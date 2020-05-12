@@ -4,7 +4,7 @@ library(tidyverse)
 library(magrittr)
 
 # Make sure working directory is in /scripts/
-#setwd("C:/git/CAMP_10yr_proj/scripts")
+#setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 
 datapath <- "../dat"
 #file_classes <- c("propsexrace.txt", "eversex.txt", "condom.txt", 
@@ -164,70 +164,53 @@ for (i in 1:length(years)) {
 }
 
 ####################
-# Diagnoses
-# For now we input the diagnoses in the first year only then use the model to generate the rest
-# Will eventually want to bring in all to compare
-# But note that this gets tricky because CDC stopped imputing missing attributes in 2010,
-# and race is missing for a large proportion of cases. So that needs to be dealt with.
+# Pregancies
 
-dx_gc_10_14_f <- dx_gc_10_14_m <- dx_gc_15_19_f <- dx_gc_15_19_m <- array(dim=c(neths, 1, nyears))
-dx_gc_f <- dx_gc_m <- array(dim=c(neths, nages, nyears))
-dx_ct_10_14_f <- dx_ct_10_14_m <- dx_ct_15_19_f <- dx_ct_15_19_m <- array(dim=c(neths, 1, nyears))
-dx_ct_f <- dx_ct_m <- array(dim=c(neths, nages, nyears))
+## TODO Here we will import initial pregnancy info for calibration
 
-for (i in 1:nyears) {
-  filename <- paste(datapath, "/diagnoses_", years[1], ".csv", sep="")
-  temp <- read.csv(filename)
+#dx_gc_10_14_f <- dx_gc_10_14_m <- dx_gc_15_19_f <- dx_gc_15_19_m <- array(dim=c(neths, 1, nyears))
+#dx_gc_f <- dx_gc_m <- array(dim=c(neths, nages, nyears))
+#dx_ct_10_14_f <- dx_ct_10_14_m <- dx_ct_15_19_f <- dx_ct_15_19_m <- array(dim=c(neths, 1, nyears))
+#dx_ct_f <- dx_ct_m <- array(dim=c(neths, nages, nyears))
+
+#for (i in 1:nyears) {
+#  filename <- paste(datapath, "/diagnoses_", years[1], ".csv", sep="")
+#  temp <- read.csv(filename)
   
-  # No need to prorate for 2007 - CDC prorated the data in the reports until 2009
-  for (j in 1:neths) {
-    dx_gc_10_14_f[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="GC", Sex=="F", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_gc_15_19_f[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="GC", Sex=="F", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_gc_10_14_m[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="GC", Sex=="M", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_gc_15_19_m[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="GC", Sex=="M", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_ct_10_14_f[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="CT", Sex=="F", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_ct_15_19_f[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="CT", Sex=="F", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_ct_10_14_m[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="CT", Sex=="M", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-    dx_ct_15_19_m[j,,i] <- unname(unlist(
-      temp %>% filter(Infection=="CT", Sex=="M", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
-        dplyr::select(Rate)
-    ))
-  }  
-}
-
-### Race mixing
-
-filename <- paste(datapath, "/racemixing.csv", sep="")
-p_ethn <- read.csv(filename)
-
-p_ethn_f <- p_ethn_m <- mat3(rep(NA,9))
-p_ethn_f[1,] <- unname(unlist(p_ethn %>% filter(Ego=="BF") %>% dplyr::select(B, H, W)))
-p_ethn_f[2,] <- unname(unlist(p_ethn %>% filter(Ego=="HF") %>% dplyr::select(B, H, W)))
-p_ethn_f[3,] <- unname(unlist(p_ethn %>% filter(Ego=="WF") %>% dplyr::select(B, H, W)))
-p_ethn_m[1,] <- unname(unlist(p_ethn %>% filter(Ego=="BM") %>% dplyr::select(B, H, W)))
-p_ethn_m[2,] <- unname(unlist(p_ethn %>% filter(Ego=="HM") %>% dplyr::select(B, H, W)))
-p_ethn_m[3,] <- unname(unlist(p_ethn %>% filter(Ego=="WM") %>% dplyr::select(B, H, W)))
+#  for (j in 1:neths) {
+#    dx_gc_10_14_f[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="GC", Sex=="F", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_gc_15_19_f[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="GC", Sex=="F", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_gc_10_14_m[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="GC", Sex=="M", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_gc_15_19_m[j,,i] <- unname(unlist(
+#        dplyr::select(Rate)
+#    ))
+#    dx_ct_10_14_f[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="CT", Sex=="F", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_ct_15_19_f[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="CT", Sex=="F", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_ct_10_14_m[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="CT", Sex=="M", Ethn==eths_all[j], Age=="10-14", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#    dx_ct_15_19_m[j,,i] <- unname(unlist(
+#      temp %>% filter(Infection=="CT", Sex=="M", Ethn==eths_all[j], Age=="15-19", !is.na(Ethn)) %>% 
+#        dplyr::select(Rate)
+#    ))
+#  }  
+#}
 
 save.image("../output/a10_inputs_raw.rda")
 
