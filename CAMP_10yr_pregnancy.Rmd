@@ -15,4 +15,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - a10_import:  removed race mixing (not needed), and initial diagnoses.  Will need to replace the latter with initial pregnancies once we have them
 
-
+- changed package name, set up NAMESPACE etc.  
