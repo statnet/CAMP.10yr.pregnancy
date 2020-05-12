@@ -1,4 +1,4 @@
-Package: statnet/CAMP_10yr_pregnancy
+Package: CAMP.10yr.pregnancy
 Title: Model of behavoral change and pregnancies among US adolescents, 2007-2017
 Version: 0.1
 Authors@R: person("Steven M.", "Goodreau", email = "goodreau@uw.edu",
