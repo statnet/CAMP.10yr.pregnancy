@@ -2,7 +2,7 @@
 ########################################################################
 ## Code for manuscript "XXXXX"
 
-setwd("C:/git/CAMP_10yr_proj/scripts/")  # Change depending on machine
+setwd("C:/git/CAMP_10yr_pregnancy/scripts/")  # Change depending on machine
 rm(list=ls())
 
 #install.packages("EasyABC")
