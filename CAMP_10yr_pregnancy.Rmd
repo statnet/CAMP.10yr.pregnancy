@@ -1,0 +1,18 @@
+---
+title: "record of work on 10-year pregancny paper"
+author: "Steven M. Goodreau"
+date: "5/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## May 12, 2020
+
+- Copied over code from GC/CT, now working through from beginning of entire_project step by step.
+
+- a10_import:  removed race mixing (not needed), and initial diagnoses.  Will need to replace the latter with initial pregnancies once we have them
+
+
