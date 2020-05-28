@@ -168,6 +168,11 @@ for (i in 1:length(years)) {
 
 ## TODO Here we will import initial pregnancy info for calibration
 
+preg_init <- mat3(c(20, 100, 200, 300, 400, 500,
+                    20, 100, 200, 300, 400, 500,
+                    20, 100, 200, 300, 400, 500
+                  ))
+
 #dx_gc_10_14_f <- dx_gc_10_14_m <- dx_gc_15_19_f <- dx_gc_15_19_m <- array(dim=c(neths, 1, nyears))
 #dx_gc_f <- dx_gc_m <- array(dim=c(neths, nages, nyears))
 #dx_ct_10_14_f <- dx_ct_10_14_m <- dx_ct_15_19_f <- dx_ct_15_19_m <- array(dim=c(neths, 1, nyears))
@@ -212,8 +217,9 @@ for (i in 1:length(years)) {
 #  }  
 #}
 
-save.image("../output/a10_inputs_raw.rda")
-
 ### Costs
 filename <- paste(datapath, "/costs.csv", sep="")
 costs <- read.csv(filename)
+
+save.image("../output/a10_inputs_raw.rda")
+
