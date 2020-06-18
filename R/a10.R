@@ -29,68 +29,62 @@ a10_preg <- function(n_f,
 
   ##################################################
   # Notes to self
-  # Need to convert incidence to prevalence again
-  # Need to incorporate race mixing
-  # Need to decide on model calibration
 
   ##########################################################################
   # Dimensional error checking
   if (sum(dim(n_f) == c(3,6,11)) <3) stop("n_f must be an array with dimensions c(3,6,11).")
-  if (sum(dim(n_f) == c(3,6,11)) <3) stop("n_m must be an array with dimensions c(3,6,11).")
-  # TODO
 
   ##########################################################################
   # Init bookkeeping
 
   # Calc # who have sexually debuted
   n_eversex_f <- n_f * prop_eversex_f
-  n_eversex_m <- n_m * prop_eversex_m
 
-  # Create arrays to store number of incident cases per year **in school8 and *total*
-  n_inc_insch_f <- n_inc_insch_m <- n_inc_total_f <- n_inc_total_m <- array(dim=c(3,6,12))
-  n_inc_insch_f[,,1] <- n_inc_insch_m[,,1] <- n_inc_total_f[,,1] <- n_inc_total_m[,,1] <- NA
-  
+  # Create arrays to store number of pregnancies per year **in school** and *total*
+  n_preg_insch_f <- n_preg_total_f <- array(dim=c(3,6,12))
+  n_preg_insch_f[,,1] <- n_preg_total_f[,,1] <- NA
+
   # Create arrays to store number of diagnoses per year *total* (in and out of HS)
-  n_diag_total_f <- n_diag_total_m <- array(dim=c(3,6,12))
-  if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
-    n_diag_total_f[,,1] <- diag_init_f
-    n_diag_total_m[,,1] <- diag_init_m
-  } else n_diag_total_f[,,1] <- n_diag_total_m[,,1] <- NA
+  #n_diag_total_f <- array(dim=c(3,6,12))
+  #if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
+  #  n_diag_total_f[,,1] <- diag_init_f
+  #  n_diag_total_m[,,1] <- diag_init_m
+  #} else n_diag_total_f[,,1] <- n_diag_total_m[,,1] <- NA
 
   # Create arrays to store number of diagnoses per year *in HS*
-  n_diag_insch_f <- n_diag_insch_m <- array(dim=c(3,6,12))
-  n_diag_insch_f[,,1] <- NA
-  n_diag_insch_m[,,1] <- NA
+  #n_diag_insch_f <- n_diag_insch_m <- array(dim=c(3,6,12))
+  #n_diag_insch_f[,,1] <- NA
+  #n_diag_insch_m[,,1] <- NA
 
   # Create arrays to store prevalence in the cross-section (value should be same in sch and tot)
-  prev_f <- prev_m <- array(dim=c(3,6,12))
+  #prev_f <- prev_m <- array(dim=c(3,6,12))
   
-  if(is.vector(diag_init_f) & length(diag_init_f)==3) {
-    ###prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / rowSums(prop_eversex_f[,,1]*meanpop_tot_f[,,1])
-    prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / rowSums(meanpop_tot_f[,,1])
-  } else {
-    if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
+  #if(is.vector(diag_init_f) & length(diag_init_f)==3) {
+  #  ###prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / rowSums(prop_eversex_f[,,1]*meanpop_tot_f[,,1])
+  #  prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / rowSums(meanpop_tot_f[,,1])
+  #} else {
+  #  if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
       ###prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / (prop_eversex_f[,,1]*meanpop_tot_f[,,1])
-      prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / (meanpop_tot_f[,,1])
-    } else {
-      stop("diag_init_f must be either a vector of length 3 or a matrix of dim (3,6).")
-    }
-  }
+  #    prev_f[,,1] <- diag_init_f * dur_inf_f / prop_diag_f / (meanpop_tot_f[,,1])
+  #  } else {
+  #    stop("diag_init_f must be either a vector of length 3 or a matrix of dim (3,6).")
+  #  }
+  #}
   
-  if(is.vector(diag_init_f) & length(diag_init_f)==3) {
-    ###prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / rowSums(prop_eversex_m[,,1]*meanpop_tot_m[,,1])
-    prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / rowSums(meanpop_tot_m[,,1])
-  } else {
-    if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
-      ###prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / (prop_eversex_m[,,1]*meanpop_tot_m[,,1])
-      prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / (meanpop_tot_m[,,1])    } else {
-      stop(" diag_init_m must be either a vector of length 3 or a matrix of dim (3,6).")
-    }
-  }
+  #if(is.vector(diag_init_f) & length(diag_init_f)==3) {
+  #  ###prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / rowSums(prop_eversex_m[,,1]*meanpop_tot_m[,,1])
+  #  prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / rowSums(meanpop_tot_m[,,1])
+  #} else {
+  #  if(is.matrix(diag_init_f) & sum(dim(diag_init_f)==c(3,6))==2) {
+  #    ###prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / (prop_eversex_m[,,1]*meanpop_tot_m[,,1])
+  #    prev_m[,,1] <- diag_init_m * dur_inf_m / prop_diag_m / (meanpop_tot_m[,,1])    } else {
+  #    stop(" diag_init_m must be either a vector of length 3 or a matrix of dim (3,6).")
+  #  }
+  #}
 
   # Calculate the number of condomless acts per person
   cl_acts_f <- mean_new_part_f * coital_acts_pp_f * (1-condom_use_f)
-  cl_acts_m <- mean_new_part_m * coital_acts_pp_m * (1-condom_use_m)
+  #cl_acts_m <- mean_new_part_m * coital_acts_pp_m * (1-condom_use_m)
 
   ##########################################################################
   # Advancement
@@ -101,60 +95,27 @@ a10_preg <- function(n_f,
     #  Differs from in school bc age population weights are different, even though age-specific prevs are the same.
     #  This is all needed to make consistent with the tool.
     
-    overall_prev_f <- rowSums(prev_f[,,i-1]*meanpop_tot_f[,,i-1]) /   
-                                rowSums(meanpop_tot_f[,,i-1])
-    overall_prev_m <- rowSums(prev_m[,,i-1]*meanpop_tot_m[,,i-1]) / 
-                                rowSums(meanpop_tot_m[,,i-1])
+    #overall_prev_f <- rowSums(prev_f[,,i-1]*meanpop_tot_f[,,i-1]) /   
+    #                            rowSums(meanpop_tot_f[,,i-1])
 
-    n_inc_insch_f[,,i] <- (n_eversex_f[,,i-1]*(1-prev_f[,,i-1])) *           # Transm from BM
-                        (1-(1-overall_prev_m[1]*part_prev_ratio_f*beta_m2f)^(cl_acts_f[,,i-1]*p_ethn_f[,1])) + 
+    n_preg_insch_f[,,i] <- (n_eversex_f[,,i-1]) * (1-(1-prob_detpreg_f[,])^(cl_acts_f[,,i-1]))
+    #n_diag_insch_f[,,i] <- n_inc_insch_f[,,i] * prop_diag_f
+    n_preg_total_f[,,i] <- n_preg_insch_f[,,i] * meanpop_tot_f[,,1] / n_f[,,1]
+    #n_diag_total_f[,,i] <- n_diag_insch_f[,,i] * meanpop_tot_f[,,1] / n_f[,,1]
 
-                        (n_eversex_f[,,i-1]*(1-prev_f[,,i-1])) *           # Transm from HM
-                        (1-(1-overall_prev_m[2]*part_prev_ratio_f*beta_m2f)^(cl_acts_f[,,i-1]*p_ethn_f[,2])) + 
+    #prev_f[,,i] <- n_inc_insch_f[,,i]*dur_inf_f / n_f[,,i-1]                        
 
-                        (n_eversex_f[,,i-1]*(1-prev_f[,,i-1])) *           # Transm from WM
-                        (1-(1-overall_prev_m[3]*part_prev_ratio_f*beta_m2f)^(cl_acts_f[,,i-1]*p_ethn_f[,3]))  
-      
-    n_inc_insch_m[,,i] <- (n_eversex_m[,,i-1]*(1-prev_m[,,i-1])) *         # Transm from BF
-                        (1-(1-overall_prev_f[1]*part_prev_ratio_m*beta_f2m)^(cl_acts_m[,,i-1]*p_ethn_m[,1])) + 
-                    
-                        (n_eversex_m[,,i-1]*(1-prev_m[,,i-1])) *           # Transm from HF
-                        (1-(1-overall_prev_f[2]*part_prev_ratio_m*beta_f2m)^(cl_acts_m[,,i-1]*p_ethn_m[,2])) + 
-                    
-                        (n_eversex_m[,,i-1]*(1-prev_m[,,i-1])) *           # Transm from WF
-                        (1-(1-overall_prev_f[3]*part_prev_ratio_m*beta_f2m)^(cl_acts_m[,,i-1]*p_ethn_m[,3]))  
-
-    n_diag_insch_f[,,i] <- n_inc_insch_f[,,i] * prop_diag_f
-    n_diag_insch_m[,,i] <- n_inc_insch_m[,,i] * prop_diag_m
-    
-    n_inc_total_f[,,i] <- n_inc_insch_f[,,i] * meanpop_tot_f[,,1] / n_f[,,1]
-    n_inc_total_m[,,i] <- n_inc_insch_m[,,i] * meanpop_tot_m[,,1] / n_m[,,1]
-    n_diag_total_f[,,i] <- n_diag_insch_f[,,i] * meanpop_tot_f[,,1] / n_f[,,1]
-    n_diag_total_m[,,i] <- n_diag_insch_m[,,i] * meanpop_tot_m[,,1] / n_m[,,1]
-
-    prev_f[,,i] <- n_inc_insch_f[,,i]*dur_inf_f / n_f[,,i-1]                        
-    prev_m[,,i] <- n_inc_insch_m[,,i]*dur_inf_m / n_m[,,i-1]
-  
   }
-
 
   ##########################################################################
   # Final processing
 
-  result <- list(n_inc_insch_f = n_inc_insch_f,
-                 n_inc_insch_m = n_inc_insch_m,
-                 n_inc_total_f = n_inc_total_f,
-                 n_inc_total_m = n_inc_total_m,
-                 prev_f = prev_f,
-                 prev_m = prev_m,
-                 n_diag_insch_f = n_diag_insch_f,
-                 n_diag_insch_m = n_diag_insch_m,
-                 n_diag_total_f = n_diag_total_f,
-                 n_diag_total_m = n_diag_total_m,
+  result <- list(n_preg_insch_f = n_preg_insch_f,
+                 n_preg_total_f = n_preg_total_f,
+                 #n_diag_insch_f = n_diag_insch_f,
+                 #n_diag_total_f = n_diag_total_f,
                  n_eversex_f = n_eversex_f,
-                 n_eversex_m = n_eversex_m,
-                 cl_acts_f = cl_acts_f,
-                 cl_acts_m = cl_acts_m
+                 cl_acts_f = cl_acts_f
   )
   return(result)
 }
