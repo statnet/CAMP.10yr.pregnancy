@@ -1,0 +1,91 @@
+sex,race,age,pregprev,WgtFreq
+female,white,12,no method,.
+female,white,12,hormonal+LARC,.
+female,white,12,condoms,.
+female,white,12,withdrawal,.
+female,white,12,other,.
+female,white,14,no method,9.9335
+female,white,14,hormonal+LARC,14.4128
+female,white,14,condoms,14.8093
+female,white,14,withdrawal,13.2512
+female,white,14,other,.
+female,white,15,no method,31.7822
+female,white,15,hormonal+LARC,48.8139
+female,white,15,condoms,101.7071
+female,white,15,withdrawal,21.7841
+female,white,15,other,11.8492
+female,white,16,no method,34.9439
+female,white,16,hormonal+LARC,139.2069
+female,white,16,condoms,124.1391
+female,white,16,withdrawal,40.6991
+female,white,16,other,8.1467
+female,white,17,no method,57.0972
+female,white,17,hormonal+LARC,180.1538
+female,white,17,condoms,164.4177
+female,white,17,withdrawal,48.5795
+female,white,17,other,8.4334
+female,white,18,no method,24.2766
+female,white,18,hormonal+LARC,125.1203
+female,white,18,condoms,93.1534
+female,white,18,withdrawal,26.0022
+female,white,18,other,3.8635
+female,black,12,no method,0.2229
+female,black,12,hormonal+LARC,.
+female,black,12,condoms,.
+female,black,12,withdrawal,.
+female,black,12,other,.
+female,black,14,no method,4.4396
+female,black,14,hormonal+LARC,.
+female,black,14,condoms,12.9957
+female,black,14,withdrawal,.
+female,black,14,other,0.3329
+female,black,15,no method,7.3264
+female,black,15,hormonal+LARC,7.0202
+female,black,15,condoms,37.7782
+female,black,15,withdrawal,8.3716
+female,black,15,other,0.5173
+female,black,16,no method,14.3071
+female,black,16,hormonal+LARC,19.9691
+female,black,16,condoms,34.8608
+female,black,16,withdrawal,7.0967
+female,black,16,other,1.62
+female,black,17,no method,17.1335
+female,black,17,hormonal+LARC,29.5935
+female,black,17,condoms,33.5409
+female,black,17,withdrawal,22.8256
+female,black,17,other,3.3711
+female,black,18,no method,15.2511
+female,black,18,hormonal+LARC,16.5876
+female,black,18,condoms,21.2355
+female,black,18,withdrawal,8.1081
+female,black,18,other,1.7059
+female,hispanic,12,no method,1.0915
+female,hispanic,12,hormonal+LARC,.
+female,hispanic,12,condoms,.
+female,hispanic,12,withdrawal,1.2989
+female,hispanic,12,other,.
+female,hispanic,14,no method,3.1385
+female,hispanic,14,hormonal+LARC,1.1324
+female,hispanic,14,condoms,11.9375
+female,hispanic,14,withdrawal,0.5503
+female,hispanic,14,other,0.2648
+female,hispanic,15,no method,25.7425
+female,hispanic,15,hormonal+LARC,14.7357
+female,hispanic,15,condoms,37.4304
+female,hispanic,15,withdrawal,7.6511
+female,hispanic,15,other,1.3867
+female,hispanic,16,no method,26.8318
+female,hispanic,16,hormonal+LARC,18.9272
+female,hispanic,16,condoms,52.7209
+female,hispanic,16,withdrawal,9.6744
+female,hispanic,16,other,6.4647
+female,hispanic,17,no method,25.0811
+female,hispanic,17,hormonal+LARC,24.4067
+female,hispanic,17,condoms,49.8493
+female,hispanic,17,withdrawal,12.9132
+female,hispanic,17,other,3.8176
+female,hispanic,18,no method,12.9548
+female,hispanic,18,hormonal+LARC,13.1683
+female,hispanic,18,condoms,30.5565
+female,hispanic,18,withdrawal,9.7497
+female,hispanic,18,other,3.0267
