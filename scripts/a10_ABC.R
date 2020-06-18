@@ -4,13 +4,13 @@
 a10_ABC <- function(part_prev_ratio) {
   part_prev_ratio_f <- as.vector(part_prev_ratio[1:3])
   #part_prev_ratio_m <- as.vector(part_prev_ratio[4:6])
-  a10_output <- a10(n_f = n_f,
+  a10_output <- a10_preg(n_f = n_f,
                     prop_eversex_f = pred_eversex_f,
                     condom_use_f = pred_condom_f,
                     mean_new_part_f = pred_mnppy_f,
                     coital_acts_pp_f = capp_f,
-                    prop_diag_f = prop_diag_f_gc,              # IMPT EDIT
-                    prob_detpreg = prob_detpreg,               # IMPT EDIT
+                    #prop_diag_f = prop_diag_f,                # IMPT EDIT
+                    prob_detpreg_f = prob_detpreg_f,               # IMPT EDIT
                     meanpop_tot_f = meanpop_13to18_f,
                     preg_init_f = preg_init_f                  # IMPT EDIT
   )
