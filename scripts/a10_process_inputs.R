@@ -7,6 +7,7 @@
 
 #########################################################################
 ### Basics
+library(nnet)
 
 #setwd("C:/git/CAMP_10yr_pregnancy/scripts/")
 years <- seq(2007, 2017, by=2)          # Set years info
@@ -93,17 +94,49 @@ pred_eversex_f <- array(predict(eversex_f_reg, type='response',
                         
 
 #########################################################################
-### Condom use
+### Birth control
 
-condom_f_df <- expand.grid(c('B','H','W'), 13:18, seq(2007,2017,2))
-colnames(condom_f_df) <- c('ethn', 'age', 'year')
-condom_f_df$condom <- as.vector(condom_f)
-condom_f_df$wts <- as.vector(condom_wts_f)
-condom_f_df$agefac <- relevel(as.factor(condom_f_df$age), ref='16')
-condom_f_df$ym2007 <- condom_f_df$year - 2007
-condom_f_reg <- suppressWarnings(glm(condom ~ agefac + ym2007 + ethn + ym2007*ethn,
-                     data=condom_f_df, weights=wts, 
-                     family="binomial"))
+bctype_df <- expand.grid(c('B','H','W'), 13:18, seq(2007,2017,2))
+colnames(bctype_df) <- c('ethn', 'age', 'year')
+
+bctype_df$wts <- as.vector(apply(bctype_wts, 1:3, sum))
+
+bctype_df[,5:13] <- sapply(1:9, function(x) as.vector(bctype_prob[,,,x]))
+names(bctype_df)[5:13] <- bctypes
+
+bctype_df <- bctype_df %>% replace(is.na(.), 0)
+
+bctype_df$agefac <- relevel(as.factor(bctype_df$age), ref='16')
+bctype_df$yearfac <- relevel(as.factor(bctype_df$year), ref='2007')
+bctype_df$ym2007 <- bctype_df$year - 2007
+
+#bctype_df_reg <- suppressWarnings(multinom(as.matrix(bctype_df[,5:13]) ~ 
+#                                             bctype_df$agefac + 
+#                                             bctype_df$yearfac + bctype_df$ethn + 
+#                                             bctype_df$yearfac*bctype_df$ethn,
+#                                       weights=bctype_df$wts))
+
+bctype_df_2007 <- bctype_df %>% filter(year==2007)
+
+bctype_df_2007 <- bctype_df_2007[,!names(bctype_df_2007) %in% 
+                                   c("hormonal+LARC", "LARC", "other1", "other357")]
+
+bctype_df_2007[rowSums(bctype_df_2007[,5:9])==0,"no method"] <- 1   # allows for fitting but does not matter since wts = 0
+
+bctype_df_reg_2007 <- multinom(as.matrix(bctype_df_2007[,5:9])~ 
+                                       bctype_df_2007$agefac + bctype_df_2007$ethn, 
+                                       weights=bctype_df_2007$wts)
+
+bctype_df_reg_2007_age <- multinom(as.matrix(bctype_df_2007[,5:9])~ 
+                                 bctype_df_2007$age + bctype_df_2007$ethn, 
+                                 weights=bctype_df_2007$wts)
+  
+#bctype_df_reg_2007_tests <- multinom(as.matrix(bctype_df_2007[,5:9])~ 
+#                                 bctype_df_2007$agefac + bctype_df_2007$ethn, 
+#                               weights=bctype_df_2007$wts)
+
+#######################################3
+
 pred_condom_f_df_indep <- expand.grid(c('B','H','W'), 13:18, 2007:2017)
 colnames(pred_condom_f_df_indep) <- c('ethn', 'age', 'year')
 pred_condom_f_df_indep$agefac <- relevel(as.factor(pred_condom_f_df_indep$age), ref='16')
