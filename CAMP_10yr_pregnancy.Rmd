@@ -34,10 +34,24 @@ Tasks completed:
 - rewrote a10_calib in numerous ways
 - ran calib.pt1 to determine it gave no errors.
 
+## June 18, 2020
+
+Commited lots of old things (must get on top of this!)
+Filed tickets
+Looked at David's BC data files
+
+## June 19, 2020
+
+Wrote code to import BC data
+Wrote code to process BC data
+Got as far as multinomial regression for year 2007.  
+
+Need to clean up BC processing code so it's less ugly and repetitive.
+
 ### Leave at bottom
 
 Todo:
-- change condom to bp throughout
+- change condom to bc throughout
 - update costs
 - get preg_init
 
