@@ -48,6 +48,13 @@ Got as far as multinomial regression for year 2007.
 
 Need to clean up BC processing code so it's less ugly and repetitive.
 
+## June 23, 2020
+
+Had conversation with DASH, and they prefer the separate-regression-by-year approach. maria also expressed a desire for age as categorical.Goal today is to finish these.
+
+Completed the regressions
+Began wrangling the predicted values
+
 ### Leave at bottom
 
 Todo:
