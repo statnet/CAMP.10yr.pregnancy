@@ -59,6 +59,49 @@ Began wrangling the predicted values
 
 Finished wrangling the predicted values.  Bean comparing agefac to agenum.  Need to make a few plots and send to DASH.
 
+## June 25, 2020
+
+Carol's 80th!
+plots to show to DASH:
+r
+```{r} 
+
+matplot(t(pred_bctype_agefac[[2]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "Condom use, 2017, age-as-categorical model")
+axis(1,1:6, 13:18)
+
+matplot(t(pred_bctype_agenum[[2]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "Condom use, 2017, age-as-numerical model")
+axis(1,1:6, 13:18)
+
+matplot(t(pred_bctype_agefac[[1]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "No method, 2017, age-as-categorical model")
+axis(1,1:6, 13:18)
+
+matplot(t(pred_bctype_agenum[[1]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "No method, 2017, age-as-numerical model")
+axis(1,1:6, 13:18)
+
+matplot(t(pred_bctype_agefac[[5]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "LARCs, 2017, age-as-categorical model")
+axis(1,1:6, 13:18)
+
+matplot(t(pred_bctype_agenum[[5]][,,c(11)]), type='b', ylab='prob. condom use', 
+        xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
+        main = "LARCs, 2017, age-as-numerical model")
+axis(1,1:6, 13:18)
+
+
+
+
+```
+
+
 ### Leave at bottom
 
 Todo:
