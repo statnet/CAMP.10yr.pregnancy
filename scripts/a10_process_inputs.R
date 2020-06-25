@@ -113,6 +113,13 @@ bctype_df <- bctype_df %>% replace(is.na(.), 0)
 
 ## Create partitions
 
+included_cols_by_year <- list()
+included_cols_by_year[[1]] <- included_cols_by_year[[2]] <- 
+  c("no method", "condoms", "hormonal", "withdrawal", "other79")
+included_cols_by_year[[3]] <- c("no method", "condoms", "hormonal+LARC", "withdrawal", "other1")
+included_cols_by_year[[4]] <- included_cols_by_year[[5]] <- included_cols_by_year[[6]] <-  
+  c("no method", "condoms", "hormonal", "LARC", "other357")
+
 skipped_cols_by_year <- list()
 skipped_cols_by_year[[1]] <- skipped_cols_by_year[[2]] <- 
                 c("hormonal+LARC", "LARC", "other1", "other357")
@@ -151,24 +158,29 @@ bctype_reg_agenum_AIC <- sapply(1:6, function(x) bctype_reg_agenum[[x]]$AIC)
 ### This could be done with four-dimenwsional arrays and less verbose code, 
 ###   but I like having 3 dims and explicit names to reduce room for confusion and error
 
-pred_bctype <- list(no_method     = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    condoms       = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    hormonal      = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    hormonal_LARC = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    LARC          = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    withdrawal    = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    other79       = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    other1        = expand.grid(c('B','H','W'), 13:18, 2007:2017),
-                    other357      = expand.grid(c('B','H','W'), 13:18, 2007:2017)
+pred_bctype_agefac <- pred_bctype_agenum <- list(
+                            no_method     = array(dim=c(3,6,11)),
+                            condoms       = array(dim=c(3,6,11)),
+                            hormonal      = array(dim=c(3,6,11)),
+                            hormonal_LARC = array(dim=c(3,6,11)),
+                            LARC          = array(dim=c(3,6,11)),
+                            withdrawal    = array(dim=c(3,6,11)),
+                            other79       = array(dim=c(3,6,11)),
+                            other1        = array(dim=c(3,6,11)),
+                            other357      = array(dim=c(3,6,11))
 )
- 
-for (i in 1:9) colnames(pred_bctype[[i]]) <- c('ethn', 'age', 'year')
 
-for (j in 11) colnames(pred_bctype[[j]]) <- c('ethn', 'age', 'year')
+for (year in 1:6) {
+  types <- which(bctypes%in%included_cols_by_year[[year]])
+  for (type_index in 1:length(types)) {
+      pred_bctype_agefac[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg_agefac[[year]]$fitted.values[,type_index], nrow=3)
+      pred_bctype_agenum[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg_agenum[[year]]$fitted.values[,type_index], nrow=3)
+  }
+}
 
-
-
-
+matplot(t(pred_bctype_agenum[[2]][,,c(11)]), type='b')
 
 #######################################
 

@@ -55,6 +55,10 @@ Had conversation with DASH, and they prefer the separate-regression-by-year appr
 Completed the regressions
 Began wrangling the predicted values
 
+## June 24, 2020
+
+Finished wrangling the predicted values.  Bean comparing agefac to agenum.  Need to make a few plots and send to DASH.
+
 ### Leave at bottom
 
 Todo:
