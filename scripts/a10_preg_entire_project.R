@@ -16,7 +16,6 @@ set.seed(0)
 source("a10_import.R")                          # Get all inputs
 source("a10_process_inputs.R")                  # Process inputs (i.e. conduct regressions, etc.)
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
-#source("a10_process_dx_for_calib.R")            # create total (pseudo-age-specific) diagnosis numbers for step 1 of the calibration 
 source("a10_ABC.R")
 
 ########################################################################
