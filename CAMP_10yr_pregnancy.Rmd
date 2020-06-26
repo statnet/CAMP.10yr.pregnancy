@@ -89,17 +89,19 @@ axis(1,1:6, 13:18)
 matplot(t(pred_bctype_agefac[[5]][,,c(11)]), type='b', ylab='prob. condom use', 
         xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
         main = "LARCs, 2017, age-as-categorical model")
-axis(1,1:6, 13:18)
 
+axis(1,1:6, 13:18)
 matplot(t(pred_bctype_agenum[[5]][,,c(11)]), type='b', ylab='prob. condom use', 
         xaxt='n', xlab="age", pch=c('B','H','W'), ylim=c(0,0.6), 
         main = "LARCs, 2017, age-as-numerical model")
 axis(1,1:6, 13:18)
 
-
-
-
 ```
+
+## June 26, 2020
+
+finished the import processing
+made a list of tasks - currently in my "to do" excel file, but needs to be trasnferred to github wen my signal is strong and i have more time.
 
 
 ### Leave at bottom
@@ -112,7 +114,6 @@ Todo:
 Things to think about:
 - need to replace dx input data with detectable pregnancy input data. What form will this come in? By age? By race/ethn?  By single years? All detectable pregs or by outcomes?
 - need to decide what to calibrate to exactly - pregs? births?  in school or tot? by race/ethn?
-- how to do regressions on BC options?
 
 ### Master change list
 
