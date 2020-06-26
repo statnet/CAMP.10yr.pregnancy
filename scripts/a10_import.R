@@ -47,7 +47,7 @@ wts_m <- wts_m %>% replace_na(0)
 #### Read in the eversex numbers
 # NB:the name of the sex column is different hear than for wts
 
-eversex_f <- eversex_m <- array(dim=c(neths, nages, nyears))
+eversex_f <- array(dim=c(neths, nages, nyears))
 
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/eversex_", years[i], ".txt", sep="")
@@ -56,14 +56,14 @@ for (i in 1:length(years)) {
     eversex_f[j,,i] <- unname(unlist(
       temp %>% filter(sex_active=="Female", race==eths[j]) %>% dplyr::select(starts_with("Age"))
     ))
-    eversex_m[j,,i] <- unname(unlist(
-      temp %>% filter(sex_active=="Male", race==eths[j]) %>% dplyr::select(starts_with("Age"))
-    ))
+    #eversex_m[j,,i] <- unname(unlist(
+    #  temp %>% filter(sex_active=="Male", race==eths[j]) %>% dplyr::select(starts_with("Age"))
+    #))
   }
 }
 
 eversex_f <- eversex_f %>% replace_na(0)
-eversex_m <- eversex_m %>% replace_na(0)
+#eversex_m <- eversex_m %>% replace_na(0)
 
 ### Read in the bith control numbers
 ## These are expressed differently than previous values, as popsizes for each type
@@ -142,7 +142,7 @@ legend(2, 0.7, c(
 ### Read in matrix1 (number by race by current age by age of debut by year)
 ## notice stop-gap in terms of dim 3 size
 
-AgeByDebutAge_num_f <- AgeByDebutAge_num_m <- array(dim=c(neths, nages, 7, nyears))
+AgeByDebutAge_num_f <- array(dim=c(neths, nages, 7, nyears))
 
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/matrix1_", years[i], ".txt", sep="")
@@ -151,15 +151,15 @@ for (i in 1:length(years)) {
     AgeByDebutAge_num_f[j,,,i] <- unname(as.matrix(temp %>% 
                         filter(sex_active=="Female", race==eths[j]) %>% 
                         dplyr::select(starts_with("age1")), nages))
-    AgeByDebutAge_num_m[j,,,i] <- unname(as.matrix(temp %>% 
-                        filter(sex_active=="Male", race==eths[j]) %>% 
-                        dplyr::select(starts_with("age1")), nages))
+    #AgeByDebutAge_num_m[j,,,i] <- unname(as.matrix(temp %>% 
+    #                    filter(sex_active=="Male", race==eths[j]) %>% 
+    #                    dplyr::select(starts_with("age1")), nages))
   }
 }
 
 ### Read in matrix2 (mean lifetime partners by race by current age by age of debut by year)
 
-AgeByDebutAge_lp_f <- AgeByDebutAge_lp_m <- array(dim=c(neths, nages, 7, nyears))
+AgeByDebutAge_lp_f <- array(dim=c(neths, nages, 7, nyears))
 
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/matrix2_", years[i], ".txt", sep="")
@@ -168,9 +168,9 @@ for (i in 1:length(years)) {
     AgeByDebutAge_lp_f[j,,,i] <- unname(as.matrix(temp %>% 
                                  filter(sex_active=="Female", race==eths[j]) %>% 
                                  dplyr::select(starts_with("mean1")), nages))
-    AgeByDebutAge_lp_m[j,,,i] <- unname(as.matrix(temp %>% 
-                                 filter(sex_active=="Male", race==eths[j]) %>% 
-                                 dplyr::select(starts_with("mean1")), nages))
+    #AgeByDebutAge_lp_m[j,,,i] <- unname(as.matrix(temp %>% 
+    #                             filter(sex_active=="Male", race==eths[j]) %>% 
+    #                             dplyr::select(starts_with("mean1")), nages))
   }
 }
 
