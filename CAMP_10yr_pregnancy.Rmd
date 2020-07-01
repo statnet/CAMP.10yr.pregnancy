@@ -101,7 +101,12 @@ axis(1,1:6, 13:18)
 ## June 26, 2020
 
 finished the import processing
-made a list of tasks - currently in my "to do" excel file, but needs to be trasnferred to github wen my signal is strong and i have more time.
+made a list of tasks - currently in my "to do" excel file, but needs to be transferred to github when my signal is strong and I have more time.
+
+## June 30, 2020
+
+Updated a10_make_behav_inputs_all_2007
+
 
 
 ### Leave at bottom
