@@ -18,6 +18,33 @@ source("a10_process_inputs.R")                  # Process inputs (i.e. conduct r
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
 source("a10_ABC.R")
 
+
+########################################################################
+### Run each scenario
+
+# Scenario 1: No LARC prior to 2013
+
+pred_bctype.s1 <- pred_bctype_agefac
+
+pred_bctype.s1[[5]][,,c(1,3)] <- 0                              # 2007, 2009
+pred_bctype.s1[[8]][,,c(1,3)] <- pred_bctype.s1[[7]][,,c(1,3)]  # 2007, 2009
+pred_bctype.s1[[5]][,,5] <- 0                                   # 2011
+pred_bctype.s1[[3]][,,5] <- pred_bctype.s1[[4]][,,5]            # 2011
+
+
+pred_bctype.s1[[4]][,,] <- 0                                    # clear away hormonal+LARC
+pred_bctype.s1[[7]][,,] <- 0                                    # clear away other79
+pred_bctype.s1[[9]][,,] <- 0                                    # clear away other357
+
+
+# No behavior change
+source("a10_no_behav_change_script.R")       # No behavior change
+
+
+
+
+
+
 ########################################################################
 ### Calibrate
 
