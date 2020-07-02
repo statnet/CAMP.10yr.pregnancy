@@ -149,7 +149,8 @@ for (i in 1:6) {
                                 weights=bctype_by_year[[i]]$wts)
   
   bctype_reg_ageasq[[i]] <- multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                bctype_by_year[[i]]$age + I(bctype_by_year[[i]]$age^2) + 
+                                I(bctype_by_year[[i]]$age-0) +
+                                I((bctype_by_year[[i]]$age-0)^2) + 
                                 bctype_by_year[[i]]$ethn, 
                                 weights=bctype_by_year[[i]]$wts)
   }
@@ -167,7 +168,7 @@ cbind(bctype_reg_agefac_AIC, bctype_reg_agenum_AIC, bctype_reg_ageasq_AIC)
 ### This could be done with four-dimenwsional arrays and less verbose code, 
 ###   but I like having 3 dims and explicit names to reduce room for confusion and error
 
-pred_bctype <- pred_bctype_agenum <- list(
+pred_bctype_agefac <- pred_bctype_agenum <- pred_bctype_ageasq <- list(
                             no_method     = array(dim=c(3,6,11)),
                             condoms       = array(dim=c(3,6,11)),
                             hormonal      = array(dim=c(3,6,11)),
@@ -182,11 +183,17 @@ pred_bctype <- pred_bctype_agenum <- list(
 for (year in 1:6) {
   types <- which(bctypes%in%included_cols_by_year[[year]])
   for (type_index in 1:length(types)) {
-      pred_bctype[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
-        matrix(bctype_reg[[year]]$fitted.values[,type_index], nrow=3)
+      pred_bctype_agefac[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg_agefac[[year]]$fitted.values[,type_index], nrow=3)
       pred_bctype_agenum[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
         matrix(bctype_reg_agenum[[year]]$fitted.values[,type_index], nrow=3)
+      pred_bctype_ageasq[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg_ageasq[[year]]$fitted.values[,type_index], nrow=3)
   }
+}
+
+if (F) {
+matplot(t(pred_bctype_agefac[[1]][1,,]), type='b')
 }
 
 #######################################
@@ -271,13 +278,10 @@ capp_f <- array11(mat3(c( 9.4, 9.4, 9.4, 24.7, 24.7, 46.7,
 #########################################################################
 ### Small inputs
 
-rel_failure_rate <- mat3(c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                           0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                           0.1, 0.1, 0.1, 0.1, 0.1, 0.1,  0.1, 0.1, 0.1
-                         ))
-
-
-## TODO: This will be calib parameter, no?
+failure_rate <- mat3(c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
+                       0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
+                       0.1, 0.1, 0.1, 0.1, 0.1, 0.1,  0.1, 0.1, 0.1
+                       ))
 
 #########################################################################
 ### NOTES
