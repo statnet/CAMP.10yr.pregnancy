@@ -202,10 +202,14 @@ for (i in 1:length(years)) {
 
 ## TODO Here we will import initial pregnancy info for calibration
 
-preg_init <- mat3(c(20, 100, 200, 300, 400, 500,
-                    20, 100, 200, 300, 400, 500,
-                    20, 100, 200, 300, 400, 500
-                  ))
+## Made up numbers but baed on Guttmacher
+## Aim for total of 350,000
+
+## TODO REVISIT WITH ACTUAL NUMBERS
+temp <- c(122.3, 113.8, 44.4) * rowSums(n_f[,,1])
+prop_by_race <- matrix(rep(temp / sum(temp), 6), nrow=3)
+prop_by_age <- mat3(rep(c(0.001, 0.007, 0.015, 0.113, 0.273, 0.591),3))  # Tot made up
+preg_init <- prop_by_race * prop_by_age * 350000 
 
 #dx_gc_10_14_f <- dx_gc_10_14_m <- dx_gc_15_19_f <- dx_gc_15_19_m <- array(dim=c(neths, 1, nyears))
 #dx_gc_f <- dx_gc_m <- array(dim=c(neths, nages, nyears))
