@@ -107,6 +107,10 @@ made a list of tasks - currently in my "to do" excel file, but needs to be trans
 
 Updated a10_make_behav_inputs_all_2007
 
+## July 2, 2020
+
+Started writing the code to move people around by method by year under each assumption.  But then I hit  wall and need to talk to David re Depo, etc.
+
 
 
 ### Leave at bottom
