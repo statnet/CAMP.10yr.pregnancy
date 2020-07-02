@@ -70,15 +70,15 @@ eversex_f <- eversex_f %>% replace_na(0)
 ## And the types keep changing across years
 ## There are a total of nine different possible repsonses with different associated 
 ##    efficacies present in at least 1 year:
-##       - no method:     2007, 2009, 2011, 2013, 2015, 2017
-##       - condoms:       2007, 2009, 2011, 2013, 2015, 2017
-##       - hormonal:      2007, 2009, ----, 2013, 2015, 2017
-##       - hormonal+LARC: ----, ----, 2011, ----, ----, ----
-##       - LARC:          ----, ----, ----, 2013, 2015, 2017
-##       - withdrawal:    2007, 2009, 2011, ----, ----, ----
-##       - other79:       2007, 2009, ----, ----, ----, ----
-##       - other1:        ----, ----, 2011, ----, ----, ----
-##       - other357:      ----, ----, ----, 2013, 2015, 2017
+##       1 * no method:     2007, 2009, 2011, 2013, 2015, 2017
+##       2 * condoms:       2007, 2009, 2011, 2013, 2015, 2017
+##       3 * hormonal:      2007, 2009, ----, 2013, 2015, 2017
+##       4   hormonal+LARC: ----, ----, 2011, ----, ----, ----
+##       5 * LARC:          ----, ----, ----, 2013, 2015, 2017
+##       6 * withdrawal:    2007, 2009, 2011, ----, ----, ----
+##       7   other79:       2007, 2009, ----, ----, ----, ----
+##       8 * other1:        ----, ----, 2011, ----, ----, ----
+##       9   other357:      ----, ----, ----, 2013, 2015, 2017
 ##
 
 ## "no method", "condoms", "hormonal", "hormonal+LARC", "LARC", "withdrawal", 
