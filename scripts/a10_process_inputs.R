@@ -137,28 +137,37 @@ for (i in 1:6) {
 
 }
 
-bctype_reg_agefac <- bctype_reg_agenum <- list() 
-for (i in 1:6) {
-  bctype_reg_agefac[[i]] <- multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                   bctype_by_year[[i]]$agefac + bctype_by_year[[i]]$ethn, 
-                                   weights=bctype_by_year[[i]]$wts)
+bctype_reg_agefac <- bctype_reg_agenum <- bctype_reg_ageasq <- list()
 
-  bctype_reg_agenum[[i]] <- multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                    bctype_by_year[[i]]$age + bctype_by_year[[i]]$ethn, 
-                                    weights=bctype_by_year[[i]]$wts)
-}
+for (i in 1:6) {
+  bctype_reg_agefac[[i]] <-   multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                bctype_by_year[[i]]$agefac + bctype_by_year[[i]]$ethn, 
+                                weights=bctype_by_year[[i]]$wts)
+
+  bctype_reg_agenum[[i]] <-   multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                bctype_by_year[[i]]$age + bctype_by_year[[i]]$ethn, 
+                                weights=bctype_by_year[[i]]$wts)
+  
+  bctype_reg_ageasq[[i]] <- multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                bctype_by_year[[i]]$age + I(bctype_by_year[[i]]$age^2) + 
+                                bctype_by_year[[i]]$ethn, 
+                                weights=bctype_by_year[[i]]$wts)
+  }
 
 bctype_reg_agefac_AIC <- sapply(1:6, function(x) bctype_reg_agefac[[x]]$AIC)
 bctype_reg_agenum_AIC <- sapply(1:6, function(x) bctype_reg_agenum[[x]]$AIC)  
+bctype_reg_ageasq_AIC <- sapply(1:6, function(x) bctype_reg_ageasq[[x]]$AIC)  
 # Agenum are lower, but we are still proceeding with agefac because our goal here is not to
 #   develop the most parsimonious model, but rather to develop the fullest model that smooths
 #   the data observed across all multi-way categories using first principles
+
+cbind(bctype_reg_agefac_AIC, bctype_reg_agenum_AIC, bctype_reg_ageasq_AIC)
 
 ### assemble the predicted value matrices
 ### This could be done with four-dimenwsional arrays and less verbose code, 
 ###   but I like having 3 dims and explicit names to reduce room for confusion and error
 
-pred_bctype_agefac <- pred_bctype_agenum <- list(
+pred_bctype <- pred_bctype_agenum <- list(
                             no_method     = array(dim=c(3,6,11)),
                             condoms       = array(dim=c(3,6,11)),
                             hormonal      = array(dim=c(3,6,11)),
@@ -173,8 +182,8 @@ pred_bctype_agefac <- pred_bctype_agenum <- list(
 for (year in 1:6) {
   types <- which(bctypes%in%included_cols_by_year[[year]])
   for (type_index in 1:length(types)) {
-      pred_bctype_agefac[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
-        matrix(bctype_reg_agefac[[year]]$fitted.values[,type_index], nrow=3)
+      pred_bctype[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg[[year]]$fitted.values[,type_index], nrow=3)
       pred_bctype_agenum[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
         matrix(bctype_reg_agenum[[year]]$fitted.values[,type_index], nrow=3)
   }
