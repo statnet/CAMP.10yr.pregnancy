@@ -103,11 +103,11 @@ pred_eversex_f <- array(predict(eversex_f_reg, type='response',
 bctype_df <- expand.grid(c('B','H','W'), 13:18, seq(2007,2017,2))
 colnames(bctype_df) <- c('ethn', 'age', 'year')
 
-bctype_df$wts <- as.vector(apply(bctype_wts, 1:3, sum))
+bctype_df$wts <- as.vector(apply(bctype_in_wts, 1:3, sum))
 bctype_df$agefac <- relevel(as.factor(bctype_df$age), ref='16')
 
-bctype_df[,6:14] <- sapply(1:9, function(x) as.vector(bctype_prob[,,,x]))
-names(bctype_df)[6:14] <- bctypes
+bctype_df[,6:16] <- sapply(1:11, function(x) as.vector(bctype_in_prob[,,,x]))
+names(bctype_df)[6:16] <- bctypes_in
 
 bctype_df <- bctype_df %>% replace(is.na(.), 0)
 
@@ -115,17 +115,14 @@ bctype_df <- bctype_df %>% replace(is.na(.), 0)
 
 included_cols_by_year <- list()
 included_cols_by_year[[1]] <- included_cols_by_year[[2]] <- 
-  c("no method", "condoms", "hormonal", "withdrawal", "other79")
-included_cols_by_year[[3]] <- c("no method", "condoms", "hormonal+LARC", "withdrawal", "other1")
+  c("no method", "condoms", "withdrawal", "pills", "injection", "other79")
+included_cols_by_year[[3]] <- 
+  c("no method", "condoms", "withdrawal", "pills", "other hormonal+LARC", "other1")
 included_cols_by_year[[4]] <- included_cols_by_year[[5]] <- included_cols_by_year[[6]] <-  
-  c("no method", "condoms", "hormonal", "LARC", "other357")
+  c("no method", "condoms", "pills", "LARC", "other hormonal", "withdrawal/other")
 
 skipped_cols_by_year <- list()
-skipped_cols_by_year[[1]] <- skipped_cols_by_year[[2]] <- 
-                c("hormonal+LARC", "LARC", "other1", "other357")
-skipped_cols_by_year[[3]] <- c("hormonal", "LARC", "other79", "other357")
-skipped_cols_by_year[[4]] <- skipped_cols_by_year[[5]] <- skipped_cols_by_year[[6]] <-  
-                c("hormonal+LARC", "withdrawal", "other79", "other1")
+for (i in 1:6) skipped_cols_by_year[[i]] <- setdiff(bctypes_in, included_cols_by_year[[i]])
 
 bctype_by_year <- list()
 for (i in 1:6) {
@@ -169,19 +166,22 @@ cbind(bctype_reg_agefac_AIC, bctype_reg_agenum_AIC, bctype_reg_ageasq_AIC)
 ###   but I like having 3 dims and explicit names to reduce room for confusion and error
 
 pred_bctype_agefac <- pred_bctype_agenum <- pred_bctype_ageasq <- list(
-                            no_method     = array(dim=c(3,6,11)),
-                            condoms       = array(dim=c(3,6,11)),
-                            hormonal      = array(dim=c(3,6,11)),
-                            hormonal_LARC = array(dim=c(3,6,11)),
-                            LARC          = array(dim=c(3,6,11)),
-                            withdrawal    = array(dim=c(3,6,11)),
-                            other79       = array(dim=c(3,6,11)),
-                            other1        = array(dim=c(3,6,11)),
-                            other357      = array(dim=c(3,6,11))
+                            no_method           = array(dim=c(3,6,11)),
+                            condoms             = array(dim=c(3,6,11)),
+                            withdrawal          = array(dim=c(3,6,11)),
+                            pills               = array(dim=c(3,6,11)),
+                            injection           = array(dim=c(3,6,11)),
+                            LARC                = array(dim=c(3,6,11)),
+                            other_hormonal      = array(dim=c(3,6,11)),
+                            other_hormonal_LARC = array(dim=c(3,6,11)),
+                            other79             = array(dim=c(3,6,11)),
+                            other1              = array(dim=c(3,6,11)),
+                            withdrawal_other    = array(dim=c(3,6,11))
 )
 
+
 for (year in 1:6) {
-  types <- which(bctypes%in%included_cols_by_year[[year]])
+  types <- which(bctypes_in%in%included_cols_by_year[[year]])
   for (type_index in 1:length(types)) {
       pred_bctype_agefac[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
         matrix(bctype_reg_agefac[[year]]$fitted.values[,type_index], nrow=3)
@@ -197,7 +197,6 @@ matplot(t(pred_bctype_agefac[[1]][1,,]), type='b')
 }
 
 #######################################
-
 
 #########################################################################
 ### mean # new partners per year (mnnppy)
@@ -278,9 +277,12 @@ capp_f <- array11(mat3(c( 9.4, 9.4, 9.4, 24.7, 24.7, 46.7,
 #########################################################################
 ### Small inputs
 
-failure_rate <- mat3(c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                       0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                       0.1, 0.1, 0.1, 0.1, 0.1, 0.1,  0.1, 0.1, 0.1
+# Failure rates of no method, condoms, pills, LARC, other hormonal, withdrawal/other
+# Relative to no method
+# broken out by race/ethn
+failure_rate <- mat3(c(1.000, 0.153, 0.082, 0.024, 0.082, 0.235,
+                       1.000, 0.153, 0.082, 0.024, 0.082, 0.235,
+                       1.000, 0.153, 0.082, 0.024, 0.082, 0.235
                        ))
 
 #########################################################################
