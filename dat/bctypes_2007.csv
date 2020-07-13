@@ -1,106 +1,127 @@
-sex,race,age,pregprev,WgtFreq,
-female,white,12,no method,.,
-female,white,12,hormonal,.,
-female,white,12,condoms,.,
-female,white,12,withdrawal,.,
-female,white,12,other,.,
-female,white,13,no method,.,
-female,white,13,hormonal,.,
-female,white,13,condoms,.,
-female,white,13,withdrawal,.,
-female,white,13,other,.,
-female,white,14,no method,0.8624,
-female,white,14,hormonal,4.768,
-female,white,14,condoms,22.6465,
-female,white,14,withdrawal,6.1894,
-female,white,14,other,0.8811,
-female,white,15,no method,19.6767,
-female,white,15,hormonal,22.7498,
-female,white,15,condoms,101.8998,
-female,white,15,withdrawal,27.8434,
-female,white,15,other,13.7689,
-female,white,16,no method,36.9116,
-female,white,16,hormonal,98.6566,
-female,white,16,condoms,168.9902,
-female,white,16,withdrawal,50.3109,
-female,white,16,other,3.0849,
-female,white,17,no method,44.8982,
-female,white,17,hormonal,139.3886,
-female,white,17,condoms,172.9334,
-female,white,17,withdrawal,35.8342,
-female,white,17,other,25.3125,
-female,white,18,no method,36.8258,
-female,white,18,hormonal,109.0822,
-female,white,18,condoms,97.2276,
-female,white,18,withdrawal,38.0864,
-female,white,18,other,1.8928,
-female,black,12,no method,.,
-female,black,12,hormonal,.,
-female,black,12,condoms,.,
-female,black,12,withdrawal,.,
-female,black,12,other,.,
-female,black,13,no method,.,
-female,black,13,hormonal,.,
-female,black,13,condoms,.,
-female,black,13,withdrawal,.,
-female,black,13,other,.,
-female,black,14,no method,1.8146,
-female,black,14,hormonal,2.4061,
-female,black,14,condoms,14.0889,
-female,black,14,withdrawal,1.6792,
-female,black,14,other,1.4045,
-female,black,15,no method,10.0752,
-female,black,15,hormonal,8.4627,
-female,black,15,condoms,37.6973,
-female,black,15,withdrawal,7.7343,
-female,black,15,other,2.1561,
-female,black,16,no method,18.4913,
-female,black,16,hormonal,22.646,
-female,black,16,condoms,60.8442,
-female,black,16,withdrawal,11.7051,
-female,black,16,other,2.2533,
-female,black,17,no method,19.7701,
-female,black,17,hormonal,23.621,
-female,black,17,condoms,68.15,
-female,black,17,withdrawal,16.5303,
-female,black,17,other,0.662,
-female,black,18,no method,13.3202,
-female,black,18,hormonal,21.1161,
-female,black,18,condoms,29.9314,
-female,black,18,withdrawal,8.5916,
-female,black,18,other,1.6471,
-female,hispanic,12,no method,0.695,
-female,hispanic,12,hormonal,.,
-female,hispanic,12,condoms,0.5729,
-female,hispanic,12,withdrawal,.,
-female,hispanic,12,other,.,
-female,hispanic,13,no method,0.4466,
-female,hispanic,13,hormonal,.,
-female,hispanic,13,condoms,.,
-female,hispanic,13,withdrawal,.,
-female,hispanic,13,other,.,
-female,hispanic,14,no method,4.3194,
-female,hispanic,14,hormonal,0.6675,
-female,hispanic,14,condoms,13.8775,
-female,hispanic,14,withdrawal,0.5256,
-female,hispanic,14,other,.,
-female,hispanic,15,no method,12.6674,
-female,hispanic,15,hormonal,4.2094,
-female,hispanic,15,condoms,40.4494,
-female,hispanic,15,withdrawal,7.6702,
-female,hispanic,15,other,3.2099,
-female,hispanic,16,no method,19.1716,
-female,hispanic,16,hormonal,8.9618,
-female,hispanic,16,condoms,36.7395,
-female,hispanic,16,withdrawal,8.7267,
-female,hispanic,16,other,9.9634,
-female,hispanic,17,no method,22.5914,
-female,hispanic,17,hormonal,16.4663,
-female,hispanic,17,condoms,51.3719,
-female,hispanic,17,withdrawal,10.6735,
-female,hispanic,17,other,7.2849,
-female,hispanic,18,no method,27.0332,
-female,hispanic,18,hormonal,9.4248,
-female,hispanic,18,condoms,29.8747,
-female,hispanic,18,withdrawal,6.1973,
-female,hispanic,18,other,5.4212,
+sex,race,age,pregprev2,Frequency,WgtFreq
+female,white,12,no method,0,.
+female,white,12,pills,0,.
+female,white,12,injection,0,.
+female,white,12,condoms,0,.
+female,white,12,withdrawal,0,.
+female,white,12,other,0,.
+female,white,13,no method,0,.
+female,white,13,pills,0,.
+female,white,13,injection,0,.
+female,white,13,condoms,0,.
+female,white,13,withdrawal,0,.
+female,white,13,other,0,.
+female,white,14,no method,1,0.8624
+female,white,14,pills,3,4.768
+female,white,14,injection,0,.
+female,white,14,condoms,17,22.6465
+female,white,14,withdrawal,4,6.1894
+female,white,14,other,1,0.8811
+female,white,15,no method,11,19.6767
+female,white,15,pills,12,19.1605
+female,white,15,injection,3,3.5893
+female,white,15,condoms,71,101.8998
+female,white,15,withdrawal,19,27.8434
+female,white,15,other,8,13.7689
+female,white,16,no method,20,36.9116
+female,white,16,pills,57,82.5134
+female,white,16,injection,9,16.1432
+female,white,16,condoms,123,168.9902
+female,white,16,withdrawal,35,50.3109
+female,white,16,other,3,3.0849
+female,white,17,no method,33,44.8982
+female,white,17,pills,85,113.6636
+female,white,17,injection,18,25.725
+female,white,17,condoms,126,172.9334
+female,white,17,withdrawal,30,35.8342
+female,white,17,other,15,25.3125
+female,white,18,no method,27,36.8258
+female,white,18,pills,76,90.8161
+female,white,18,injection,13,18.2661
+female,white,18,condoms,74,97.2276
+female,white,18,withdrawal,25,38.0864
+female,white,18,other,3,1.8928
+female,black,12,no method,0,.
+female,black,12,pills,0,.
+female,black,12,injection,0,.
+female,black,12,condoms,0,.
+female,black,12,withdrawal,0,.
+female,black,12,other,0,.
+female,black,13,no method,0,.
+female,black,13,pills,0,.
+female,black,13,injection,0,.
+female,black,13,condoms,0,.
+female,black,13,withdrawal,0,.
+female,black,13,other,0,.
+female,black,14,no method,4,1.8146
+female,black,14,pills,1,2.4061
+female,black,14,injection,0,.
+female,black,14,condoms,19,14.0889
+female,black,14,withdrawal,1,1.6792
+female,black,14,other,1,1.4045
+female,black,15,no method,16,10.0752
+female,black,15,pills,6,5.8159
+female,black,15,injection,4,2.6468
+female,black,15,condoms,49,37.6973
+female,black,15,withdrawal,8,7.7343
+female,black,15,other,3,2.1561
+female,black,16,no method,30,18.4913
+female,black,16,pills,15,13.3814
+female,black,16,injection,13,9.2646
+female,black,16,condoms,92,60.8442
+female,black,16,withdrawal,17,11.7051
+female,black,16,other,3,2.2533
+female,black,17,no method,41,19.7701
+female,black,17,pills,27,13.8398
+female,black,17,injection,16,9.7812
+female,black,17,condoms,117,68.15
+female,black,17,withdrawal,31,16.5303
+female,black,17,other,5,0.662
+female,black,18,no method,34,13.3202
+female,black,18,pills,21,14.9705
+female,black,18,injection,13,6.1456
+female,black,18,condoms,58,29.9314
+female,black,18,withdrawal,20,8.5916
+female,black,18,other,7,1.6471
+female,hispanic,12,no method,1,0.695
+female,hispanic,12,pills,0,.
+female,hispanic,12,injection,0,.
+female,hispanic,12,condoms,1,0.5729
+female,hispanic,12,withdrawal,0,.
+female,hispanic,12,other,0,.
+female,hispanic,13,no method,1,0.4466
+female,hispanic,13,pills,0,.
+female,hispanic,13,injection,0,.
+female,hispanic,13,condoms,0,.
+female,hispanic,13,withdrawal,0,.
+female,hispanic,13,other,0,.
+female,hispanic,14,no method,5,4.3194
+female,hispanic,14,pills,1,0.6675
+female,hispanic,14,injection,0,.
+female,hispanic,14,condoms,18,13.8775
+female,hispanic,14,withdrawal,1,0.5256
+female,hispanic,14,other,0,.
+female,hispanic,15,no method,26,12.6674
+female,hispanic,15,pills,6,4.2094
+female,hispanic,15,injection,0,.
+female,hispanic,15,condoms,60,40.4494
+female,hispanic,15,withdrawal,14,7.6702
+female,hispanic,15,other,3,3.2099
+female,hispanic,16,no method,37,19.1716
+female,hispanic,16,pills,11,7.0636
+female,hispanic,16,injection,4,1.8982
+female,hispanic,16,condoms,76,36.7395
+female,hispanic,16,withdrawal,18,8.7267
+female,hispanic,16,other,11,9.9634
+female,hispanic,17,no method,52,22.5914
+female,hispanic,17,pills,29,14.297
+female,hispanic,17,injection,6,2.1693
+female,hispanic,17,condoms,89,51.3719
+female,hispanic,17,withdrawal,31,10.6735
+female,hispanic,17,other,16,7.2849
+female,hispanic,18,no method,48,27.0332
+female,hispanic,18,pills,17,7.138
+female,hispanic,18,injection,6,2.2868
+female,hispanic,18,condoms,57,29.8747
+female,hispanic,18,withdrawal,15,6.1973
+female,hispanic,18,other,9,5.4212
