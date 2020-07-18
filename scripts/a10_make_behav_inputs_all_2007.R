@@ -4,7 +4,8 @@
 pred_eversex_f_dyn <- pred_eversex_f
 #pred_eversex_m_dyn <- pred_eversex_m
 #pred_condom_f_dyn <- pred_condom_f
-pred_bctype_agefac_dyn <- pred_bctype_agefac
+pred_bctype_minLARC_dyn <- pred_bctype_minLARC
+#...
 #pred_condom_m_dyn <- pred_condom_m
 pred_mnppy_f_dyn <- pred_mnppy_f
 #pred_mnppy_m_dyn <- pred_mnppy_m
@@ -21,8 +22,8 @@ pred_mnppy_f_dyn <- pred_mnppy_f
 for (i in 2:dim(pred_eversex_f)[3]) pred_eversex_f[,,i] <- pred_eversex_f[,,1]
 #for (i in 2:dim(pred_eversex_m)[3]) pred_eversex_m[,,i] <- pred_eversex_m[,,1]
 #for (i in 2:dim(pred_condom_f)[3]) pred_condom_f[,,i] <- pred_condom_f[,,1]
-for (bctype in 1:9) {
-  for (i in 2:dim(pred_bctype_agefac[[bctype]])[3]) pred_bctype_agefac[[bctype]][,,i] <- pred_bctype_agefac[[bctype]][,,1]
+for (bctype in 1:6) {
+  for (i in 2:dim(pred_bctype_minLARC[[bctype]])[3]) pred_bctype_minLARC[[bctype]][,,i] <- pred_bctype_minLARC[[bctype]][,,1]
 }
 
 #for (i in 2:dim(pred_condom_m)[3]) pred_condom_m[,,i] <- pred_condom_m[,,1]
