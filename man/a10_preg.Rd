@@ -4,8 +4,16 @@
 \alias{a10_preg}
 \title{Main a10 function}
 \usage{
-a10_preg(n_f, prop_eversex_f, condom_use_f, mean_new_part_f,
-  coital_acts_pp_f, preg_init_f, prob_detpreg_f, meanpop_tot_f)
+a10_preg(
+  n_f,
+  prop_eversex_f,
+  condom_use_f,
+  mean_new_part_f,
+  coital_acts_pp_f,
+  preg_init_f,
+  prob_detpreg_f,
+  meanpop_tot_f
+)
 }
 \arguments{
 \item{n_f}{A 3x6x11 array indicating the population size for females, by race/eth by age by year}
