@@ -24,14 +24,10 @@ source("a10_ABC.R")
 ########################################################################
 ### Run each scenario
 
-# Scenario 1: No LARC prior to 2013
+# Scenario 1: No LARC prior to 2013 (minLARC)
 
 # No behavior change
 source("a10_no_behav_change_script.R")       # No behavior change
-
-
-
-
 
 
 ########################################################################
