@@ -7,20 +7,21 @@
 a10_preg(
   n_f,
   prop_eversex_f,
-  condom_use_f,
+  bc_use_f,
   mean_new_part_f,
   coital_acts_pp_f,
   preg_init_f,
   prob_detpreg_f,
-  meanpop_tot_f
+  meanpop_tot_f,
+  failure_rate
 )
 }
 \arguments{
 \item{n_f}{A 3x6x11 array indicating the population size for females, by race/eth by age by year}
 
-\item{prop_eversex_f}{A 3x6x11 matrix inidicating the proportion of females debuted (as FSM), by race/eth by age by year}
+\item{prop_eversex_f}{A 3x6x11 matrix indicating the proportion of females debuted (as FSM), by race/eth by age by year}
 
-\item{condom_use_f, }{A 3x6x11 matrix indicating % condom use for females, by race/eth by age by year}
+\item{bc_use_f, }{A list of 6 3x6x11 matrices indicating birth control use for females, by race/eth by age by year}
 
 \item{mean_new_part_f}{A 3x6x11 matrix indicating the mean new partners per year for debuted females, by race/eth by age}
 
@@ -31,6 +32,9 @@ a10_preg(
 \item{prob_detpreg_f}{Per-act transmission probability from male to female}
 
 \item{meanpop_tot_f}{Total female population in and out of school across the relevant ages}
+
+\item{failure_rate}{A list of 6 3x6 matrices indicating the relative failure rate of the six different BC methods, by race/eth by age 
+'}
 }
 \value{
 A list comprising an array of dimensions [3,6,12], containing the estimated number of
