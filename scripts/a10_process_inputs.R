@@ -279,11 +279,15 @@ capp_f <- array11(mat3(c( 9.4, 9.4, 9.4, 24.7, 24.7, 46.7,
 
 # Failure rates of no method, condoms, pills, LARC, other hormonal, withdrawal/other
 # Relative to no method
-# broken out by race/ethn
-failure_rate <- mat3(c(1.000, 0.153, 0.082, 0.024, 0.082, 0.235,
-                       1.000, 0.153, 0.082, 0.024, 0.082, 0.235,
-                       1.000, 0.153, 0.082, 0.024, 0.082, 0.235
-                       ))
+# broken out by race/ethn and age
+
+failure_rate <- list()
+failure_rate[[1]] <- mat3(rep(1.000, 18))
+failure_rate[[2]] <- mat3(rep(0.153, 18))
+failure_rate[[3]] <- mat3(rep(0.082, 18))
+failure_rate[[4]] <- mat3(rep(0.024, 18))
+failure_rate[[5]] <- mat3(rep(0.082, 18))
+failure_rate[[6]] <- mat3(rep(0.235, 18))
 
 #########################################################################
 ### NOTES
