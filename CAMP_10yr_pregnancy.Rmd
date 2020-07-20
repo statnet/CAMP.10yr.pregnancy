@@ -119,7 +119,9 @@ So much.
 - Rewrote code to transfer to new methods under assumptions, starting with min LARC.
 - Wrote code to impute even years.
 
+## July 20, 2020
 
+- Redid the main function (a10_preg) to incorporate all of the BC types and failure rates, as well as to do the primary calculations on the total pop, not the school pop
 
 ### Leave at bottom
 
