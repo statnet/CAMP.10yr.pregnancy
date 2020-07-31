@@ -12,7 +12,7 @@ calib_pt1_tolerance=c(10, 5, 2.5, 1,
 
 cal_times <- 2
 lower <- 0
-upper <- 5
+upper <- 0.3
 
 calib_pt1_priors=list(c("unif", lower, upper), c("unif", lower, upper), 
                          c("unif", lower, upper), c("unif", lower, upper),

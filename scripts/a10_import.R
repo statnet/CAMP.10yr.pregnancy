@@ -227,7 +227,7 @@ for (i in 1:length(years)) {
 
 # DOING INPUTS ONLY BY AGE NOT BY RACE/ETHN
 
-preg_init <- c(0.001, 0.007, 0.015, 0.113, 0.273, 0.591)*350000
+preg_init <- c(2850, 11987, 38596, 80400, 132135, 189000)
 
 ### Costs
 filename <- paste(datapath, "/costs.csv", sep="")
