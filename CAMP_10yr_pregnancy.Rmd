@@ -63,7 +63,7 @@ Finished wrangling the predicted values.  Bean comparing agefac to agenum.  Need
 
 Carol's 80th!
 plots to show to DASH:
-r
+
 ```{r} 
 
 matplot(t(pred_bctype_agefac[[2]][,,c(11)]), type='b', ylab='prob. condom use', 
@@ -123,21 +123,20 @@ So much.
 
 - Redid the main function (a10_preg) to incorporate all of the BC types and failure rates, as well as to do the primary calculations on the total pop, not the school pop
 
-### Testing new PAT wit ha randmo commit -- can remove this line later.
+### Sep 22, 2020
+
+- Returning to Seattle from Dad's funeral  
+- I did a bunch of things in Aug that I didn't document and now I need to catch up on where I got
+- I know that I redid the calibration code
+_ I know that I came up with a plan to disaggregate the initial pregnancies by single year of age, using a logistic model, and ran it by CDC folks, and they agreed.
+- Just now I integrated the new 1-yr pregnancy estimates into the workflow, and made them the inputs to the model.  But there are 7 of them (ages 13-19) whereas in my test runs there were oly 6 (13-18) so I need to check on that.
 
 
 ### Leave at bottom
 
 Todo:
-- change condom to bc throughout
+- make the model cover age 19 - or just leave it out
 - update costs
-- get preg_init
-
-Things to think about:
-- need to replace dx input data with detectable pregnancy input data. What form will this come in? By age? By race/ethn?  By single years? All detectable pregs or by outcomes?
-- need to decide what to calibrate to exactly - pregs? births?  in school or tot? by race/ethn?
-
-
 
 
 ### Master change list
