@@ -3,14 +3,17 @@ library(EasyABC)
 setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 ### Back-calculating pregnancies from births
 
+pregs_guttmacher_binned <- c(14520, 247000, 506100)
+births_nvs_1yrage <- c(925, 5120, 18449, 43267, 78850, 127034, 177299)
+
 a10_preg_backcalc_logistic <- function(input_params) {
   maxval <- input_params[1]
   xmid <- input_params[2]
   steepness <- input_params[3]
   # Guttmacher's #s for 2007 pregnancies (13-14, 15-17, 18-19): this is what we want to match
-  pregs_guttmacher_binned <- c(14520, 247000, 506100)
+  pregs_guttmacher_binned <- pregs_guttmacher_binned
   # NVS #s for 2007 births
-  births_nvs_1yrage <- c(925, 5120, 18449, 43267, 78850, 127034, 177299)
+  births_nvs_1yrage <- births_nvs_1yrage
   ages <- (13:19)-12 
 #  birth_to_preg_ratio_1yrage <- maxval / (1 + exp(-steepness*(ages-xmid)))
   birth_to_preg_ratio_1yrage <- maxval / (1 + exp(-steepness*(ages-xmid)))
@@ -56,11 +59,25 @@ a10_preg_calib <-ABC_sequential(method="Beaumont",
                                nb_simul=100,
                                summary_stat_target=0,
                                tolerance_tab=calib_preg_tolerance,
-                               verbose=TRUE,
+                               verbose=FALSE,
                                progress_bar=TRUE)
 
 save(a10_preg_calib, file = "../output/a10_calib_preg.rda")
 
 min(a10_preg_calib$stats)
-a10_preg_calib$param[which(a10_preg_calib$stats==min(a10_preg_calib$stats)),]
+
+btpr_params <-  a10_preg_calib$param[which(a10_preg_calib$stats==min(a10_preg_calib$stats)),]
+maxval <- btpr_params[1]
+xmid <- btpr_params[2]
+steepness <- btpr_params[3]
+ages <- (13:19)-12 
+
+btpr_model <- maxval / (1 + exp(-steepness*(ages-xmid)))
+pregs_1yr_model <- births_nvs_1yrage / btpr_model
+pregs_binned_model <- c(sum(pregs_1yr_model[1:2]),
+                        sum(pregs_1yr_model[3:5]),
+                        sum(pregs_1yr_model[6:7]))
+
+
+gutt_model_pregs_diff <- sum(abs(pregs_binned_model - pregs_guttmacher_binned))
 
