@@ -2,38 +2,25 @@
 ########################################################################
 ## Code for manuscript "XXXXX"
 
-#setwd("C:/git/CAMP_10yr_pregnancy/scripts/")  # Change depending on machine
-setwd("C:/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
+setwd("C:/git/CAMP_10yr_pregnancy/scripts/")  # Change depending on machine
+#setwd("C:/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
 rm(list=ls())
 
 #install.packages("EasyABC")
 library(EasyABC)
 library(MASS)
-set.seed(0)
+set.seed(1)
 
 ########################################################################
 ### Inputs for GC and CT
 
+source("a10_preg_backcalc_logistic.R")
 source("a10_import.R")                          # Get all inputs
 source("a10_process_inputs.R")                  # Process inputs (i.e. conduct regressions, etc.)
 source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
 source("a10_impute_even_years.R")               # Impute even years
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
 source("a10_ABC.R")
-
-#temp <- a10_preg(n_f = n_f,
-#                prop_eversex_f = pred_eversex_f_dyn,
-#                bc_use_f = pred_bctype_minLARC_dyn,
-#                mean_new_part_f = pred_mnppy_f_dyn,
-#                coital_acts_pp_f = capp_f,
-#                preg_init_f = preg_init,
-#                prob_detpreg_f = mat3(c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05,
-#                                        0.05, 0.05, 0.05, 0.05, 0.05, 0.05,
-#                                        0.05, 0.05, 0.05, 0.05, 0.05, 0.05
-#                                        )),
-#                meanpop_tot_f = meanpop_13to18_f,
-#                failure_rate = failure_rate
-#)
 
 ########################################################################
 ### Run each scenario
