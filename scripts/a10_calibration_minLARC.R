@@ -22,12 +22,14 @@ calib_pt1_priors=list(c("unif", lower, upper), c("unif", lower, upper),
 ## Run first version of ABC
 
 a10_calib_pt1 <-ABC_sequential(method="Beaumont",
-                               model=a10_ABC,
+                               model=a10_ABC_minLARC,
                                prior=calib_pt1_priors,
                                nb_simul=100,
                                summary_stat_target=0,
                                tolerance_tab=calib_pt1_tolerance,
-                               verbose=TRUE,
+                               verbose=FALSE,
                                progress_bar=TRUE)
 
 save(a10_calib_pt1, file = "../output/a10_calib_pt1.rda")
+
+prob_detpreg <- colMeans(a10_calib_pt1$param)
