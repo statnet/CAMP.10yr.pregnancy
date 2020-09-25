@@ -81,3 +81,4 @@ pregs_binned_model <- c(sum(pregs_1yr_model[1:2]),
 
 gutt_model_pregs_diff <- sum(abs(pregs_binned_model - pregs_guttmacher_binned))
 
+pregs_1yr_model <- pregs_1yr_model[1:6] 
