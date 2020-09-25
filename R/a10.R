@@ -7,8 +7,8 @@
 #' @param bc_use_f, A list of 6 3x6x11 matrices indicating birth control use for females, by race/eth by age by year
 #' @param mean_new_part_f A 3x6x11 matrix indicating the mean new partners per year for debuted females, by race/eth by age
 #' @param coital_acts_pp_f A 3x6x11 matrix indicating the mean coital acts per partner for females, by race/eth by age
-#' @param preg_init_f A vector of length 3 or a 3x6 matrix, indicating the number of recent annual pregnancies among females, by race/eth (and optionally by age) -- in and out of school
-#' @param prob_detpreg_f Per-act transmission probability from male to female
+#' @param preg_init_f A vector of length 6 indicating the number of recent annual pregnancies among females by age, in and out of school
+#' @param prob_detpreg_f A vector of length 6 indicating the probability of a detectable pregnancy per unprotected coital act by age
 #' @param meanpop_tot_f Total female population in and out of school across the relevant ages
 #' @param failure_rate A list of 6 3x6 matrices indicating the relative failure rate of the six different BC methods, by race/eth by age 
 #' '
@@ -102,15 +102,17 @@ a10_preg <- function(n_f,
     #overall_prev_f <- rowSums(prev_f[,,i-1]*meanpop_tot_f[,,i-1]) /   
     #                            rowSums(meanpop_tot_f[,,i-1])
 
+    prob_detpreg_f_mat <- rbind(prob_detpreg_f, prob_detpreg_f, prob_detpreg_f)
+      
     n_preg_total_f[,,i] <- 
       (n_eversex_f_tot[,,i-1]) * 
         (1-
-          (1-prob_detpreg_f[,]*(failure_rate[[1]]))^(coital_acts_f[,,i-1]*bc_use_f[[1]][,,i-1]) * 
-          (1-prob_detpreg_f[,]*(failure_rate[[2]]))^(coital_acts_f[,,i-1]*bc_use_f[[2]][,,i-1]) *
-          (1-prob_detpreg_f[,]*(failure_rate[[3]]))^(coital_acts_f[,,i-1]*bc_use_f[[3]][,,i-1]) *
-          (1-prob_detpreg_f[,]*(failure_rate[[4]]))^(coital_acts_f[,,i-1]*bc_use_f[[4]][,,i-1]) *
-          (1-prob_detpreg_f[,]*(failure_rate[[5]]))^(coital_acts_f[,,i-1]*bc_use_f[[5]][,,i-1]) *
-          (1-prob_detpreg_f[,]*(failure_rate[[6]]))^(coital_acts_f[,,i-1]*bc_use_f[[6]][,,i-1])
+          (1-prob_detpreg_f_mat*(failure_rate[[1]]))^(coital_acts_f[,,i-1]*bc_use_f[[1]][,,i-1]) * 
+          (1-prob_detpreg_f_mat*(failure_rate[[2]]))^(coital_acts_f[,,i-1]*bc_use_f[[2]][,,i-1]) *
+          (1-prob_detpreg_f_mat*(failure_rate[[3]]))^(coital_acts_f[,,i-1]*bc_use_f[[3]][,,i-1]) *
+          (1-prob_detpreg_f_mat*(failure_rate[[4]]))^(coital_acts_f[,,i-1]*bc_use_f[[4]][,,i-1]) *
+          (1-prob_detpreg_f_mat*(failure_rate[[5]]))^(coital_acts_f[,,i-1]*bc_use_f[[5]][,,i-1]) *
+          (1-prob_detpreg_f_mat*(failure_rate[[6]]))^(coital_acts_f[,,i-1]*bc_use_f[[6]][,,i-1])
       )
 
     n_preg_insch_f[,,i] <- n_preg_total_f[,,i] * n_f[,,1] / meanpop_tot_f[,,1] 
