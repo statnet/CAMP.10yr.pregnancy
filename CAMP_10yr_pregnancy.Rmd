@@ -131,11 +131,15 @@ So much.
 _ I know that I came up with a plan to disaggregate the initial pregnancies by single year of age, using a logistic model, and ran it by CDC folks, and they agreed.
 - Just now I integrated the new 1-yr pregnancy estimates into the workflow, and made them the inputs to the model.  But there are 7 of them (ages 13-19) whereas in my test runs there were oly 6 (13-18) so I need to check on that.
 
+### Sep 25
+
+Removed 19-year olds as per email conversation
+Tested, edited, re-tested the calibration_minLARC
+
 
 ### Leave at bottom
 
 Todo:
-- make the model cover age 19 - or just leave it out
 - update costs
 
 
