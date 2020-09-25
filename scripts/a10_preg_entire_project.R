@@ -20,25 +20,17 @@ source("a10_process_inputs.R")                  # Process inputs (i.e. conduct r
 source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
 source("a10_impute_even_years.R")               # Impute even years
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
-source("a10_ABC.R")
-
-########################################################################
-### Run each scenario
-
-# Scenario 1: No LARC prior to 2013 (minLARC)
-
-# No behavior change
-source("a10_no_behav_change_script.R")       # No behavior change
-
+source("a10_ABC_minLARC.R")
 
 ########################################################################
 ### Calibrate
 
-source("a10_calibration_pt1.R")              # calib pt 1
+# Scenario 1: No LARC prior to 2013 (minLARC)
+source("a10_calibration_minLARC.R")              # calib pt 1
 
 ##### TODO MADE IT UP TO HERE
 
-source("a10_gc_calibration_ABC_check.R")        # Load calibration check function
+source("a10_gc_calibration_ABC_check.R")     # Load calibration check function
 boxplot(a10_calib_pt1$param)                 # Check pt 1 calibration
 calib_test_gc(a10_calib_gc_pt1, 
   "../output/a10_calib_test_gc_step1_f.pdf", 
