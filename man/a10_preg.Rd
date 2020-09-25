@@ -27,9 +27,9 @@ a10_preg(
 
 \item{coital_acts_pp_f}{A 3x6x11 matrix indicating the mean coital acts per partner for females, by race/eth by age}
 
-\item{preg_init_f}{A vector of length 3 or a 3x6 matrix, indicating the number of recent annual pregnancies among females, by race/eth (and optionally by age) -- in and out of school}
+\item{preg_init_f}{A vector of length 6 indicating the number of recent annual pregnancies among females by age, in and out of school}
 
-\item{prob_detpreg_f}{Per-act transmission probability from male to female}
+\item{prob_detpreg_f}{A vector of length 6 indicating the probability of a detectable pregnancy per unprotected coital act by age}
 
 \item{meanpop_tot_f}{Total female population in and out of school across the relevant ages}
 
