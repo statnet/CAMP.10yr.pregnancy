@@ -23,37 +23,24 @@ source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers wit
 source("a10_ABC_minLARC.R")
 
 ########################################################################
-### Calibrate
+### # Scenario 1: No LARC prior to 2013 (minLARC)
+source("a10_calibration_minLARC.R")          # calib pt 1
 
-# Scenario 1: No LARC prior to 2013 (minLARC)
-source("a10_calibration_minLARC.R")              # calib pt 1
-
-##### TODO MADE IT UP TO HERE
-
-source("a10_gc_calibration_ABC_check.R")     # Load calibration check function
-boxplot(a10_calib_pt1$param)                 # Check pt 1 calibration
-calib_test_gc(a10_calib_gc_pt1, 
-  "../output/a10_calib_test_gc_step1_f.pdf", 
-  "../output/a10_calib_test_gc_step1_m.pdf")
-
-#source("a10_gc_calibration_pt1_sim.R")          # simulate from GC calib pt 1 to get starting age-specific dx
-
-#source("a10_gc_calibration_pt2.R")              # GC calib pt 2 (starting with non-age-specific dx)
-
-#boxplot(a10_calib_gc_pt2$param)                 # Check pt 2 calibration
-#calib_test_gc(a10_calib_gc_pt2, 
-#  "../output/a10_calib_test_gc_step2_f.pdf", 
-#  "../output/a10_calib_test_gc_step2_m.pdf")
-
-#source("a10_gc_calibration_pt2_sim.R")          # GC calib pt 2 (starting with age-specific dx)
-
+#source("a10_gc_calibration_ABC_check.R")    # Load calibration check function
+#boxplot(a10_calib_pt1$param)                # Check pt 1 calibration
+#calib_test_gc(a10_calib_gc_pt1, 
+#  "../output/a10_calib_test_gc_step1_f.pdf", 
+#  "../output/a10_calib_test_gc_step1_m.pdf")
 
 ########################################################################
 ### Run scenarios and credible intervals
 
 source("a10_no_behav_change_script.R")       # No behavior change
 source("a10_obs_behav_change.R")             # Observed behavior change
-source("a10_credible_intervals.R")             # Observed behavior change
+source("a10_obs_contraception_change.R")     # Observed contraception change only
+source("a10_obs_sexual_activity_change.R")   # Observed debut / partner numbers only
+
+#source("a10_credible_intervals.R")           # Observed behavior change
 
 
 ########################################################
