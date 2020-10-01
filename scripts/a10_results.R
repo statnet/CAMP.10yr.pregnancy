@@ -1,4 +1,60 @@
 
+
+aaa <- round(apply(a10_minLARC_nbc$n_preg_total_f, 2:3, sum)[,3:12],0)
+bbb <- round(apply(a10_minLARC_obs$n_preg_total_f, 2:3, sum)[,3:12],0)
+ccc <- round(apply(a10_minLARC_obs_cc$n_preg_total_f, 2:3, sum)[,3:12],0)
+ddd <- round(apply(a10_minLARC_obs_sex$n_preg_total_f, 2:3, sum)[,3:12],0)   
+
+matplot(t(1- bbb/aaa), type='b')
+
+plot(1 - colSums(bbb)/colSums(aaa), ylab="prop. pregs averted",
+     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='minLARC scenario')
+abline(h=0)
+axis(1, 1:11, 2007:2017)
+legend(1.5, 0.3, c('total', 'from reduced sexual activity',
+                   ' from changes in conraception methods'),
+  cex=0.7, text.col=c('black','white','white'),
+  col=c('black','white','white'), pch = 1, ncol=2)
+
+points(1 - colSums(ccc)/colSums(aaa), col='red')
+points(1 - colSums(ddd)/colSums(aaa), col='blue')
+
+legend(1.5, 0.3, c('total', 'from reduced sexual activity',
+                   ' from changes in conraception methods'),
+       cex=0.7, text.col=c('black','red','blue'),
+       col=c('black','red','blue'), pch = 1, ncol=2)
+
+
+wtavg_bctype <- function(obj, method, dim) {
+
+  apply((obj[[method]]*meanpop_13to18_f), dim, sum) /
+    apply((meanpop_13to18_f), dim, sum)
+
+}
+
+bctypes<- names(pred_bctype_minLARC_dyn)
+bctypes_mean_minLARC <- 
+  sapply(1:6, function(x) wtavg_bctype(pred_bctype_minLARC_dyn, bctypes[x],3))
+
+matplot(bctypes_mean_minLARC, type='b', xlab="year", xaxt="n",
+        ylab = "Prop. using method", main = "Minimum LARC use scenario",
+        ylim=c(0,0.8), pch=c('a', 'b', 'd', 'f', 'g', 'k'))
+
+legend(1.5, 0.8, c(
+  'a = no method', 'b = condoms', 'd = pills', 
+  'f = LARC', 'g = other hormonal', 'k = other (incl. withdrawal)'),
+  cex=0.7, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+
+axis(1, 1:11, 2007:2017)
+abline(h=0, col="lightgray", lty=3)
+
+
+bctype_in <- names(pred_bctype_minLARC_dyn)
+bctypes_mean_in <- 
+  sapply(1:11, function(x) wtavg_bctype(bctypes_in, bctypes[x],3))
+
+
+
 #############################################################
 #### Results for paper "XXXX"
 
