@@ -2,12 +2,13 @@
 ### Set parameters for first round 
 
 calib_pt1_tolerance=c(10, 5, 2.5, 1, 
-                           0.5, 0.25, 0.1, 
-                           0.05, 0.025, 0.01, 
-                           0.005, 0.0025, 0.001  #, 
-#                           0.0005, 0.00025, 0.0001,
-#                           0.00005, 0.000025, 0.00001,
-#                           0.000005, 0.0000025, 0.000001
+                          0.5, 0.25, 0.1, 
+                          0.05, 0.025, 0.01, 
+                          0.005, 0.0025, 0.001, 
+                          0.0005, 0.00025, 0.0001,
+                          0.00005, 0.000025, 0.00001,
+                          0.000005, 0.0000025, 0.000001,
+                          0.0000005, 0.00000025, 0.0000001
         )
 
 cal_times <- 2
@@ -30,6 +31,12 @@ a10_calib_pt1 <-ABC_sequential(method="Beaumont",
                                verbose=FALSE,
                                progress_bar=TRUE)
 
-save(a10_calib_pt1, file = "../output/a10_calib_pt1.rda")
+minrun <- which(a10_calib_pt1$stats==min(a10_calib_pt1$stats))
+prob_detpreg <- a10_calib_pt1$param[minrun,]
 
-prob_detpreg <- colMeans(a10_calib_pt1$param)
+#prob_detpreg <- colMeans(a10_calib_pt1$param)
+
+save(a10_calib_pt1, prob_detpreg, file = "../output/a10_calib_pt1.rda")
+
+
+
