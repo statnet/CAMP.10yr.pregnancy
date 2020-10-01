@@ -136,12 +136,20 @@ _ I know that I came up with a plan to disaggregate the initial pregnancies by s
 Removed 19-year olds as per email conversation
 Tested, edited, re-tested the calibration_minLARC
 
+### Sep 30
+
+Big day with lots of advances.
+Finalized the calibration (for minLARC) - works perfectly.
+Developed the various scenarios for minLARC
+Created preliminary plots of output to show DASH
 
 ### Leave at bottom
 
 Todo:
 - update costs
-
+- check what is up with the bctypes before and after
+- finalize scenarios
+- decide on credible intervals
 
 ### Master change list
 
