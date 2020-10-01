@@ -141,7 +141,7 @@ bctype_in_prob <- sweep(bctype_in_wts, 1:3, apply(bctype_in_wts, 1:3, sum), "/")
 bctype_in_yearprob <- apply(bctype_in_wts, c(3,4), sum) / apply(bctype_in_wts, 3, sum)
 bctype_in_yearprob <- na_if(bctype_in_yearprob, 0)
 matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
-        main = "Method of birth control reported be females, YRBS", ylim=c(0,0.8),
+        main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
         pch=letters[1:length(bctypes_in)])
 axis(1, 1:6, seq(2007, 2017, 2))
 legend(1.5, 0.8, c(
