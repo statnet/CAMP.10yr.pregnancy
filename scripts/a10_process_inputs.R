@@ -134,38 +134,46 @@ for (i in 1:6) {
 
 }
 
-bctype_reg_agefac <- bctype_reg_agenum <- bctype_reg_ageasq <- list()
+bctype_reg_agefac <- bctype_reg_agefac_byrace <- bctype_reg_agenum <- bctype_reg_ageasq <- list()
 
 for (i in 1:6) {
-  bctype_reg_agefac[[i]] <-   multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                bctype_by_year[[i]]$agefac + bctype_by_year[[i]]$ethn, 
-                                weights=bctype_by_year[[i]]$wts)
-
-  bctype_reg_agenum[[i]] <-   multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                bctype_by_year[[i]]$age + bctype_by_year[[i]]$ethn, 
-                                weights=bctype_by_year[[i]]$wts)
+  bctype_reg_agefac[[i]] <-         multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                      bctype_by_year[[i]]$agefac + bctype_by_year[[i]]$ethn, 
+                                      weights=bctype_by_year[[i]]$wts)
+        
+  bctype_reg_agefac_byrace[[i]] <-  multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                      bctype_by_year[[i]]$agefac + bctype_by_year[[i]]$ethn +
+                                      bctype_by_year[[i]]$agefac*bctype_by_year[[i]]$ethn, 
+                                      weights=bctype_by_year[[i]]$wts)
   
-  bctype_reg_ageasq[[i]] <- multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
-                                I(bctype_by_year[[i]]$age-0) +
-                                I((bctype_by_year[[i]]$age-0)^2) + 
-                                bctype_by_year[[i]]$ethn, 
-                                weights=bctype_by_year[[i]]$wts)
+  bctype_reg_agenum[[i]] <-         multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                      bctype_by_year[[i]]$age + bctype_by_year[[i]]$ethn, 
+                                      weights=bctype_by_year[[i]]$wts)
+  
+  bctype_reg_ageasq[[i]] <-         multinom(as.matrix(bctype_by_year[[i]][,-(1:5)])~ 
+                                      I(bctype_by_year[[i]]$age-0) +
+                                      I((bctype_by_year[[i]]$age-0)^2) + 
+                                      bctype_by_year[[i]]$ethn, 
+                                      weights=bctype_by_year[[i]]$wts)
   }
 
 bctype_reg_agefac_AIC <- sapply(1:6, function(x) bctype_reg_agefac[[x]]$AIC)
+bctype_reg_agefac_byrace_AIC <- sapply(1:6, function(x) bctype_reg_agefac_byrace[[x]]$AIC)
 bctype_reg_agenum_AIC <- sapply(1:6, function(x) bctype_reg_agenum[[x]]$AIC)  
 bctype_reg_ageasq_AIC <- sapply(1:6, function(x) bctype_reg_ageasq[[x]]$AIC)  
+
 # Agenum are lower, but we are still proceeding with agefac because our goal here is not to
 #   develop the most parsimonious model, but rather to develop the fullest model that smooths
 #   the data observed across all multi-way categories using first principles
 
-cbind(bctype_reg_agefac_AIC, bctype_reg_agenum_AIC, bctype_reg_ageasq_AIC)
+cbind(bctype_reg_agefac_AIC, bctype_reg_agefac_byrace_AIC, bctype_reg_agenum_AIC, bctype_reg_ageasq_AIC)
 
 ### assemble the predicted value matrices
 ### This could be done with four-dimenwsional arrays and less verbose code, 
 ###   but I like having 3 dims and explicit names to reduce room for confusion and error
 
-pred_bctype_agefac <- pred_bctype_agenum <- pred_bctype_ageasq <- list(
+pred_bctype_agefac <- pred_bctype_agefac_byrace <- 
+  pred_bctype_agenum <- pred_bctype_ageasq <- list(
                             no_method           = array(dim=c(3,6,11)),
                             condoms             = array(dim=c(3,6,11)),
                             withdrawal          = array(dim=c(3,6,11)),
@@ -185,6 +193,8 @@ for (year in 1:6) {
   for (type_index in 1:length(types)) {
       pred_bctype_agefac[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
         matrix(bctype_reg_agefac[[year]]$fitted.values[,type_index], nrow=3)
+      pred_bctype_agefac_byrace[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
+        matrix(bctype_reg_agefac_byrace[[year]]$fitted.values[,type_index], nrow=3)
       pred_bctype_agenum[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
         matrix(bctype_reg_agenum[[year]]$fitted.values[,type_index], nrow=3)
       pred_bctype_ageasq[[types[type_index]]][,,year*2-1] <- # Expands out to include even years
