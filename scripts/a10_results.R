@@ -1,36 +1,126 @@
 
+#############################################################
+#### Results for paper "XXXX"
 
-aaa <- round(apply(a10_minLARC_nbc$n_preg_total_f, 2:3, sum)[,3:12],0)
-bbb <- round(apply(a10_minLARC_obs$n_preg_total_f, 2:3, sum)[,3:12],0)
-ccc <- round(apply(a10_minLARC_obs_cc$n_preg_total_f, 2:3, sum)[,3:12],0)
-ddd <- round(apply(a10_minLARC_obs_sex$n_preg_total_f, 2:3, sum)[,3:12],0)   
+# Load results
 
-matplot(t(1- bbb/aaa), type='b')
+load("../output/a10_minLARC_nbc.rda")
+load("../output/a10_minLARC_obs.rda")
+load("../output/a10_minLARC_obs_cc.rda")
+load("../output/a10_minLARC_obs_sex.rda")
+load("../output/a10_minLARC_obs_debut.rda")
+load("../output/a10_minLARC_obs_mnppy.rda")
 
-plot(1 - colSums(bbb)/colSums(aaa), ylab="prop. pregs averted",
+# Pull out core data
+
+p_minL_nbc <- round(apply(a10_minLARC_nbc$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs <- round(apply(a10_minLARC_obs$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs_cc <- round(apply(a10_minLARC_obs_cc$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs_sex <- round(apply(a10_minLARC_obs_sex$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_minL_obs_debut <- round(apply(a10_minLARC_obs_debut$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_minL_obs_mnppy <- round(apply(a10_minLARC_obs_mnppy$n_preg_total_f, 2:3, sum)[,3:12],0)   
+
+
+#### Costs
+# costs saved in 2017 dollars by year
+
+costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
+
+#############################################################
+# Plot partition of proportion averted, minLARC
+
+plot(1 - colSums(p_minL_obs)/colSums(p_minL_nbc), ylab="prop. pregs averted",
      ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='minLARC scenario')
 abline(h=0)
-axis(1, 1:11, 2007:2017)
-legend(1.5, 0.3, c('total', 'from reduced sexual activity',
-                   ' from changes in conraception methods'),
-  cex=0.7, text.col=c('black','white','white'),
-  col=c('black','white','white'), pch = 1, ncol=2)
+axis(1, 1:10, 2008:2017)
+legend(1.5, 0.3, c('total', 
+                   'from delay in age at first sex',
+                   'from changes in annual partner numbers post-debut',
+                   'from changes in conraception methods'
+),
+  cex=0.7, text.col=c('black','red','darkgreen', 'blue'),
+  col=c('black','red','green', 'orange'), pch = 1, ncol=2)
 
-points(1 - colSums(ccc)/colSums(aaa), col='red')
-points(1 - colSums(ddd)/colSums(aaa), col='blue')
+#points(1 - colSums(p_minL_obs_sex)/colSums(p_minL_nbc), col='blue')
+points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red')
+points(1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc), col='darkgreen')
+points(1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc), col='blue')
 
-legend(1.5, 0.3, c('total', 'from reduced sexual activity',
-                   ' from changes in conraception methods'),
-       cex=0.7, text.col=c('black','red','blue'),
-       col=c('black','red','blue'), pch = 1, ncol=2)
 
+#############################################################
+# Plot partitions of pregnancies averted, by age, minLARC
+
+pregs_averted_by_age_and_cause <- rbind(
+  rowSums(p_minL_nbc - p_minL_obs_debut),
+  rowSums(p_minL_nbc - p_minL_obs_mnppy),
+  rowSums(p_minL_nbc - p_minL_obs_cc)
+)
+
+bp <- barplot(pregs_averted_by_age_and_cause, xaxt='n', beside=TRUE,
+        col=c('red', 'darkgreen', 'blue'), 
+        xlab='age', ylab='No. of pregnancies averted',
+        main='No. of pregnancies averted by cause and by age, summed across years',
+        ylim=c(-4e4,20e4))
+axis(1, bp[2,], 13:18, pos=-50000, tick = FALSE)
+legend(bp[1,1], 2e5, c('from delay in age at first sex',
+                       'from changes in annual partner numbers post-debut',
+                       'from changes in conraception methods'),
+        cex=0.7, text.col=c('red','darkgreen', 'blue'),
+        col=c('red','green', 'orange'))
+
+
+matplot(t(p_minL_nbc - p_minL_obs_cc), type='b', pch=1:6, xaxt='n',
+        main = 'No. of pregnancies averted by changes in contraception usage',
+        xlab='Age', ylab='Number of pregnancies averted')
+abline(h=0, col='darkgray')
+axis(1, 1:10, 2008:2017)
+legend(1, 38000, c('13-yo','14-yo',
+                   '15-yo','16-yo',
+                   '17-yo','18-yo'),
+       cex=0.87, text.col=1:6,
+       col=1:6, lty=1, pch=1:6, ncol=2)
+
+#plot(rowSums(p_minL_nbc - p_minL_obs_cc), xaxt='n')
+#matplot(t(p_minL_nbc - p_minL_obs))
+
+
+#matplot(t(p_minL_nbc - p_minL_obs_cc), ylim = c(-1e4,4e4))
+abline(h=0)
+axis(1, 1:10, 2008:2017)
+
+matplot(t(p_minL_nbc - p_minL_obs_debut), ylim = c(-1e4,4e4))
+matplot(t(p_minL_nbc - p_minL_obs_mnppy), ylim = c(-1e4,4e4))
+
+######################
+
+pregs_averted_by_year_and_cause <- rbind(
+  colSums(p_minL_nbc - p_minL_obs_debut),
+  colSums(p_minL_nbc - p_minL_obs_mnppy),
+  colSums(p_minL_nbc - p_minL_obs_cc)
+)
+
+costs3 <- rbind(costs,costs,costs)
+
+costs_averted_by_year_and_cause <- pregs_averted_by_year_and_cause * costs3
+rowSums(costs_averted_by_year_and_cause)
+
+#     ylab="prop. pregs averted",
+#     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='minLARC scenario')
 
 wtavg_bctype <- function(obj, method, dim) {
 
-  apply((obj[[method]]*meanpop_13to18_f), dim, sum) /
-    apply((meanpop_13to18_f), dim, sum)
+  apply((obj[[method]]*meanpop_13to18_f*pred_eversex_f_dyn), dim, sum) /
+    apply((meanpop_13to18_f*pred_eversex_f_dyn), dim, sum)
 
 }
+
+
+
+
+
+
+
+
 
 bctypes<- names(pred_bctype_minLARC_dyn)
 bctypes_mean_minLARC <- 
@@ -55,13 +145,30 @@ bctypes_mean_in <-
 
 
 
-#############################################################
-#### Results for paper "XXXX"
 
-load("../output/a10_ct_nbc.rda")
-load("../output/a10_ct_obs.rda")
-load("../output/a10_gc_nbc.rda")
-load("../output/a10_gc_obs.rda")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #################################################################################
 #### Table 1: regression coefficients
