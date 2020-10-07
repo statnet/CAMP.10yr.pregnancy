@@ -143,6 +143,15 @@ Finalized the calibration (for minLARC) - works perfectly.
 Developed the various scenarios for minLARC
 Created preliminary plots of output to show DASH
 
+### Oct 5
+
+Checking on what's up with the bctypes before and after.
+
+### Oct 6
+
+Analyze by age
+Analyze numbers and costs
+
 ### Leave at bottom
 
 Todo:
