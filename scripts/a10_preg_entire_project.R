@@ -39,6 +39,8 @@ source("a10_no_behav_change_script.R")       # No behavior change
 source("a10_obs_behav_change.R")             # Observed behavior change
 source("a10_obs_contraception_change.R")     # Observed contraception change only
 source("a10_obs_sexual_activity_change.R")   # Observed debut / partner numbers only
+source("a10_obs_debut_change.R")             # Observed debut only
+source("a10_obs_mnppy_change.R")             # Observed partner numbers only
 
 #source("a10_credible_intervals.R")           # Observed behavior change
 
