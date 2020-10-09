@@ -38,8 +38,8 @@ legend(1.5, 0.3, c('total',
                    'from changes in annual partner numbers post-debut',
                    'from changes in conraception methods'
 ),
-  cex=0.7, text.col=c('black','red','darkgreen', 'blue'),
-  col=c('black','red','green', 'orange'), pch = 1, ncol=2)
+  cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
+  col=c('black','red','green', 'orange'), pch = 1, ncol=1)
 
 #points(1 - colSums(p_minL_obs_sex)/colSums(p_minL_nbc), col='blue')
 points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red')
@@ -56,16 +56,22 @@ pregs_averted_by_age_and_cause <- rbind(
   rowSums(p_minL_nbc - p_minL_obs_cc)
 )
 
-bp <- barplot(pregs_averted_by_age_and_cause, xaxt='n', beside=TRUE,
+pregs_averted_by_agebin_and_cause <- cbind(
+  rowSums(pregs_averted_by_age_and_cause[,1:2]),
+  pregs_averted_by_age_and_cause[,3:6]
+)
+
+bp <- barplot(pregs_averted_by_agebin_and_cause, xaxt='n', beside=TRUE,
         col=c('red', 'darkgreen', 'blue'), 
         xlab='age', ylab='No. of pregnancies averted',
         main='No. of pregnancies averted by cause and by age, summed across years',
         ylim=c(-4e4,20e4))
-axis(1, bp[2,], 13:18, pos=-50000, tick = FALSE)
+#axis(1, bp[2,], 13:18, pos=-50000, tick = FALSE)
+axis(1, bp[2,], c("13-14", 15:18), pos=-50000, tick = FALSE)
 legend(bp[1,1], 2e5, c('from delay in age at first sex',
                        'from changes in annual partner numbers post-debut',
                        'from changes in conraception methods'),
-        cex=0.7, text.col=c('red','darkgreen', 'blue'),
+        cex=0.9, text.col=c('red','darkgreen', 'blue'),
         col=c('red','green', 'orange'))
 
 

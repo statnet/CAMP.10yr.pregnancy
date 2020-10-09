@@ -148,7 +148,7 @@ legend(1.5, 0.8, c(
   'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
   'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
   'i = other (incl. LARC)', 'j = other', 'k = other (incl. withdrawal)'),
-  cex=0.7, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+  cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
 abline(h=0, col="lightgray", lty=3)
 ## "no method", "condoms", "withdrawal", "pills", "injection", "LARC", 
 ##             "other hormonal", "other hormonal+LARC", "other79", "other1", "withdrawal/other")
