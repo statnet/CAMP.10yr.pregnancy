@@ -1,13 +1,13 @@
 #########################################################################
 ### Call main function
 
-a10_minLARC_obs_cc <- a10_preg(n_f = n_f, 
+a10_obs_cc_minLARC <- a10_preg(n_f = n_f, 
                                 prop_eversex_f = pred_eversex_f,
                                 bc_use = pred_bctype_minLARC_dyn,
                                 mean_new_part_f = pred_mnppy_f,
                                 coital_acts_pp_f = capp_f,
                                 preg_init_f = preg_init_f,             
-                                prob_detpreg_f = prob_detpreg,        
+                                prob_detpreg_f = prob_detpreg_minLARC,        
                                 meanpop_tot_f = meanpop_13to18_f,
                                 failure_rate = failure_rate
 )
@@ -16,5 +16,5 @@ a10_minLARC_obs_cc <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_minLARC_obs_cc, file='../output/a10_minLARC_obs_cc.rda')
+save(a10_obs_cc_minLARC, file='../output/a10_obs_cc_minLARC.rda')
 
