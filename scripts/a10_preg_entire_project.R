@@ -21,28 +21,30 @@ source("a10_reassign_bctypes.R")                # Move bc methods from input typ
 source("a10_impute_even_years.R")               # Impute even years
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
 source("a10_ABC_minLARC.R")
+source("a10_ABC_maxLARC.R")
 
 ########################################################################
 ### # Scenario 1: No LARC prior to 2013 (minLARC)
-source("a10_calibration_minLARC.R")          # calib pt 1
-
-#source("a10_gc_calibration_ABC_check.R")    # Load calibration check function
-#boxplot(a10_calib_pt1$param)                # Check pt 1 calibration
-#calib_test_gc(a10_calib_gc_pt1, 
-#  "../output/a10_calib_test_gc_step1_f.pdf", 
-#  "../output/a10_calib_test_gc_step1_m.pdf")
-
-########################################################################
-### Run scenarios and credible intervals
-
-source("a10_no_behav_change_script.R")       # No behavior change
-source("a10_obs_behav_change.R")             # Observed behavior change
-source("a10_obs_contraception_change.R")     # Observed contraception change only
-source("a10_obs_sexual_activity_change.R")   # Observed debut / partner numbers only
-source("a10_obs_debut_change.R")             # Observed debut only
-source("a10_obs_mnppy_change.R")             # Observed partner numbers only
+source("a10_calibration_minLARC.R")                  # calib pt 1
+source("a10_no_behav_change_minLARC.R")              # No behavior change
+source("a10_obs_behav_change_minLARC.R")             # Observed behavior change
+source("a10_obs_contraception_change_minLARC.R")     # Observed contraception change only
+source("a10_obs_sexual_activity_change_minLARC.R")   # Observed debut / partner numbers only
+source("a10_obs_debut_change_minLARC.R")             # Observed debut only
+source("a10_obs_mnppy_change_minLARC.R")             # Observed partner numbers only
 
 #source("a10_credible_intervals.R")           # Observed behavior change
+
+########################################################################
+### # Scenario 2: Maximum LARC possible given responses from 2009 on (maxLARC)
+
+source("a10_calibration_maxLARC.R")                  # calib pt 1
+source("a10_no_behav_change_maxLARC.R")              # No behavior change
+source("a10_obs_behav_change_maxLARC.R")             # Observed behavior change
+source("a10_obs_contraception_change_maxLARC.R")     # Observed contraception change only
+source("a10_obs_sexual_activity_change_maxLARC.R")   # Observed debut / partner numbers only
+source("a10_obs_debut_change_maxLARC.R")             # Observed debut only
+source("a10_obs_mnppy_change_maxLARC.R")             # Observed partner numbers only
 
 
 ########################################################
