@@ -1,7 +1,7 @@
 ###############################################
 ### Set parameters for first round 
 
-calib_pt1_tolerance=c(10, 5, 2.5, 1, 
+calib_minLARC_tolerance=c(10, 5, 2.5, 1, 
                           0.5, 0.25, 0.1, 
                           0.05, 0.025, 0.01, 
                           0.005, 0.0025, 0.001, 
@@ -15,28 +15,28 @@ cal_times <- 2
 lower <- 0
 upper <- 0.3
 
-calib_pt1_priors=list(c("unif", lower, upper), c("unif", lower, upper), 
+calib_minLARC_priors=list(c("unif", lower, upper), c("unif", lower, upper), 
                          c("unif", lower, upper), c("unif", lower, upper),
                          c("unif", lower, upper), c("unif", lower, upper))
 
 ###############################################
 ## Run first version of ABC
 
-a10_calib_pt1 <-ABC_sequential(method="Beaumont",
+a10_calib_minLARC <-ABC_sequential(method="Beaumont",
                                model=a10_ABC_minLARC,
-                               prior=calib_pt1_priors,
+                               prior=calib_minLARC_priors,
                                nb_simul=100,
                                summary_stat_target=0,
-                               tolerance_tab=calib_pt1_tolerance,
+                               tolerance_tab=calib_minLARC_tolerance,
                                verbose=FALSE,
                                progress_bar=TRUE)
 
-minrun <- which(a10_calib_pt1$stats==min(a10_calib_pt1$stats))
-prob_detpreg <- a10_calib_pt1$param[minrun,]
+minrun <- which(a10_calib_minLARC$stats==min(a10_calib_minLARC$stats))
+prob_detpreg_minLARC <- a10_calib_minLARC$param[minrun,]
 
-#prob_detpreg <- colMeans(a10_calib_pt1$param)
+#prob_detpreg <- colMeans(a10_calib_minLARC$param)
 
-save(a10_calib_pt1, prob_detpreg, file = "../output/a10_calib_pt1.rda")
+save(a10_calib_minLARC, prob_detpreg_minLARC, file = "../output/a10_calib_minLARC.rda")
 
 
 
