@@ -4,22 +4,36 @@
 
 # Load results
 
-load("../output/a10_minLARC_nbc.rda")
-load("../output/a10_minLARC_obs.rda")
-load("../output/a10_minLARC_obs_cc.rda")
-load("../output/a10_minLARC_obs_sex.rda")
-load("../output/a10_minLARC_obs_debut.rda")
-load("../output/a10_minLARC_obs_mnppy.rda")
+load("../output/a10_nbc_minLARC.rda")
+load("../output/a10_obs_minLARC.rda")
+load("../output/a10_obs_cc_minLARC.rda")
+load("../output/a10_obs_sex_minLARC.rda")
+load("../output/a10_obs_debut_minLARC.rda")
+load("../output/a10_obs_mnppy_minLARC.rda")
+
+load("../output/a10_nbc_maxLARC.rda")
+load("../output/a10_obs_maxLARC.rda")
+load("../output/a10_obs_cc_maxLARC.rda")
+load("../output/a10_obs_sex_maxLARC.rda")
+load("../output/a10_obs_debut_maxLARC.rda")
+load("../output/a10_obs_mnppy_maxLARC.rda")
+
 
 # Pull out core data
 
-p_minL_nbc <- round(apply(a10_minLARC_nbc$n_preg_total_f, 2:3, sum)[,3:12],0)
-p_minL_obs <- round(apply(a10_minLARC_obs$n_preg_total_f, 2:3, sum)[,3:12],0)
-p_minL_obs_cc <- round(apply(a10_minLARC_obs_cc$n_preg_total_f, 2:3, sum)[,3:12],0)
-p_minL_obs_sex <- round(apply(a10_minLARC_obs_sex$n_preg_total_f, 2:3, sum)[,3:12],0)   
-p_minL_obs_debut <- round(apply(a10_minLARC_obs_debut$n_preg_total_f, 2:3, sum)[,3:12],0)   
-p_minL_obs_mnppy <- round(apply(a10_minLARC_obs_mnppy$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_minL_nbc <- round(apply(a10_nbc_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs <- round(apply(a10_obs_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs_cc <- round(apply(a10_obs_cc_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_minL_obs_sex <- round(apply(a10_obs_sex_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_minL_obs_debut <- round(apply(a10_obs_debut_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_minL_obs_mnppy <- round(apply(a10_obs_mnppy_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 
+p_maxL_nbc <- round(apply(a10_nbc_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_maxL_obs <- round(apply(a10_obs_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_maxL_obs_cc <- round(apply(a10_obs_cc_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
+p_maxL_obs_sex <- round(apply(a10_obs_sex_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_maxL_obs_debut <- round(apply(a10_obs_debut_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
+p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 
 #### Costs
 # costs saved in 2017 dollars by year
@@ -46,15 +60,47 @@ points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red')
 points(1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc), col='darkgreen')
 points(1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc), col='blue')
 
+#############################################################
+# Plot partition of proportion averted, maxLARC
+
+plot(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), ylab="prop. pregs averted",
+     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='maxLARC scenario')
+abline(h=0)
+axis(1, 1:10, 2008:2017)
+legend(1.5, 0.3, c('total', 
+                   'from delay in age at first sex',
+                   'from changes in annual partner numbers post-debut',
+                   'from changes in conraception methods'
+),
+cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
+col=c('black','red','green', 'orange'), pch = 1, ncol=1)
+
+#points(1 - colSums(p_maxL_obs_sex)/colSums(p_maxL_nbc), col='blue')
+points(1 - colSums(p_maxL_obs_debut)/colSums(p_maxL_nbc), col='red')
+points(1 - colSums(p_maxL_obs_mnppy)/colSums(p_maxL_nbc), col='darkgreen')
+points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue')
+
 
 #############################################################
 # Plot partitions of pregnancies averted, by age, minLARC
 
-pregs_averted_by_age_and_cause <- rbind(
+pregs_averted_by_age_and_cause_minL <- rbind(
   rowSums(p_minL_nbc - p_minL_obs_debut),
   rowSums(p_minL_nbc - p_minL_obs_mnppy),
   rowSums(p_minL_nbc - p_minL_obs_cc)
 )
+
+pregs_averted_by_age_and_cause_maxL <- rbind(
+  rowSums(p_maxL_nbc - p_maxL_obs_debut),
+  rowSums(p_maxL_nbc - p_maxL_obs_mnppy),
+  rowSums(p_maxL_nbc - p_maxL_obs_cc)
+)
+
+
+
+
+
+
 
 pregs_averted_by_agebin_and_cause <- cbind(
   rowSums(pregs_averted_by_age_and_cause[,1:2]),
