@@ -13,14 +13,13 @@
 pred_bctype_in <- pred_bctype_agefac
 
 # Create object 
-pred_bctype <- list(no_method = array(dim=c(3,6,11)),
+pred_bctype <- list(no_method           = array(dim=c(3,6,11)),
                     condoms             = array(dim=c(3,6,11)),
                     pills               = array(dim=c(3,6,11)),
                     LARC                = array(dim=c(3,6,11)),
                     other_hormonal      = array(dim=c(3,6,11)),
                     withdrawal_other    = array(dim=c(3,6,11))
 )
-
 
 # Reassign the ones that are straightforward across all years
 pred_bctype$no_method <- pred_bctype_in$no_method
@@ -72,10 +71,43 @@ temp <- pred_bctype_minLARC[[1]] + pred_bctype_minLARC[[2]] + pred_bctype_minLAR
 temp <- round(temp,5)  
 sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
 
+###### maximum LARC ###
 
-#pred_bctype_maxLARC <- pred_bctype
+pred_bctype_maxLARC <- pred_bctype
+
+pred_bctype_maxLARC$LARC[,,1] <- 0
+pred_bctype_maxLARC$LARC[,,3] <- pred_bctype_maxLARC$LARC[,,7]
+pred_bctype_maxLARC$LARC[,,5] <- pred_bctype_maxLARC$LARC[,,7]
+
+for (year in c(1)) {
+  pred_bctype_maxLARC$other_hormonal[,,year] <- 
+    pred_bctype$other_hormonal[,,year] + pred_bctype_in$other79[,,year]
+}
+
+for (year in c(3)) {
+  pred_bctype_maxLARC$other_hormonal[,,year] <- 
+    pred_bctype$other_hormonal[,,year] + pred_bctype_in$other79[,,year] - pred_bctype_maxLARC$LARC[,,year]
+}
+
+for (year in c(5)) {
+  pred_bctype_maxLARC$other_hormonal[,,year] <- 
+    pred_bctype_in$other_hormonal_LARC[,,year] - pred_bctype_maxLARC$LARC[,,year]
+}
 
 
+# if any other hormonals go below zero, reduce LARC down so that other hormonals = 0
+for (year in c(1,3,5)) {
+  whichneg <- pred_bctype_maxLARC$other_hormonal[,,year] < 0
+  pred_bctype_maxLARC$LARC[,,year][whichneg] <- 
+    pred_bctype_maxLARC$LARC[,,year][whichneg] + pred_bctype_maxLARC$other_hormonal[,,year][whichneg]
+  pred_bctype_maxLARC$other_hormonal[,,year][whichneg] <- 0
+  }
+
+# Check to see it's all 1s
+temp <- pred_bctype_maxLARC[[1]] + pred_bctype_maxLARC[[2]] + pred_bctype_maxLARC[[3]] + 
+  pred_bctype_maxLARC[[4]] + pred_bctype_maxLARC[[5]] + pred_bctype_maxLARC[[6]]
+temp <- round(temp,5)  
+sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
 
 #######################################################################
 ### NOTES
