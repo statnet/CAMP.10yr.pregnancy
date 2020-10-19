@@ -70,7 +70,7 @@ eversex_f <- eversex_f %>% replace_na(0)
 ## And the types keep changing across years
 
 ## OLD***********************************
-## There are a total of nine different possible repsonses with different associated 
+## There are a total of nine different possible responses with different associated 
 ##    efficacies present in at least 1 year:
 ##       1 * no method:     2007, 2009, 2011, 2013, 2015, 2017
 ##       2 * condoms:       2007, 2009, 2011, 2013, 2015, 2017
