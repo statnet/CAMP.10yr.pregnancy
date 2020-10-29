@@ -40,11 +40,29 @@ p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[
 
 costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
 
+
+###
+bmp("../output/Fig1.bmp", 520, 520)
+matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
+        main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
+        pch=letters[1:length(bctypes_in)])
+axis(1, 1:6, seq(2007, 2017, 2))
+legend(1.5, 0.8, c(
+  'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
+  'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
+  'i = other', 'j = other', 'k = other (incl. withdrawal)'),
+  cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+abline(h=0, col="lightgray", lty=3)
+dev.off()
+
+
+
 #############################################################
 # Plot partition of proportion averted, minLARC
 
+bmp("../output/Fig2.bmp", 520, 520)
 plot(1 - colSums(p_minL_obs)/colSums(p_minL_nbc), ylab="prop. pregs averted",
-     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='minLARC scenario')
+     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='Proprtions of pregnancies averted by cause', type='b')
 abline(h=0)
 axis(1, 1:10, 2008:2017)
 legend(1.5, 0.3, c('total', 
@@ -56,15 +74,20 @@ legend(1.5, 0.3, c('total',
   col=c('black','red','green', 'orange'), pch = 1, ncol=1)
 
 #points(1 - colSums(p_minL_obs_sex)/colSums(p_minL_nbc), col='blue')
-points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red')
-points(1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc), col='darkgreen')
-points(1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc), col='blue')
+points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red', type='b')
+points(1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc), col='darkgreen', type='b')
+points(1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc), col='blue', type='b')
+
+points(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), col='black', type='b')
+points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue', type='b')
+dev.off()
 
 #############################################################
 # Plot partition of proportion averted, maxLARC
 
+bmp("../output/Fig3.bmp", 520, 520)
 plot(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), ylab="prop. pregs averted",
-     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='maxLARC scenario')
+     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='maxLARC scenario', type='b')
 abline(h=0)
 axis(1, 1:10, 2008:2017)
 legend(1.5, 0.3, c('total', 
@@ -76,10 +99,11 @@ cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
 col=c('black','red','green', 'orange'), pch = 1, ncol=1)
 
 #points(1 - colSums(p_maxL_obs_sex)/colSums(p_maxL_nbc), col='blue')
-points(1 - colSums(p_maxL_obs_debut)/colSums(p_maxL_nbc), col='red')
-points(1 - colSums(p_maxL_obs_mnppy)/colSums(p_maxL_nbc), col='darkgreen')
-points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue')
+points(1 - colSums(p_maxL_obs_debut)/colSums(p_maxL_nbc), col='red', type='b')
+points(1 - colSums(p_maxL_obs_mnppy)/colSums(p_maxL_nbc), col='darkgreen', type='b')
+points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue', type='b')
 
+dev.off()
 
 #############################################################
 # Plot partitions of pregnancies averted, by age, minLARC
@@ -95,12 +119,6 @@ pregs_averted_by_age_and_cause_maxL <- rbind(
   rowSums(p_maxL_nbc - p_maxL_obs_mnppy),
   rowSums(p_maxL_nbc - p_maxL_obs_cc)
 )
-
-
-
-
-
-
 
 pregs_averted_by_agebin_and_cause <- cbind(
   rowSums(pregs_averted_by_age_and_cause[,1:2]),
