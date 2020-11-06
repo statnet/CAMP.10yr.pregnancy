@@ -2,6 +2,40 @@
 ##########################################################
 ### Determining credible intervals for pregnancy model
 
+### Bootstrapping
+
+bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, 100))
+for (i in 1:length(years)) {
+  filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
+  temp <- read.csv(filename)
+  if(years[i] %in% c(2007, 2009))       temp$pregprev2 <- recode(temp$pregprev2, other="other79")
+  if(years[i] %in% c(2011))             temp$pregprev2 <- recode(temp$pregprev2, other="other1")
+  n <- nrow(temp)
+  indices <- table(sample(1:n, 1e5, prob=temp$wts, replace=TRUE))
+  for (s in 1:100) {
+    resample[[i]][[j]] <- temp[indices,]
+    for (j in 1:neths) {
+      for (k in 1:nages) {
+        for (m in 1:nbctypes_in) {
+            bctype_in_wts_boot[j,k,i,m,s] <- nrow(temp %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]))
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################
 ### Draw coefficient samples (NB: these can be used for both GC and CT)
 
 coefs_eversex <- mvrnorm(n = 100, 
