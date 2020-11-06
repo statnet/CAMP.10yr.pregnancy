@@ -18,7 +18,6 @@ load("../output/a10_obs_sex_maxLARC.rda")
 load("../output/a10_obs_debut_maxLARC.rda")
 load("../output/a10_obs_mnppy_maxLARC.rda")
 
-
 # Pull out core data
 
 p_minL_nbc <- round(apply(a10_nbc_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
@@ -35,13 +34,16 @@ p_maxL_obs_sex <- round(apply(a10_obs_sex_maxLARC$n_preg_total_f, 2:3, sum)[,3:1
 p_maxL_obs_debut <- round(apply(a10_obs_debut_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 
+####################################################################################
 #### Costs
 # costs saved in 2017 dollars by year
 
 costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
 
 
-###
+####################################################################################
+#### Fig: BC type by year, raw data
+
 bmp("../output/Fig1.bmp", 520, 520)
 matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
         main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
@@ -57,8 +59,8 @@ dev.off()
 
 
 
-#############################################################
-# Plot partition of proportion averted, minLARC
+####################################################################################
+### Plot partition of proportion averted, minLARC and maxLARC
 
 bmp("../output/Fig2.bmp", 520, 520)
 plot(1 - colSums(p_minL_obs)/colSums(p_minL_nbc), ylab="prop. pregs averted",
@@ -82,50 +84,27 @@ points(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), col='black', type='b')
 points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue', type='b')
 dev.off()
 
-#############################################################
-# Plot partition of proportion averted, maxLARC
 
-bmp("../output/Fig3.bmp", 520, 520)
-plot(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), ylab="prop. pregs averted",
-     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='maxLARC scenario', type='b')
-abline(h=0)
-axis(1, 1:10, 2008:2017)
-legend(1.5, 0.3, c('total', 
-                   'from delay in age at first sex',
-                   'from changes in annual partner numbers post-debut',
-                   'from changes in conraception methods'
-),
-cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
-col=c('black','red','green', 'orange'), pch = 1, ncol=1)
+####################################################################################
+#### Plot partitions of pregnancies averted by cause, by age, minLARC
 
-#points(1 - colSums(p_maxL_obs_sex)/colSums(p_maxL_nbc), col='blue')
-points(1 - colSums(p_maxL_obs_debut)/colSums(p_maxL_nbc), col='red', type='b')
-points(1 - colSums(p_maxL_obs_mnppy)/colSums(p_maxL_nbc), col='darkgreen', type='b')
-points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue', type='b')
-
-dev.off()
-
-#############################################################
-# Plot partitions of pregnancies averted, by age, minLARC
+# Still deciding whether to use this version
 
 pregs_averted_by_age_and_cause_minL <- rbind(
   rowSums(p_minL_nbc - p_minL_obs_debut),
   rowSums(p_minL_nbc - p_minL_obs_mnppy),
-  rowSums(p_minL_nbc - p_minL_obs_cc)
-)
+  rowSums(p_minL_nbc - p_minL_obs_cc))
 
 pregs_averted_by_age_and_cause_maxL <- rbind(
   rowSums(p_maxL_nbc - p_maxL_obs_debut),
   rowSums(p_maxL_nbc - p_maxL_obs_mnppy),
-  rowSums(p_maxL_nbc - p_maxL_obs_cc)
-)
+  rowSums(p_maxL_nbc - p_maxL_obs_cc))
 
-pregs_averted_by_agebin_and_cause <- cbind(
-  rowSums(pregs_averted_by_age_and_cause[,1:2]),
-  pregs_averted_by_age_and_cause[,3:6]
-)
+pregs_averted_by_age_and_cause_minL <- cbind(
+  rowSums(pregs_averted_by_age_and_cause_minL[,1:2]),
+  pregs_averted_by_age_and_cause_minL[,3:6])
 
-bp <- barplot(pregs_averted_by_agebin_and_cause, xaxt='n', beside=TRUE,
+bp <- barplot(pregs_averted_by_age_and_cause_minL, xaxt='n', beside=TRUE,
         col=c('red', 'darkgreen', 'blue'), 
         xlab='age', ylab='No. of pregnancies averted',
         main='No. of pregnancies averted by cause and by age, summed across years',
@@ -139,6 +118,24 @@ legend(bp[1,1], 2e5, c('from delay in age at first sex',
         col=c('red','green', 'orange'))
 
 
+
+####################################################################################
+#### Plot partitions of pregnancies averted by age and year by BC types, minLARC
+
+# Still exploring
+
+pregs_averted_by_age_and_year <- p_minL_nbc - p_minL_obs_cc
+
+pregs_averted_by_age_and_year_binned2 <- rbind(
+  colSums(pregs_averted_by_age_and_year[1:2,]),
+  colSums(pregs_averted_by_age_and_year[3:4,]),
+  pregs_averted_by_age_and_year[5:6,])
+
+pregs_averted_by_age_and_year_binned4 <- rbind(
+    colSums(pregs_averted_by_age_and_year[1:4,]),
+    pregs_averted_by_age_and_year[5:6,])
+
+#### 6 ages version
 matplot(t(p_minL_nbc - p_minL_obs_cc), type='b', pch=1:6, xaxt='n',
         main = 'No. of pregnancies averted by changes in contraception usage',
         xlab='Age', ylab='Number of pregnancies averted')
@@ -150,18 +147,19 @@ legend(1, 38000, c('13-yo','14-yo',
        cex=0.87, text.col=1:6,
        col=1:6, lty=1, pch=1:6, ncol=2)
 
-#plot(rowSums(p_minL_nbc - p_minL_obs_cc), xaxt='n')
-#matplot(t(p_minL_nbc - p_minL_obs))
-
-
-#matplot(t(p_minL_nbc - p_minL_obs_cc), ylim = c(-1e4,4e4))
-abline(h=0)
+#### 4 ages version
+matplot(t(pregs_averted_by_age_and_year_binned2), type='b', pch=1:4, xaxt='n',
+        main = 'No. of pregnancies averted by changes in contraception usage',
+        xlab='Age', ylab='Number of pregnancies averted')
+abline(h=0, col='darkgray')
 axis(1, 1:10, 2008:2017)
+legend(1, 38000, c('13-14-yo','15-16-yo',
+                   '17-yo','18-yo'),
+       cex=0.87, text.col=1:4,
+       col=1:4, lty=1, pch=1:4, ncol=2)
 
-matplot(t(p_minL_nbc - p_minL_obs_debut), ylim = c(-1e4,4e4))
-matplot(t(p_minL_nbc - p_minL_obs_mnppy), ylim = c(-1e4,4e4))
-
-######################
+####################################################################################
+#### Costs by year and cause, total costs by cause
 
 pregs_averted_by_year_and_cause <- rbind(
   colSums(p_minL_nbc - p_minL_obs_debut),
@@ -174,23 +172,18 @@ costs3 <- rbind(costs,costs,costs)
 costs_averted_by_year_and_cause <- pregs_averted_by_year_and_cause * costs3
 rowSums(costs_averted_by_year_and_cause)
 
-#     ylab="prop. pregs averted",
-#     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='minLARC scenario')
+
+
+####################################################################################
+#### function: wtavg_bctype
 
 wtavg_bctype <- function(obj, method, dim) {
-
   apply((obj[[method]]*meanpop_13to18_f*pred_eversex_f_dyn), dim, sum) /
     apply((meanpop_13to18_f*pred_eversex_f_dyn), dim, sum)
-
 }
 
-
-
-
-
-
-
-
+####################################################################################
+#### bctypes predicted by regression
 
 bctypes<- names(pred_bctype_minLARC_dyn)
 bctypes_mean_minLARC <- 
@@ -208,12 +201,13 @@ legend(1.5, 0.8, c(
 axis(1, 1:11, 2007:2017)
 abline(h=0, col="lightgray", lty=3)
 
+#bctype_in <- names(pred_bctype_minLARC_dyn)
+#bctypes_mean_in <- 
+#  sapply(1:11, function(x) wtavg_bctype(bctypes_in, bctypes[x],3))
 
-bctype_in <- names(pred_bctype_minLARC_dyn)
-bctypes_mean_in <- 
-  sapply(1:11, function(x) wtavg_bctype(bctypes_in, bctypes[x],3))
 
-
+###############################################################################3
+# Isolating LARC, minLARC
 
 
 
@@ -241,6 +235,29 @@ bctypes_mean_in <-
 
 
 #################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+
+
 #### Table 1: regression coefficients
 
 round(summary(eversex_f_reg)$coef[,c(1,2,4)],3)
@@ -703,30 +720,3 @@ pia_gcct_age_pt <-
 pia_ct_age_pt
 pia_gc_age_pt
 pia_gcct_age_pt
-
-
-#####################################
-#  Boneyard
-
-#bmp("../output/costs.gc.bmp")
-#plot(plotyears, annual_savings_gc[,1]/1e6, pch=15, 
-#     xlim=c(min(plotyears)-0.5, max(plotyears)+0.5), 
-#     ylim=c(min(annual_savings_gc/1e6), max(annual_savings_gc/1e6)), 
-#     xaxp=c(min(plotyears),max(plotyears),length(plotyears)-1),
-#     xlab="Year", ylab="Costs saved (US $mil)",
-#     main="Costs saved, Gonorrhea"
-#)
-#errbar(plotyears, annual_savings_gc[,2]/1e6, annual_savings_gc[,3]/1e6)
-#
-#plot(plotyears, annual_savings_ct[,1]/1e6, pch=15, 
-#     xlim=c(min(plotyears)-0.5, max(plotyears)+0.5), 
-#     ylim=c(min(annual_savings_ct/1e6), max(annual_savings_ct/1e6)), 
-#     xaxp=c(min(plotyears),max(plotyears),length(plotyears)-1),
-#     xlab="Year", ylab="Costs saved (US $mil)",
-#     main="Costs saved, Chlamydia"
-#)
-#errbar(plotyears, annual_savings_ct[,2]/1e6, annual_savings_ct[,3]/1e6)
-#
-#dev.off()
-
-
