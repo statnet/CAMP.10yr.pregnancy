@@ -152,12 +152,27 @@ Checking on what's up with the bctypes before and after.
 Analyze by age
 Analyze numbers and costs
 
+### Nov 2
+
+Forgot to keep a record for a while.
+
+- Updated LARC failure rate
+- revisiting decision to do agefac or age-age-squared, thinking maybe he latter 
+will be less stochastic
+
+### Nov 6
+
+Forgot to finish record last time argh
+- agefac is still better
+- decided I will not show age by year results; simply too stochastic
+- started adding onlyLARC
+- started adding in bootstrap for CIs, following convo with NMG
+
 ### Leave at bottom
 
 Todo:
-- update costs
-- check what is up with the bctypes before and after
-- finalize scenarios
+- decide on agefac vs age-agesquared (and do other in supplement)
+- finalize only-LARC
 - decide on credible intervals
 
 ### Master change list
@@ -174,3 +189,10 @@ dur_inf_X            -> nothing
 # Outputs
 n_dx_total_f         -> n_preg_total        CALIBRATION OUTPUT
 
+#  Places to add a new scenario
+a10_reassign_bctypes.R
+a10_impute_even_years.R
+a10_make_behav_inputs_all_2007.R
+add scenario-specific script
+add scenario-specific calibration file
+add scenario-specific run files
