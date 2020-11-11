@@ -3,16 +3,22 @@
 ### Determining credible intervals for pregnancy model
 
 ### Bootstrapping
+save.image(file="../output/a10_preg_all_before_boot.rda")
 
-bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, 100))
+### Bootstrapping
+
+nreps <- 100
+bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, nreps))
+resample <- vector("list", length(years))
+
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
   temp <- read.csv(filename)
-  if(years[i] %in% c(2007, 2009))       temp$pregprev2 <- recode(temp$pregprev2, other="other79")
-  if(years[i] %in% c(2011))             temp$pregprev2 <- recode(temp$pregprev2, other="other1")
+  if(years[i] %in% c(2007, 2009)) temp$pregprev2 <- recode(temp$pregprev2, other="other79")
+  if(years[i] %in% c(2011))       temp$pregprev2 <- recode(temp$pregprev2, other="other1")
   n <- nrow(temp)
   indices <- table(sample(1:n, 1e5, prob=temp$wts, replace=TRUE))
-  for (s in 1:100) {
+  for (s in 1:nreps) {
     resample[[i]][[j]] <- temp[indices,]
     for (j in 1:neths) {
       for (k in 1:nages) {
@@ -24,9 +30,45 @@ for (i in 1:length(years)) {
   }
 }
 
+#### Run the model on each bootstrapped version
 
+bctype_in_prob_boot <- sweep(bctype_in_wts_boot, c(1:3,5), apply(bctype_in_wts_boot, c(1:3,5), sum), "/")
 
-
+for (i in 1:nreps) {
+  bctype_in_wts <- bctype_in_wts_boot[,,,,i]
+  bctype_in_prob <- bctype_in_prob_boot[,,,,i]
+  source("a10_process_inputs_bctypes.R")          # Process inputs (i.e. conduct regressions, etc.)
+  source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
+  source("a10_impute_even_years.R")               # Impute even years
+  source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
+  
+  ########################################################################
+  ### # Scenario 1: No LARC prior to 2013 (minLARC)
+  source("a10_ABC_minLARC.R")
+  source("a10_calibration_minLARC.R")                  # calib pt 1
+  source("a10_no_behav_change_minLARC.R")              # No behavior change
+  source("a10_obs_behav_change_minLARC.R")             # Observed behavior change
+  source("a10_obs_contraception_change_minLARC.R")     # Observed contraception change only
+  source("a10_obs_sexual_activity_change_minLARC.R")   # Observed debut / partner numbers only
+  source("a10_obs_debut_change_minLARC.R")             # Observed debut only
+  source("a10_obs_mnppy_change_minLARC.R")             # Observed partner numbers only
+  
+  ########################################################################
+  ### # Scenario 2: Maximum LARC possible given responses from 2009 on (maxLARC)
+  
+#  source("a10_ABC_maxLARC.R")
+#  source("a10_calibration_maxLARC.R")                  # calib pt 1
+#  source("a10_no_behav_change_maxLARC.R")              # No behavior change
+#  source("a10_obs_behav_change_maxLARC.R")             # Observed behavior change
+#  source("a10_obs_contraception_change_maxLARC.R")     # Observed contraception change only
+#  source("a10_obs_sexual_activity_change_maxLARC.R")   # Observed debut / partner numbers only
+#  source("a10_obs_debut_change_maxLARC.R")             # Observed debut only
+#  source("a10_obs_mnppy_change_maxLARC.R")             # Observed partner numbers only
+  
+  filename <- paste("../output/a10_preg_boot", ifelse(i<10, "0", ""), i, ".rda", sep="")
+  save.image(file=filename)
+  cat("Finished bootstrap", i, ".\n", sep="")
+}
 
 
 
@@ -38,17 +80,17 @@ for (i in 1:length(years)) {
 ###############################################
 ### Draw coefficient samples (NB: these can be used for both GC and CT)
 
-coefs_eversex <- mvrnorm(n = 100, 
+coefs_eversex <- mvrnorm(n = nreps, 
           mu = eversex_f_reg$coefficients,
           Sigma = vcov(eversex_f_reg))
 
-coefs_mnppy <- mvrnorm(n = 100, 
+coefs_mnppy <- mvrnorm(n = nreps, 
           mu = mnppy_f_reg$coefficients,
           Sigma = vcov(mnppy_f_reg))
 
 coefs_bctype <- list()
 for (i in 1:6) {
-  coefs_bctype[[i]] <- mvrnorm(n = 100, 
+  coefs_bctype[[i]] <- mvrnorm(n = nreps, 
                           mu = as.vector(t(coef(bctype_reg_ageasq[[i]]))),
                           Sigma = vcov(bctype_reg_ageasq[[i]]))
 }
