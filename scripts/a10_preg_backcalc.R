@@ -1,5 +1,4 @@
 ###
-library(EasyABC)
 setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 ### Back-calculating pregnancies from births
 

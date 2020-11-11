@@ -7,7 +7,6 @@
 
 #########################################################################
 ### Basics
-library(nnet)
 
 #setwd("C:/git/CAMP_10yr_pregnancy/scripts/")
 years <- seq(2007, 2017, by=2)          # Set years info

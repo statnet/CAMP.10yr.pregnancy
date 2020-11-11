@@ -9,6 +9,11 @@ rm(list=ls())
 #install.packages("EasyABC")
 library(EasyABC)
 library(MASS)
+library(dplyr)
+library(tidyverse)
+library(magrittr)
+library(nnet)
+
 set.seed(1)
 
 ########################################################################

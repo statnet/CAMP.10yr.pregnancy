@@ -1,8 +1,4 @@
 
-library(dplyr)
-library(tidyverse)
-library(magrittr)
-
 # Make sure working directory is in /scripts/
 #setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 
