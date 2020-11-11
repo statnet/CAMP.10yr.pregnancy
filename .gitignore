@@ -1,6 +1,7 @@
 *.rda
 *.Rproj
 *.bmp
+/output/*.rda
 
 # History files
 .Rhistory
