@@ -40,6 +40,41 @@ p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[
 
 costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
 
+####################################################################################
+#### bctype data
+
+bctype_in_yearprob <- apply(bctype_in_wts, c(3,4), sum) / apply(bctype_in_wts, 3, sum)
+bctype_in_yearprob <- na_if(bctype_in_yearprob, 0)
+matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
+        main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
+        pch=letters[1:length(bctypes_in)])
+axis(1, 1:6, seq(2007, 2017, 2))
+legend(1.5, 0.8, c(
+  'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
+  'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
+  'i = other (incl. LARC)', 'j = other', 'k = other (incl. withdrawal)'),
+  cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+abline(h=0, col="lightgray", lty=3)
+
+#####
+numerator <- apply(bctype_in_wts, c(2,3,4), sum)
+denominator <- apply(bctype_in_wts, c(2,3), sum)
+bctype_in_yearageprob <- array(dim=c(6,6,11))
+for (i in 1:11) bctype_in_yearageprob[,,i] <- numerator[,,i]/denominator # I'm sure there's a better way to do this
+
+bctype_in_yearageprob <- na_if(bctype_in_yearageprob, 0)
+for(i in 1:6) {
+  matplot(bctype_in_yearageprob[i,,], type='b', xaxt="n" , ylab= "Prop. reporting method",
+          main = paste("Method of birth control reported by females age", i+12, ", YRBS", sep=''),
+          ylim=c(0,0.8),pch=letters[1:length(bctypes_in)])
+  axis(1, 1:6, seq(2007, 2017, 2))
+  legend(1.5, 0.8, c(
+    'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
+    'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
+    'i = other (incl. LARC)', 'j = other', 'k = other (incl. withdrawal)'),
+    cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+  abline(h=0, col="lightgray", lty=3)
+}  
 
 ####################################################################################
 #### Fig: BC type by year, raw data
@@ -256,18 +291,13 @@ abline(h=0, col="lightgray", lty=3)
 #################################################################################
 #################################################################################
 #################################################################################
-
+if(F) {
 
 #### Table 1: regression coefficients
 
 round(summary(eversex_f_reg)$coef[,c(1,2,4)],3)
-round(summary(eversex_m_reg)$coef[,c(1,2,4)],3)
 round(summary(condom_f_reg)$coef[,c(1,2,4)],3)
-round(summary(condom_m_reg)$coef[,c(1,2,4)],3)
 round(summary(mnppy_f_reg)$coef[,c(1,2,4)],3)
-round(summary(mnppy_m_reg)$coef[,c(1,2,4)],3)
-
-
 
 #################################################################################
 #### Figure 1: predicted values for eversex
@@ -323,19 +353,11 @@ fns_ct <- a10_ct_nbc$n_inc_insch_f  # Female no behavior change, school
 fcs_ct <- a10_ct_obs$n_inc_insch_f    # etc.
 fnt_ct <- a10_ct_nbc$n_inc_total_f
 fct_ct <- a10_ct_obs$n_inc_total_f
-mns_ct <- a10_ct_nbc$n_inc_insch_m
-mcs_ct <- a10_ct_obs$n_inc_insch_m
-mnt_ct <- a10_ct_nbc$n_inc_total_m
-mct_ct <- a10_ct_obs$n_inc_total_m
 
 fns_gc <- a10_gc_nbc$n_inc_insch_f  # Female no behavior change, school
 fcs_gc <- a10_gc_obs$n_inc_insch_f    # etc.
 fnt_gc <- a10_gc_nbc$n_inc_total_f
 fct_gc <- a10_gc_obs$n_inc_total_f
-mns_gc <- a10_gc_nbc$n_inc_insch_m
-mcs_gc <- a10_gc_obs$n_inc_insch_m
-mnt_gc <- a10_gc_nbc$n_inc_total_m
-mct_gc <- a10_gc_obs$n_inc_total_m
 
 plotyears <- 2008:2017
 
@@ -720,3 +742,5 @@ pia_gcct_age_pt <-
 pia_ct_age_pt
 pia_gc_age_pt
 pia_gcct_age_pt
+
+}

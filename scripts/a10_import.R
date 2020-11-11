@@ -137,38 +137,6 @@ for (i in 1:length(years)) {
 bctype_in_prob <- sweep(bctype_in_wts, 1:3, apply(bctype_in_wts, 1:3, sum), "/")
 
 #####
-bctype_in_yearprob <- apply(bctype_in_wts, c(3,4), sum) / apply(bctype_in_wts, 3, sum)
-bctype_in_yearprob <- na_if(bctype_in_yearprob, 0)
-matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
-        main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
-        pch=letters[1:length(bctypes_in)])
-axis(1, 1:6, seq(2007, 2017, 2))
-legend(1.5, 0.8, c(
-  'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
-  'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
-  'i = other (incl. LARC)', 'j = other', 'k = other (incl. withdrawal)'),
-  cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
-abline(h=0, col="lightgray", lty=3)
-
-#####
-numerator <- apply(bctype_in_wts, c(2,3,4), sum)
-denominator <- apply(bctype_in_wts, c(2,3), sum)
-bctype_in_yearageprob <- array(dim=c(6,6,11))
-for (i in 1:11) bctype_in_yearageprob[,,i] <- numerator[,,i]/denominator # I'm sure there's a better way to do this
-
-bctype_in_yearageprob <- na_if(bctype_in_yearageprob, 0)
-for(i in 1:6) {
-  matplot(bctype_in_yearageprob[i,,], type='b', xaxt="n" , ylab= "Prop. reporting method",
-        main = paste("Method of birth control reported by females age", i+12, ", YRBS", sep=''),
-        ylim=c(0,0.8),pch=letters[1:length(bctypes_in)])
-axis(1, 1:6, seq(2007, 2017, 2))
-legend(1.5, 0.8, c(
-  'a = no method', 'b = condoms', 'c = withdrawal', 'd = pills', 'e = injection',
-  'f = LARC', 'g = other hormonal', 'h = other hormonal or LARC',
-  'i = other (incl. LARC)', 'j = other', 'k = other (incl. withdrawal)'),
-  cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
-abline(h=0, col="lightgray", lty=3)
-}
 
 ## Read in matrix1 (number by race by current age by age of debut by year)
 ## notice stop-gap in terms of dim 3 size
