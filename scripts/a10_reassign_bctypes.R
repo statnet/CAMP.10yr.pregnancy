@@ -95,7 +95,6 @@ for (year in c(5)) {
     pred_bctype_in$other_hormonal_LARC[,,year] - pred_bctype_maxLARC$LARC[,,year]
 }
 
-
 # if any other hormonals go below zero, reduce LARC down so that other hormonals = 0
 for (year in c(1,3,5)) {
   whichneg <- pred_bctype_maxLARC$other_hormonal[,,year] < 0
@@ -109,28 +108,6 @@ temp <- pred_bctype_maxLARC[[1]] + pred_bctype_maxLARC[[2]] + pred_bctype_maxLAR
   pred_bctype_maxLARC[[4]] + pred_bctype_maxLARC[[5]] + pred_bctype_maxLARC[[6]]
 temp <- round(temp,5)  
 sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
-
-
-###### only LARC changes, minLARC ###
-
-pred_bctype_onlyLARC <- pred_bctype_minLARC
-pred_bctype_onlyLARC
-
-for(i in c(3,5,7,9,11)) {
-  pred_bctype_onlyLARC$no_method[,,i] <- pred_bctype_onlyLARC$no_method[,,1]  
-  pred_bctype_onlyLARC$condoms[,,i] <- pred_bctype_onlyLARC$condoms[,,1]  
-  pred_bctype_onlyLARC$pills[,,i] <- pred_bctype_onlyLARC$pills[,,1]
-  pred_bctype_onlyLARC$other_hormonal[,,i] <- pred_bctype_onlyLARC$other_hormonal[,,1]  
-  pred_bctype_onlyLARC$withdrawal_other[,,i] <- pred_bctype_onlyLARC$withdrawal_other[,,1]
-}
-
-# Check to see it's all 1s
-temp <- pred_bctype_onlyLARC[[1]] + pred_bctype_onlyLARC[[2]] + pred_bctype_onlyLARC[[3]] + 
-  pred_bctype_onlyLARC[[4]] + pred_bctype_onlyLARC[[5]] + pred_bctype_onlyLARC[[6]]
-temp <- round(temp,5)  
-sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
-
-
 
 #######################################################################
 ### NOTES

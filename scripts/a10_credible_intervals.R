@@ -2,31 +2,63 @@
 ##########################################################
 ### Determining credible intervals for pregnancy model
 
-### Bootstrapping
+### Save all
 save.image(file="../output/a10_preg_all_before_boot.rda")
 
+## 
+
 ### Bootstrapping
 
-nreps <- 100
+nreps <- 10
 bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, nreps))
-resample <- vector("list", length(years))
+#resample <- vector("list", length(years))
 
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
   temp <- read.csv(filename)
-  if(years[i] %in% c(2007, 2009)) temp$pregprev2 <- recode(temp$pregprev2, other="other79")
-  if(years[i] %in% c(2011))       temp$pregprev2 <- recode(temp$pregprev2, other="other1")
+
+  # Recoding based on David's email of 11/13/2020 - to get in line with exact structure of the original data files
+  temp$sex <- recode(temp$sex, '1' = 'female', '2' = 'male')
+  temp$race <- recode(temp$race, '1'='white', '2'='black', '3'='hispanic')
+  temp <- filter(temp, sex=='female')
+  temp <- filter(temp, age %in% 13:18)
+  temp <- filter(temp, !is.na(age))
+  temp <- filter(temp, !is.na(sex))
+  temp <- filter(temp, !is.na(race))
+  temp <- filter(temp, !is.na(pregprev2))
+  
+  if(years[i] %in% c(2007, 2009)) {
+    temp$pregprev2 <- recode(temp$pregprev2,
+                             '1'='no method', '2'='pills', '3'='injection', 
+                             '4'='condoms', '5'='withdrawal', '6'='other79')}
+  if(years[i] %in% c(2011)) {
+    temp$pregprev2 <- recode(temp$pregprev2, 
+                             '1'='no method', '2'='pills', '3'='other hormonal+LARC',
+                             '4'='condoms', '5'='withdrawal', '6'='other1')}
+  if(years[i] %in% c(2013, 2015, 2017)) {
+    temp$pregprev2 <- recode(temp$pregprev2,
+                             '1'='no method', '2'='pills', '3'='other hormonal',
+                             '4'='condoms', '5'='LARC', '6'='withdrawal/other')}
+  
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='no method')])
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='pills')])
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='injection')])
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='condoms')])
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='withdrawal')])
+  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='other')])
+  
   n <- nrow(temp)
-  indices <- table(sample(1:n, 1e5, prob=temp$wts, replace=TRUE))
   for (s in 1:nreps) {
-    resample[[i]][[j]] <- temp[indices,]
+    indices <- sample(1:n, n, prob=temp$wts, replace=TRUE)
+    resample <- temp[indices,]
     for (j in 1:neths) {
       for (k in 1:nages) {
         for (m in 1:nbctypes_in) {
-            bctype_in_wts_boot[j,k,i,m,s] <- nrow(temp %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]))
+            bctype_in_wts_boot[j,k,i,m,s] <- nrow(resample %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]))
         }
       }
     }
+  cat(s, ' ', sep='')
   }
 }
 
@@ -34,9 +66,9 @@ for (i in 1:length(years)) {
 
 bctype_in_prob_boot <- sweep(bctype_in_wts_boot, c(1:3,5), apply(bctype_in_wts_boot, c(1:3,5), sum), "/")
 
-for (i in 1:nreps) {
-  bctype_in_wts <- bctype_in_wts_boot[,,,,i]
-  bctype_in_prob <- bctype_in_prob_boot[,,,,i]
+for (bootyear in 1:nreps) {
+  bctype_in_wts <- bctype_in_wts_boot[,,,,bootyear]
+  bctype_in_prob <- bctype_in_prob_boot[,,,,bootyear]
   source("a10_process_inputs_bctypes.R")          # Process inputs (i.e. conduct regressions, etc.)
   source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
   source("a10_impute_even_years.R")               # Impute even years
@@ -56,158 +88,16 @@ for (i in 1:nreps) {
   ########################################################################
   ### # Scenario 2: Maximum LARC possible given responses from 2009 on (maxLARC)
   
-#  source("a10_ABC_maxLARC.R")
-#  source("a10_calibration_maxLARC.R")                  # calib pt 1
-#  source("a10_no_behav_change_maxLARC.R")              # No behavior change
-#  source("a10_obs_behav_change_maxLARC.R")             # Observed behavior change
-#  source("a10_obs_contraception_change_maxLARC.R")     # Observed contraception change only
-#  source("a10_obs_sexual_activity_change_maxLARC.R")   # Observed debut / partner numbers only
-#  source("a10_obs_debut_change_maxLARC.R")             # Observed debut only
-#  source("a10_obs_mnppy_change_maxLARC.R")             # Observed partner numbers only
+  source("a10_ABC_maxLARC.R")
+  source("a10_calibration_maxLARC.R")                  # calib pt 1
+  source("a10_no_behav_change_maxLARC.R")              # No behavior change
+  source("a10_obs_behav_change_maxLARC.R")             # Observed behavior change
+  source("a10_obs_contraception_change_maxLARC.R")     # Observed contraception change only
+  source("a10_obs_sexual_activity_change_maxLARC.R")   # Observed debut / partner numbers only
+  source("a10_obs_debut_change_maxLARC.R")             # Observed debut only
+  source("a10_obs_mnppy_change_maxLARC.R")             # Observed partner numbers only
   
-  filename <- paste("../output/a10_preg_boot", ifelse(i<10, "0", ""), i, ".rda", sep="")
+  filename <- paste("../output/a10_preg_boot", ifelse(i<10, "0", ""), bootyear, ".rda", sep="")
   save.image(file=filename)
-  cat("Finished bootstrap", i, ".\n", sep="")
+  cat("Finished bootstrap", bootyear, ".\n", sep="")
 }
-
-
-
-
-
-
-
-
-###############################################
-### Draw coefficient samples (NB: these can be used for both GC and CT)
-
-coefs_eversex <- mvrnorm(n = nreps, 
-          mu = eversex_f_reg$coefficients,
-          Sigma = vcov(eversex_f_reg))
-
-coefs_mnppy <- mvrnorm(n = nreps, 
-          mu = mnppy_f_reg$coefficients,
-          Sigma = vcov(mnppy_f_reg))
-
-coefs_bctype <- list()
-for (i in 1:6) {
-  coefs_bctype[[i]] <- mvrnorm(n = nreps, 
-                          mu = as.vector(t(coef(bctype_reg_ageasq[[i]]))),
-                          Sigma = vcov(bctype_reg_ageasq[[i]]))
-}
-
-##### Set up temporary objects
-
-bctype_reg_ageasq_temp <- bctype_reg_ageasq             # glm objects for each coefficient 
-eversex_f_reg_temp <- eversex_f_reg
-mnppy_f_reg_temp <- mnppy_f_reg
-
-a10_preg_obs_100 <- a10_preg_nbc_100 <- list()    # Lists of 100 outcomes
-
-##### Run loop - each model over 100 coefficient sets
-
-for (i in 1:100) {
-  
-  ## Determine predicted values for each of the six regressions
-  condom_f_reg_temp$coefficients <- coefs_condom_f_gc[i,]
-  pred_condom_f_temp_obs <- 
-    array(predict(condom_f_reg_temp, type='response', 
-    newdata= pred_condom_f_df_indep), dim=c(3,6,11))
-  
-  condom_m_reg_temp$coefficients <- coefs_condom_m_gc[i,]
-  pred_condom_m_temp_obs <- 
-    array(predict(condom_m_reg_temp, type='response', 
-    newdata= pred_condom_m_df_indep), dim=c(3,6,11))
-  
-  eversex_f_reg_temp$coefficients <- coefs_eversex_f_gc[i,]
-  pred_eversex_f_temp_obs <- 
-    array(predict(eversex_f_reg_temp, type='response', 
-    newdata= pred_eversex_f_df_indep), dim=c(3,6,11))
-  
-  eversex_m_reg_temp$coefficients <- coefs_eversex_m_gc[i,]
-  pred_eversex_m_temp_obs <- 
-    array(predict(eversex_m_reg_temp, type='response', 
-    newdata= pred_eversex_m_df_indep), dim=c(3,6,11))
-  
-  mnppy_f_reg_temp$coefficients <- coefs_mnppy_f_gc[i,]
-  pred_mnppy_f_temp_obs <- 
-    array(predict(mnppy_f_reg_temp, type='response', 
-    newdata= pred_mnppy_f_df_indep), dim=c(3,6,11))
-  
-  mnppy_m_reg_temp$coefficients <- coefs_mnppy_m_gc[i,]
-  pred_mnppy_m_temp_obs <- 
-    array(predict(mnppy_m_reg_temp, type='response', 
-    newdata= pred_mnppy_m_df_indep), dim=c(3,6,11))
-  
-  ### Run GC obs model
-  a10_gc_obs_100[[i]] <- a10(
-      n_f = n_f, n_m = n_m,
-      prop_eversex_f = pred_eversex_f_temp_obs,
-      prop_eversex_m = pred_eversex_m_temp_obs,
-      condom_use_f = pred_condom_f_temp_obs,
-      condom_use_m = pred_condom_m_temp_obs,
-      mean_new_part_f = pred_mnppy_f_temp_obs,
-      mean_new_part_m = pred_mnppy_m_temp_obs,
-      coital_acts_pp_f = capp_f,
-      coital_acts_pp_m = capp_m,
-      p_ethn_f = p_ethn_f,
-      p_ethn_m = p_ethn_m,
-      diag_init_f = dx_gc_init_tot_f,
-      diag_init_m = dx_gc_init_tot_m,
-      prop_diag_f = prop_diag_f_gc,
-      prop_diag_m = prop_diag_m_gc,
-      dur_inf_f = dur_f_gc,
-      dur_inf_m = dur_m_gc,
-      beta_f2m = beta_ipv_gc,
-      beta_m2f = beta_rpv_gc,
-      meanpop_tot_f = meanpop_13to18_f,
-      meanpop_tot_m = meanpop_13to18_m,
-      part_prev_ratio_f = part_prev_ratio_gc_f,
-      part_prev_ratio_m = part_prev_ratio_gc_m
-  )
-  
-  ## Assign predicted values of 2007 to all other years for NBC
-  pred_condom_f_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_condom_f_temp_obs[,,1],11))
-  pred_condom_m_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_condom_m_temp_obs[,,1],11))
-  pred_eversex_f_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_eversex_f_temp_obs[,,1],11))
-  pred_eversex_m_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_eversex_m_temp_obs[,,1],11))
-  pred_mnppy_f_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_mnppy_f_temp_obs[,,1],11))
-  pred_mnppy_m_nbc_temp <- array(dim=c(3,6,11), 
-      data = rep(pred_mnppy_m_temp_obs[,,1],11))
-  
-  ### Run GC obs model
-  a10_gc_nbc_100[[i]] <- a10(
-    n_f = n_f, n_m = n_m,
-    prop_eversex_f = pred_eversex_f_nbc_temp,
-    prop_eversex_m = pred_eversex_m_nbc_temp,
-    condom_use_f = pred_condom_f_nbc_temp,
-    condom_use_m = pred_condom_m_nbc_temp,
-    mean_new_part_f = pred_mnppy_f_nbc_temp,
-    mean_new_part_m = pred_mnppy_m_nbc_temp,
-    coital_acts_pp_f = capp_f,
-    coital_acts_pp_m = capp_m,
-    p_ethn_f = p_ethn_f,
-    p_ethn_m = p_ethn_m,
-    diag_init_f = dx_gc_init_tot_f,
-    diag_init_m = dx_gc_init_tot_m,
-    prop_diag_f = prop_diag_f_gc,
-    prop_diag_m = prop_diag_m_gc,
-    dur_inf_f = dur_f_gc,
-    dur_inf_m = dur_m_gc,
-    beta_f2m = beta_ipv_gc,
-    beta_m2f = beta_rpv_gc,
-    meanpop_tot_f = meanpop_13to18_f,
-    meanpop_tot_m = meanpop_13to18_m,
-    part_prev_ratio_f = part_prev_ratio_gc_f,
-    part_prev_ratio_m = part_prev_ratio_gc_m
-  )
-}
-
-#plot(sapply(1:100, function(x) sum(a10_gc_nbc_temp[[x]]$n_inc_insch_f[,,11])), 
-#     sapply(1:100, function(x) sum(a10_gc_obs_100[[x]]$n_inc_insch_f[,,11])))
-
-save(a10_gc_nbc_100, a10_gc_obs_100, file='../output/a100_gc_ci.rda')

@@ -105,7 +105,7 @@ axis(1, 1:10, 2008:2017)
 legend(1.5, 0.3, c('total', 
                    'from delay in age at first sex',
                    'from changes in annual partner numbers post-debut',
-                   'from changes in conraception methods'
+                   'from changes in contraception methods'
 ),
   cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
   col=c('black','red','green', 'orange'), pch = 1, ncol=1)

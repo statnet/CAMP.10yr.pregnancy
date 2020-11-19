@@ -168,10 +168,13 @@ Forgot to finish record last time argh
 - started adding onlyLARC
 - started adding in bootstrap for CIs, following convo with NMG
 
+### Nov 11
+
+- Did more coding of bootstrap CIs, all the way through up to analysis.  Now waiting on data from David
+
 ### Leave at bottom
 
 Todo:
-- decide on agefac vs age-agesquared (and do other in supplement)
 - finalize only-LARC
 - decide on credible intervals
 
