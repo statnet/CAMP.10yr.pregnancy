@@ -28,6 +28,8 @@ source("a10_impute_even_years.R")               # Impute even years
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
 source("a10_make_onlyLARC_scenarios.R")           # These differ from other types of scenarios and need to be made after previous two steps]
 
+saveRDS(bctype_in_wts, file="../output/a10_bctype_in_wts.rda")
+
 ########################################################################
 ### # Scenario 1: No LARC prior to 2013 (minLARC)
 source("a10_ABC_minLARC.R")
@@ -38,6 +40,15 @@ source("a10_obs_contraception_change_minLARC.R")     # Observed contraception ch
 source("a10_obs_sexual_activity_change_minLARC.R")   # Observed debut / partner numbers only
 source("a10_obs_debut_change_minLARC.R")             # Observed debut only
 source("a10_obs_mnppy_change_minLARC.R")             # Observed partner numbers only
+
+saveRDS(a10_calib_minLARC, file = "../output/a10_calib_minLARC.rda")
+saveRDS(prob_detpreg_minLARC, file="../output/prob_detpreg_minLARC.rda")
+saveRDS(a10_nbc_minLARC, file="../output/a10_nbc_minLARC.rda")
+saveRDS(a10_obs_minLARC, file='../output/a10_obs_minLARC.rda')
+saveRDS(a10_obs_cc_minLARC, file='../output/a10_obs_cc_minLARC.rda')
+saveRDS(a10_obs_sex_minLARC, file='../output/a10_obs_sex_minLARC.rda')
+saveRDS(a10_obs_debut_minLARC, file='../output/a10_obs_debut_minLARC.rda')
+saveRDS(a10_obs_mnppy_minLARC, file='../output/a10_obs_mnppy_minLARC.rda')
 
 ########################################################################
 ### # Scenario 2: Maximum LARC possible given responses from 2009 on (maxLARC)
@@ -51,11 +62,22 @@ source("a10_obs_sexual_activity_change_maxLARC.R")   # Observed debut / partner 
 source("a10_obs_debut_change_maxLARC.R")             # Observed debut only
 source("a10_obs_mnppy_change_maxLARC.R")             # Observed partner numbers only
 
+saveRDS(a10_calib_maxLARC, file = "../output/a10_calib_maxLARC.rda")
+saveRDS(prob_detpreg_maxLARC, file="../output/prob_detpreg_maxLARC.rda")
+saveRDS(a10_nbc_maxLARC, file='../output/a10_nbc_maxLARC.rda')
+saveRDS(a10_obs_maxLARC, file='../output/a10_obs_maxLARC.rda')
+saveRDS(a10_obs_cc_maxLARC, file='../output/a10_obs_cc_maxLARC.rda')
+saveRDS(a10_obs_sex_maxLARC, file='../output/a10_obs_sex_maxLARC.rda')
+saveRDS(a10_obs_debut_maxLARC, file='../output/a10_obs_debut_maxLARC.rda')
+saveRDS(a10_obs_mnppy_maxLARC, file='../output/a10_obs_mnppy_maxLARC.rda')
+
 ########################################################################
 ### # Scenario 3: Only LARC changes, drawing from withdrawal
 source("a10_obs_contraception_change_onlyLARC_from_wd.R")    # Observed behavior change
 source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    # Observed behavior change
 
+saveRDS(a10_obs_cc_onlyLARC_from_wd, file='../output/a10_obs_cc_onlyLARC_from_wd.rda')
+saveRDS(a10_obs_cc_onlyLARC_from_cdm, file='../output/a10_obs_cc_onlyLARC_from_cdm.rda')
 
 ########################################################################
 source("a10_credible_intervals.R")           # Observed behavior change
