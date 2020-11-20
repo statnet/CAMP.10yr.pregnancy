@@ -16,6 +16,4 @@ a10_nbc_minLARC <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_nbc_minLARC, file='../output/a10_nbc_minLARC.rda')
-
 #apply(a10_nbc$n_preg_total_f, 2:3, sum)[,2] / preg_init

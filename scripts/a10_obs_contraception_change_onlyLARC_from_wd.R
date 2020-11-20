@@ -16,5 +16,4 @@ a10_obs_cc_onlyLARC_from_wd <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_obs_cc_onlyLARC_from_wd, file='../output/a10_obs_cc_onlyLARC_from_wd.rda')
 

@@ -16,5 +16,4 @@ a10_obs_cc_onlyLARC_from_cdm <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_obs_cc_onlyLARC_from_cdm, file='../output/a10_obs_cc_onlyLARC_from_cdm.rda')
 

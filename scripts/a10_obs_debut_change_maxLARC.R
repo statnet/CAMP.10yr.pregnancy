@@ -16,4 +16,3 @@ a10_obs_debut_maxLARC <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_obs_debut_maxLARC, file='../output/a10_obs_debut_maxLARC.rda')

@@ -36,7 +36,6 @@ prob_detpreg_minLARC <- a10_calib_minLARC$param[minrun,]
 
 #prob_detpreg <- colMeans(a10_calib_minLARC$param)
 
-save(a10_calib_minLARC, prob_detpreg_minLARC, file = "../output/a10_calib_minLARC.rda")
 
 
 

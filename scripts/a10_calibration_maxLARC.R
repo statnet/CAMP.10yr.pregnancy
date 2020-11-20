@@ -36,4 +36,3 @@ prob_detpreg_maxLARC <- a10_calib_maxLARC$param[minrun,]
 
 #prob_detpreg <- colMeans(a10_calib_maxLARC$param)
 
-save(a10_calib_maxLARC, prob_detpreg_maxLARC, file = "../output/a10_calib_maxLARC.rda")

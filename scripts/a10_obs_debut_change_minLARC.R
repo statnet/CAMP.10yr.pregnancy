@@ -16,4 +16,3 @@ a10_obs_debut_minLARC <- a10_preg(n_f = n_f,
 #########################################################################
 ### Process results
 
-save(a10_obs_debut_minLARC, file='../output/a10_obs_debut_minLARC.rda')
