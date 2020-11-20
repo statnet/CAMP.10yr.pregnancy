@@ -2,22 +2,50 @@
 #############################################################
 #### Results for paper "XXXX"
 
-# Load results
+# Load main results
 
-load("../output/a10_nbc_minLARC.rda")
-load("../output/a10_obs_minLARC.rda")
-load("../output/a10_obs_cc_minLARC.rda")
-load("../output/a10_obs_sex_minLARC.rda")
-load("../output/a10_obs_debut_minLARC.rda")
-load("../output/a10_obs_mnppy_minLARC.rda")
+a10_nbc_minLARC <- readRDS("../output/a10_nbc_minLARC.rda")
+a10_obs_minLARC <- readRDS("../output/a10_obs_minLARC.rda")
+a10_obs_cc_minLARC <- readRDS("../output/a10_obs_cc_minLARC.rda")
+a10_obs_sex_minLARC <- readRDS("../output/a10_obs_sex_minLARC.rda")
+a10_obs_debut_minLARC <- readRDS("../output/a10_obs_debut_minLARC.rda")
+a10_obs_mnppy_minLARC <- readRDS("../output/a10_obs_mnppy_minLARC.rda")
 
-load("../output/a10_nbc_maxLARC.rda")
-load("../output/a10_obs_maxLARC.rda")
-load("../output/a10_obs_cc_maxLARC.rda")
-load("../output/a10_obs_sex_maxLARC.rda")
-load("../output/a10_obs_debut_maxLARC.rda")
-load("../output/a10_obs_mnppy_maxLARC.rda")
+a10_nbc_maxLARC <- readRDS("../output/a10_nbc_maxLARC.rda")
+a10_obs_maxLARC <- readRDS("../output/a10_obs_maxLARC.rda")
+a10_obs_cc_maxLARC <- readRDS("../output/a10_obs_cc_maxLARC.rda")
+a10_obs_sex_maxLARC <- readRDS("../output/a10_obs_sex_maxLARC.rda")
+a10_obs_debut_maxLARC <- readRDS("../output/a10_obs_debut_maxLARC.rda")
+a10_obs_mnppy_maxLARC <- readRDS("../output/a10_obs_mnppy_maxLARC.rda")
 
+# Load bootstrap results
+
+a10_nbc_minLARC_boot <- a10_obs_minLARC_boot <- a10_obs_cc_minLARC_boot <- 
+  a10_obs_sex_minLARC_boot <- a10_obs_debut_minLARC_boot <- a10_obs_mnppy_minLARC_boot <- 
+  a10_nbc_maxLARC_boot <- a10_obs_maxLARC_boot <- a10_obs_cc_maxLARC_boot <- 
+  a10_obs_sex_maxLARC_boot <- a10_obs_debut_maxLARC_boot <- a10_obs_mnppy_maxLARC_boot <- 
+  list()
+
+for ( bootrep in 1:nreps) {
+ 
+  repnum <- paste(ifelse(bootrep<10, "0", ""), bootrep, sep="")
+  
+  a10_nbc_minLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_nbc_minLARC_boot",repnum,".rda",sep=""))
+  a10_obs_minLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_obs_minLARC_boot",repnum,".rda",sep=""))
+  a10_obs_cc_minLARC_boot[[bootrep]] <-    readRDS(paste("../output/a10_obs_cc_minLARC_boot",repnum,".rda",sep=""))
+  a10_obs_sex_minLARC_boot[[bootrep]] <-   readRDS(paste("../output/a10_obs_sex_minLARC_boot",repnum,".rda",sep=""))
+  a10_obs_debut_minLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_debut_minLARC_boot",repnum,".rda",sep=""))
+  a10_obs_mnppy_minLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_mnppy_minLARC_boot",repnum,".rda",sep=""))
+  
+  a10_nbc_maxLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_nbc_maxLARC_boot",repnum,".rda",sep=""))
+  a10_obs_maxLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_obs_maxLARC_boot",repnum,".rda",sep=""))
+  a10_obs_cc_maxLARC_boot[[bootrep]] <-    readRDS(paste("../output/a10_obs_cc_maxLARC_boot",repnum,".rda",sep=""))
+  a10_obs_sex_maxLARC_boot[[bootrep]] <-   readRDS(paste("../output/a10_obs_sex_maxLARC_boot",repnum,".rda",sep=""))
+  a10_obs_debut_maxLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_debut_maxLARC_boot",repnum,".rda",sep=""))
+  a10_obs_mnppy_maxLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_mnppy_maxLARC_boot",repnum,".rda",sep=""))
+  
+}
+ 
 # Pull out core data
 
 p_minL_nbc <- round(apply(a10_nbc_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
@@ -34,6 +62,73 @@ p_maxL_obs_sex <- round(apply(a10_obs_sex_maxLARC$n_preg_total_f, 2:3, sum)[,3:1
 p_maxL_obs_debut <- round(apply(a10_obs_debut_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 
+
+# Pull out bootstrap data
+
+p_minL_nbc_boot <- p_minL_obs_boot <- p_minL_obs_cc_boot <- 
+  p_minL_obs_sex_boot <- p_minL_obs_debut_boot <- p_minL_obs_mnppy_boot <- 
+  p_maxL_nbc_boot <- p_maxL_obs_boot <- p_maxL_obs_cc_boot <-
+  p_maxL_obs_sex_boot <- p_maxL_obs_debut_boot <- p_maxL_obs_mnppy_boot <- 
+  list()
+
+for (bootnum in 1:nreps) {
+
+  p_minL_nbc_boot[[bootnum]] <- round(apply(a10_nbc_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_minL_obs_boot[[bootnum]] <- round(apply(a10_obs_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_minL_obs_cc_boot[[bootnum]] <- round(apply(a10_obs_cc_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_minL_obs_sex_boot[[bootnum]] <- round(apply(a10_obs_sex_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+  p_minL_obs_debut_boot[[bootnum]] <- round(apply(a10_obs_debut_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+  p_minL_obs_mnppy_boot[[bootnum]] <- round(apply(a10_obs_mnppy_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+  
+  p_maxL_nbc_boot[[bootnum]] <- round(apply(a10_nbc_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_maxL_obs_boot[[bootnum]] <- round(apply(a10_obs_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_maxL_obs_cc_boot[[bootnum]] <- round(apply(a10_obs_cc_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
+  p_maxL_obs_sex_boot[[bootnum]] <- round(apply(a10_obs_sex_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+  p_maxL_obs_debut_boot[[bootnum]] <- round(apply(a10_obs_debut_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+  p_maxL_obs_mnppy_boot[[bootnum]] <- round(apply(a10_obs_mnppy_maxLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)   
+
+}
+
+bootresults <- function(x, nreps) {
+  sapply(1:nreps, function(rep) sum(x[[rep]]))
+}
+
+p_minL_nbc_bootresults       <- bootresults(p_minL_nbc_boot      , nreps)
+p_minL_obs_bootresults       <- bootresults(p_minL_obs_boot      , nreps)
+p_minL_obs_cc_bootresults    <- bootresults(p_minL_obs_cc_boot   , nreps)
+p_minL_obs_sex_bootresults   <- bootresults(p_minL_obs_sex_boot  , nreps)
+p_minL_obs_debut_bootresults <- bootresults(p_minL_obs_debut_boot, nreps)
+p_minL_obs_mnppy_bootresults <- bootresults(p_minL_obs_mnppy_boot, nreps)
+                                                        
+boxplot(p_minL_nbc_bootresults, p_minL_obs_bootresults,
+        p_minL_obs_cc_bootresults, p_minL_obs_sex_bootresults, 
+        p_minL_obs_debut_bootresults, p_minL_obs_mnppy_bootresults)
+
+rbind(p_minL_nbc_bootresults, p_minL_obs_bootresults,
+        p_minL_obs_cc_bootresults, p_minL_obs_sex_bootresults, 
+        p_minL_obs_debut_bootresults, p_minL_obs_mnppy_bootresults)
+
+sum(p_minL_nbc)
+
+p_maxL_nbc_bootresults       <- bootresults(p_maxL_nbc_boot      , nreps)
+p_maxL_obs_bootresults       <- bootresults(p_maxL_obs_boot      , nreps)
+p_maxL_obs_cc_bootresults    <- bootresults(p_maxL_obs_cc_boot   , nreps)
+p_maxL_obs_sex_bootresults   <- bootresults(p_maxL_obs_sex_boot  , nreps)
+p_maxL_obs_debut_bootresults <- bootresults(p_maxL_obs_debut_boot, nreps)
+p_maxL_obs_mnppy_bootresults <- bootresults(p_maxL_obs_mnppy_boot, nreps)
+
+boxplot(p_maxL_nbc_bootresults, p_maxL_obs_bootresults,
+        p_maxL_obs_cc_bootresults, p_maxL_obs_sex_bootresults, 
+        p_maxL_obs_debut_bootresults, p_maxL_obs_mnppy_bootresults)
+
+rbind(p_maxL_nbc_bootresults, p_maxL_obs_bootresults,
+      p_maxL_obs_cc_bootresults, p_maxL_obs_sex_bootresults, 
+      p_maxL_obs_debut_bootresults, p_maxL_obs_mnppy_bootresults)
+
+sum(p_maxL_nbc)
+
+
+
 ####################################################################################
 #### Costs
 # costs saved in 2017 dollars by year
@@ -42,6 +137,8 @@ costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
 
 ####################################################################################
 #### bctype data
+
+bctype_in_wts <- readRDS("../output/a10_bctype_in_wts.rda")
 
 bctype_in_yearprob <- apply(bctype_in_wts, c(3,4), sum) / apply(bctype_in_wts, 3, sum)
 bctype_in_yearprob <- na_if(bctype_in_yearprob, 0)
@@ -91,7 +188,7 @@ legend(1.5, 0.8, c(
   cex=0.9, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
 abline(h=0, col="lightgray", lty=3)
 dev.off()
-
+dev.off()
 
 
 ####################################################################################
@@ -99,7 +196,7 @@ dev.off()
 
 bmp("../output/Fig2.bmp", 520, 520)
 plot(1 - colSums(p_minL_obs)/colSums(p_minL_nbc), ylab="prop. pregs averted",
-     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='Proprtions of pregnancies averted by cause', type='b')
+     ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='Proportions of pregnancies averted by cause', type='b')
 abline(h=0)
 axis(1, 1:10, 2008:2017)
 legend(1.5, 0.3, c('total', 
@@ -148,7 +245,7 @@ bp <- barplot(pregs_averted_by_age_and_cause_minL, xaxt='n', beside=TRUE,
 axis(1, bp[2,], c("13-14", 15:18), pos=-50000, tick = FALSE)
 legend(bp[1,1], 2e5, c('from delay in age at first sex',
                        'from changes in annual partner numbers post-debut',
-                       'from changes in conraception methods'),
+                       'from changes in contraception methods'),
         cex=0.9, text.col=c('red','darkgreen', 'blue'),
         col=c('red','green', 'orange'))
 
@@ -161,7 +258,6 @@ legend(bp[1,1], 2e5, c('from delay in age at first sex',
 
 pregs_averted_by_age_and_year <- p_minL_nbc - p_minL_obs_cc
 
-pregs_averted_by_age_and_year_binned2 <- rbind(
   colSums(pregs_averted_by_age_and_year[1:2,]),
   colSums(pregs_averted_by_age_and_year[3:4,]),
   pregs_averted_by_age_and_year[5:6,])
