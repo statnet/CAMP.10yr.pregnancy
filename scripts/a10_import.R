@@ -134,6 +134,7 @@ for (i in 1:length(years)) {
   }
 }
 
+# Make sum to 1 across bctypes within each ethn/age/year 
 bctype_in_prob <- sweep(bctype_in_wts, 1:3, apply(bctype_in_wts, 1:3, sum), "/")
 
 #####
