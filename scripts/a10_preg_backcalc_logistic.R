@@ -1,5 +1,5 @@
 ###
-setwd("C:/git/CAMP_10yr_pregnancy/scripts")
+#setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 ### Back-calculating pregnancies from births
 
 pregs_guttmacher_binned <- c(14520, 247000, 506100)

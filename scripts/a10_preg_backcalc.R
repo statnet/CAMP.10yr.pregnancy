@@ -1,5 +1,5 @@
 ###
-setwd("C:/git/CAMP_10yr_pregnancy/scripts")
+#setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 ### Back-calculating pregnancies from births
 
 a10_preg_backcalc <- function(input_params) {
