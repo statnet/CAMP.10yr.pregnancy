@@ -43,7 +43,8 @@ for ( bootrep in 1:nreps) {
   a10_obs_sex_maxLARC_boot[[bootrep]] <-   readRDS(paste("../output/a10_obs_sex_maxLARC_boot",repnum,".rda",sep=""))
   a10_obs_debut_maxLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_debut_maxLARC_boot",repnum,".rda",sep=""))
   a10_obs_mnppy_maxLARC_boot[[bootrep]] <- readRDS(paste("../output/a10_obs_mnppy_maxLARC_boot",repnum,".rda",sep=""))
-  
+
+  cat(bootrep, " ", sep="")  
 }
  
 # Pull out core data
@@ -194,12 +195,28 @@ dev.off()
 ####################################################################################
 ### Plot partition of proportion averted, minLARC and maxLARC
 
+pavert_minL_obs <- 1 - colSums(p_minL_obs)/colSums(p_minL_nbc)
+pavert_minL_obs_debut <- 1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc)
+pavert_minL_obs_mnppy <- 1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc)
+pavert_minL_obs_cc <- 1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc)
+pavert_maxL_obs <- 1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc)
+pavert_maxL_obs_cc <- 1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc)
+
+
+pavert_minL_obs_cc_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_cc_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
+boxplot(pavert_minL_obs_cc_boot, ylim=c(-0.3, 0.5))
+pavert_minL_obs_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
+boxplot(pavert_minL_obs_boot, add=T)
+
+
+
+
 bmp("../output/Fig2.bmp", 520, 520)
-plot(1 - colSums(p_minL_obs)/colSums(p_minL_nbc), ylab="prop. pregs averted",
+plot(pavert_minL_obs, ylab="prop. pregs averted",
      ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='Proportions of pregnancies averted by cause', type='b')
 abline(h=0)
 axis(1, 1:10, 2008:2017)
-legend(1.5, 0.3, c('total', 
+legend(1.5, 0.3, c('total',
                    'from delay in age at first sex',
                    'from changes in annual partner numbers post-debut',
                    'from changes in contraception methods'
@@ -207,13 +224,12 @@ legend(1.5, 0.3, c('total',
   cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
   col=c('black','red','green', 'orange'), pch = 1, ncol=1)
 
-#points(1 - colSums(p_minL_obs_sex)/colSums(p_minL_nbc), col='blue')
-points(1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc), col='red', type='b')
-points(1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc), col='darkgreen', type='b')
-points(1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc), col='blue', type='b')
+points(pavert_minL_obs_debut, col='red', type='b')
+points(pavert_minL_obs_mnppy, col='darkgreen', type='b')
+points(pavert_minL_obs_cc, col='blue', type='b')
 
-points(1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc), col='black', type='b')
-points(1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc), col='blue', type='b')
+points(pavert_maxL_obs, col='black', type='b')
+points(pavert_maxL_obs_cc, col='blue', type='b')
 dev.off()
 
 
@@ -249,8 +265,6 @@ legend(bp[1,1], 2e5, c('from delay in age at first sex',
         cex=0.9, text.col=c('red','darkgreen', 'blue'),
         col=c('red','green', 'orange'))
 
-
-
 ####################################################################################
 #### Plot partitions of pregnancies averted by age and year by BC types, minLARC
 
@@ -258,9 +272,10 @@ legend(bp[1,1], 2e5, c('from delay in age at first sex',
 
 pregs_averted_by_age_and_year <- p_minL_nbc - p_minL_obs_cc
 
-  colSums(pregs_averted_by_age_and_year[1:2,]),
+c(colSums(pregs_averted_by_age_and_year[1:2,]),
   colSums(pregs_averted_by_age_and_year[3:4,]),
   pregs_averted_by_age_and_year[5:6,])
+
 
 pregs_averted_by_age_and_year_binned4 <- rbind(
     colSums(pregs_averted_by_age_and_year[1:4,]),
