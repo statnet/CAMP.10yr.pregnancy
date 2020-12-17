@@ -72,7 +72,7 @@ saveRDS(a10_obs_debut_maxLARC, file='../output/a10_obs_debut_maxLARC.rda')
 saveRDS(a10_obs_mnppy_maxLARC, file='../output/a10_obs_mnppy_maxLARC.rda')
 
 ########################################################################
-### # Scenario 3: Only LARC changes, drawing from withdrawal
+### # Scenario 3: Only LARC changes
 source("a10_obs_contraception_change_onlyLARC_from_wd.R")    # Observed behavior change
 source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    # Observed behavior change
 

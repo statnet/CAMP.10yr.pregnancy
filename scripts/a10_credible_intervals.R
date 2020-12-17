@@ -38,16 +38,9 @@ for (i in 1:length(years)) {
                              '1'='no method', '2'='pills', '3'='other hormonal',
                              '4'='condoms', '5'='LARC', '6'='withdrawal/other')}
   
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='no method')])
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='pills')])
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='injection')])
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='condoms')])
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='withdrawal')])
-  #sum(temp$Weight[which(temp$sex=='female' & temp$race=='white' & temp$age==14 & temp$pregprev2=='other')])
-  
   n <- nrow(temp)
   for (s in 1:nreps) {
-    indices <- sample(1:n, n, prob=temp$wts, replace=TRUE)
+    indices <- sample(1:n, n, prob=temp$weight, replace=TRUE)
     resample <- temp[indices,]
     for (j in 1:neths) {
       for (k in 1:nages) {
@@ -64,6 +57,8 @@ for (i in 1:length(years)) {
 
 bctype_in_prob_boot <- sweep(bctype_in_wts_boot, c(1:3,5), apply(bctype_in_wts_boot, c(1:3,5), sum), "/")
 
+pred_bctype_minLARC_dyn_boot <- list()  # Temp
+
 for (bootrep in 1:nreps) {
   bctype_in_wts <- bctype_in_wts_boot[,,,,bootrep]
   bctype_in_prob <- bctype_in_prob_boot[,,,,bootrep]
@@ -74,6 +69,8 @@ for (bootrep in 1:nreps) {
   source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
   source("a10_impute_even_years.R")               # Impute even years
   source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
+  
+  pred_bctype_minLARC_dyn_boot[[bootrep]] <- pred_bctype_minLARC_dyn  # TEMP
   
   repnum <- paste(ifelse(bootrep<10, "0", ""), bootrep, sep="")
 

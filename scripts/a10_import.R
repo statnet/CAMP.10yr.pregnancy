@@ -204,8 +204,8 @@ for (i in 1:length(years)) {
 preg_init <- pregs_1yr_model
 
 ### Costs
-filename <- paste(datapath, "/costs.csv", sep="")
-costs <- read.csv(filename)
+#filename <- paste(datapath, "/costs.csv", sep="")
+#costs <- read.csv(filename)
 
 save.image("../output/a10_inputs_raw.rda")
 
