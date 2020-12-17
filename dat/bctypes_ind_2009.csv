@@ -1,4 +1,4 @@
-WEIGHT,STRATUM,PSU,age,sex,race,pregprev,pregprev2
+weight,stratum,psu,age,sex,race,pregprev,pregprev2
 0.852,201,10490,16,2,1,2,2
 0.852,201,10490,18,2,1,2,2
 0.852,201,10490,17,2,1,3,4
