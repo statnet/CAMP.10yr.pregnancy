@@ -2,6 +2,10 @@
 #############################################################
 #### Results for paper "XXXX"
 
+# Costs saved in 2017 dollars by year
+
+costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
+
 # Load main results
 
 a10_nbc_minLARC <- readRDS("../output/a10_nbc_minLARC.rda")
@@ -18,7 +22,7 @@ a10_obs_sex_maxLARC <- readRDS("../output/a10_obs_sex_maxLARC.rda")
 a10_obs_debut_maxLARC <- readRDS("../output/a10_obs_debut_maxLARC.rda")
 a10_obs_mnppy_maxLARC <- readRDS("../output/a10_obs_mnppy_maxLARC.rda")
 
-# Load bootstrap results
+# Load and compile bootstrap results
 
 a10_nbc_minLARC_boot <- a10_obs_minLARC_boot <- a10_obs_cc_minLARC_boot <- 
   a10_obs_sex_minLARC_boot <- a10_obs_debut_minLARC_boot <- a10_obs_mnppy_minLARC_boot <- 
@@ -46,8 +50,8 @@ for ( bootrep in 1:nreps) {
 
   cat(bootrep, " ", sep="")  
 }
- 
-# Pull out core data
+
+# Pull out core data from results and sum to: # pregs by year and age across scenarios
 
 p_minL_nbc <- round(apply(a10_nbc_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
 p_minL_obs <- round(apply(a10_obs_minLARC$n_preg_total_f, 2:3, sum)[,3:12],0)
@@ -63,8 +67,7 @@ p_maxL_obs_sex <- round(apply(a10_obs_sex_maxLARC$n_preg_total_f, 2:3, sum)[,3:1
 p_maxL_obs_debut <- round(apply(a10_obs_debut_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 p_maxL_obs_mnppy <- round(apply(a10_obs_mnppy_maxLARC$n_preg_total_f, 2:3, sum)[,3:12],0)   
 
-
-# Pull out bootstrap data
+# Pull out core bootstrap data and sum to: # pregs by year and age across scenarios
 
 p_minL_nbc_boot <- p_minL_obs_boot <- p_minL_obs_cc_boot <- 
   p_minL_obs_sex_boot <- p_minL_obs_debut_boot <- p_minL_obs_mnppy_boot <- 
@@ -90,53 +93,47 @@ for (bootnum in 1:nreps) {
 
 }
 
-bootresults <- function(x, nreps) {
+# Get total # of pregs across all ages and years for each bootstrap replicate 
+#    and query in in various ways for QC
+
+boot_totpreg <- function(x, nreps) {
   sapply(1:nreps, function(rep) sum(x[[rep]]))
 }
 
-p_minL_nbc_bootresults       <- bootresults(p_minL_nbc_boot      , nreps)
-p_minL_obs_bootresults       <- bootresults(p_minL_obs_boot      , nreps)
-p_minL_obs_cc_bootresults    <- bootresults(p_minL_obs_cc_boot   , nreps)
-p_minL_obs_sex_bootresults   <- bootresults(p_minL_obs_sex_boot  , nreps)
-p_minL_obs_debut_bootresults <- bootresults(p_minL_obs_debut_boot, nreps)
-p_minL_obs_mnppy_bootresults <- bootresults(p_minL_obs_mnppy_boot, nreps)
+p_minL_nbc_boot_totpreg       <- boot_totpreg(p_minL_nbc_boot      , nreps)
+p_minL_obs_boot_totpreg       <- boot_totpreg(p_minL_obs_boot      , nreps)
+p_minL_obs_cc_boot_totpreg    <- boot_totpreg(p_minL_obs_cc_boot   , nreps)
+p_minL_obs_sex_boot_totpreg   <- boot_totpreg(p_minL_obs_sex_boot  , nreps)
+p_minL_obs_debut_boot_totpreg <- boot_totpreg(p_minL_obs_debut_boot, nreps)
+p_minL_obs_mnppy_boot_totpreg <- boot_totpreg(p_minL_obs_mnppy_boot, nreps)
                                                         
-boxplot(p_minL_nbc_bootresults, p_minL_obs_bootresults,
-        p_minL_obs_cc_bootresults, p_minL_obs_sex_bootresults, 
-        p_minL_obs_debut_bootresults, p_minL_obs_mnppy_bootresults)
+boxplot(p_minL_nbc_boot_totpreg, p_minL_obs_boot_totpreg,
+        p_minL_obs_cc_boot_totpreg, p_minL_obs_sex_boot_totpreg, 
+        p_minL_obs_debut_boot_totpreg, p_minL_obs_mnppy_boot_totpreg)
 
-rbind(p_minL_nbc_bootresults, p_minL_obs_bootresults,
-        p_minL_obs_cc_bootresults, p_minL_obs_sex_bootresults, 
-        p_minL_obs_debut_bootresults, p_minL_obs_mnppy_bootresults)
+rowMeans(rbind(p_minL_nbc_boot_totpreg, p_minL_obs_boot_totpreg,
+        p_minL_obs_cc_boot_totpreg, p_minL_obs_sex_boot_totpreg, 
+        p_minL_obs_debut_boot_totpreg, p_minL_obs_mnppy_boot_totpreg))
 
 sum(p_minL_nbc)
 
-p_maxL_nbc_bootresults       <- bootresults(p_maxL_nbc_boot      , nreps)
-p_maxL_obs_bootresults       <- bootresults(p_maxL_obs_boot      , nreps)
-p_maxL_obs_cc_bootresults    <- bootresults(p_maxL_obs_cc_boot   , nreps)
-p_maxL_obs_sex_bootresults   <- bootresults(p_maxL_obs_sex_boot  , nreps)
-p_maxL_obs_debut_bootresults <- bootresults(p_maxL_obs_debut_boot, nreps)
-p_maxL_obs_mnppy_bootresults <- bootresults(p_maxL_obs_mnppy_boot, nreps)
+p_maxL_nbc_boot_totpreg       <- boot_totpreg(p_maxL_nbc_boot      , nreps)
+p_maxL_obs_boot_totpreg       <- boot_totpreg(p_maxL_obs_boot      , nreps)
+p_maxL_obs_cc_boot_totpreg    <- boot_totpreg(p_maxL_obs_cc_boot   , nreps)
+p_maxL_obs_sex_boot_totpreg   <- boot_totpreg(p_maxL_obs_sex_boot  , nreps)
+p_maxL_obs_debut_boot_totpreg <- boot_totpreg(p_maxL_obs_debut_boot, nreps)
+p_maxL_obs_mnppy_boot_totpreg <- boot_totpreg(p_maxL_obs_mnppy_boot, nreps)
 
-boxplot(p_maxL_nbc_bootresults, p_maxL_obs_bootresults,
-        p_maxL_obs_cc_bootresults, p_maxL_obs_sex_bootresults, 
-        p_maxL_obs_debut_bootresults, p_maxL_obs_mnppy_bootresults)
+boxplot(p_maxL_nbc_boot_totpreg, p_maxL_obs_boot_totpreg,
+        p_maxL_obs_cc_boot_totpreg, p_maxL_obs_sex_boot_totpreg, 
+        p_maxL_obs_debut_boot_totpreg, p_maxL_obs_mnppy_boot_totpreg)
 
-rbind(p_maxL_nbc_bootresults, p_maxL_obs_bootresults,
-      p_maxL_obs_cc_bootresults, p_maxL_obs_sex_bootresults, 
-      p_maxL_obs_debut_bootresults, p_maxL_obs_mnppy_bootresults)
+rowMeans(rbind(p_maxL_nbc_boot_totpreg, p_maxL_obs_boot_totpreg,
+      p_maxL_obs_cc_boot_totpreg, p_maxL_obs_sex_boot_totpreg, 
+      p_maxL_obs_debut_boot_totpreg, p_maxL_obs_mnppy_boot_totpreg))
 
 sum(p_maxL_nbc)
 
-
-
-####################################################################################
-#### Costs
-# costs saved in 2017 dollars by year
-
-costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19338)
-
-####################################################################################
 #### bctype data
 
 bctype_in_wts <- readRDS("../output/a10_bctype_in_wts.rda")
@@ -177,7 +174,9 @@ for(i in 1:6) {
 ####################################################################################
 #### Fig: BC type by year, raw data
 
-bmp("../output/Fig1.bmp", 520, 520)
+tiff("../output/Fig1.tif", height = 5*1200, width = 5*1200,
+  units = "px", res = 1200, pointsize = 8,  compression = "lzw")
+
 matplot(bctype_in_yearprob, type='b', xaxt="n" , ylab= "Prop. reporting method",
         main = "Method of birth control reported by females, YRBS", ylim=c(0,0.8),
         pch=letters[1:length(bctypes_in)])
@@ -202,16 +201,8 @@ pavert_minL_obs_cc <- 1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc)
 pavert_maxL_obs <- 1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc)
 pavert_maxL_obs_cc <- 1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc)
 
-
-pavert_minL_obs_cc_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_cc_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
-boxplot(pavert_minL_obs_cc_boot, ylim=c(-0.3, 0.5))
-pavert_minL_obs_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
-boxplot(pavert_minL_obs_boot, add=T)
-
-
-
-
-bmp("../output/Fig2.bmp", 520, 520)
+tiff("../output/Fig2.tif", height = 5*1200, 5*1200,
+    units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 plot(pavert_minL_obs, ylab="prop. pregs averted",
      ylim=c(-0.05,0.3), xaxt="n", xlab='year', main='Proportions of pregnancies averted by cause', type='b')
 abline(h=0)
@@ -222,7 +213,7 @@ legend(1.5, 0.3, c('total',
                    'from changes in contraception methods'
 ),
   cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
-  col=c('black','red','green', 'orange'), pch = 1, ncol=1)
+  col=c('black','red','darkgreen', 'blue'), pch = 1, ncol=1)
 
 points(pavert_minL_obs_debut, col='red', type='b')
 points(pavert_minL_obs_mnppy, col='darkgreen', type='b')
@@ -232,6 +223,43 @@ points(pavert_maxL_obs, col='black', type='b')
 points(pavert_maxL_obs_cc, col='blue', type='b')
 dev.off()
 
+
+####################################################################################
+### Plot proportion averted by contraception, maxLARC, with CIs.
+
+errbar <- function(x, up, low, ...) arrows(x, low, x, up, 
+                                           length=0.00, angle=90, code=3, ...)
+
+pavert_minL_obs_cc_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_cc_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
+pavert_minL_obs_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_minL_obs_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
+pavert_maxL_obs_cc_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_maxL_obs_cc_boot[[x]])/colSums(p_maxL_nbc_boot[[x]])))
+pavert_maxL_obs_boot <- t(sapply(1:nreps, function(x) 1 - colSums(p_maxL_obs_boot[[x]])/colSums(p_maxL_nbc_boot[[x]])))
+
+
+pavert_maxL_obs_cc_boot_mean <- colMeans(pavert_maxL_obs_cc_boot)
+#pavert_maxL_obs_cc_boot_sd <- apply(pavert_maxL_obs_cc_boot, 2, sd)
+#pavert_maxL_obs_cc_boot_ub <- pavert_maxL_obs_cc_boot_mean + 
+#                                (1.96 * pavert_maxL_obs_cc_boot_sd / sqrt(nreps))
+#pavert_maxL_obs_cc_boot_lb <- pavert_maxL_obs_cc_boot_mean -
+#                                (1.96 * pavert_maxL_obs_cc_boot_sd / sqrt(nreps))
+
+pavert_maxL_obs_cc_boot_ub <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.75)
+pavert_maxL_obs_cc_boot_lb <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.25)
+
+tiff("../output/Fig3.tif", height = 5*1200, 5*1200,
+     units = "px", res = 1200, pointsize = 8,  compression = "lzw")
+plot(1:10, pavert_maxL_obs_cc_boot_mean, ylim=c(-0.1, 0.1), col='blue', type='b',
+     xaxt='n', xlab="Year", ylab = "Proportion of pregnancies")
+mtext(side=3, line=2, cex=1, "Uncertainty in prop. of pregnancies averted by contraception changes")
+mtext(side=3, line=1, cex=0.9, "by year, relative to 2007")
+abline(h=0)
+errbar(1:10, pavert_maxL_obs_cc_boot_lb, pavert_maxL_obs_cc_boot_ub, col='blue')
+axis(1, 1:10, labels=2008:2017)
+dev.off()
+
+#pavert_maxL_obs_cc_boot_mean_allyrs <- mean(rowMeans(pavert_maxL_obs_cc_boot))
+#pavert_maxL_obs_cc_boot_ub_allyrs <- quantile(rowMeans(pavert_maxL_obs_cc_boot), 0.75)
+#pavert_maxL_obs_cc_boot_lb_allyrs <- quantile(rowMeans(pavert_maxL_obs_cc_boot), 0.25)
 
 ####################################################################################
 #### Plot partitions of pregnancies averted by cause, by age, minLARC
@@ -248,9 +276,10 @@ pregs_averted_by_age_and_cause_maxL <- rbind(
   rowSums(p_maxL_nbc - p_maxL_obs_mnppy),
   rowSums(p_maxL_nbc - p_maxL_obs_cc))
 
-pregs_averted_by_age_and_cause_minL <- cbind(
-  rowSums(pregs_averted_by_age_and_cause_minL[,1:2]),
-  pregs_averted_by_age_and_cause_minL[,3:6])
+pregs_averted_by_age_and_cause_minL <- pregs_averted_by_age_and_cause_minL[,2:6]
+
+tiff("../output/Fig4.tif", height = 5*1200, 5*1200,
+     units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 
 bp <- barplot(pregs_averted_by_age_and_cause_minL, xaxt='n', beside=TRUE,
         col=c('red', 'darkgreen', 'blue'), 
@@ -258,51 +287,52 @@ bp <- barplot(pregs_averted_by_age_and_cause_minL, xaxt='n', beside=TRUE,
         main='No. of pregnancies averted by cause and by age, summed across years',
         ylim=c(-4e4,20e4))
 #axis(1, bp[2,], 13:18, pos=-50000, tick = FALSE)
-axis(1, bp[2,], c("13-14", 15:18), pos=-50000, tick = FALSE)
+axis(1, bp[2,], c("14", 15:18), pos=-50000, tick = FALSE)
 legend(bp[1,1], 2e5, c('from delay in age at first sex',
-                       'from changes in annual partner numbers post-debut',
+                       'from changes in annual partner numbers after first sex',
                        'from changes in contraception methods'),
         cex=0.9, text.col=c('red','darkgreen', 'blue'),
-        col=c('red','green', 'orange'))
+        fill = c('red','darkgreen', 'blue'))
+
+dev.off()
 
 ####################################################################################
 #### Plot partitions of pregnancies averted by age and year by BC types, minLARC
 
 # Still exploring
 
-pregs_averted_by_age_and_year <- p_minL_nbc - p_minL_obs_cc
-
-c(colSums(pregs_averted_by_age_and_year[1:2,]),
-  colSums(pregs_averted_by_age_and_year[3:4,]),
-  pregs_averted_by_age_and_year[5:6,])
-
-
-pregs_averted_by_age_and_year_binned4 <- rbind(
-    colSums(pregs_averted_by_age_and_year[1:4,]),
-    pregs_averted_by_age_and_year[5:6,])
-
+#pregs_averted_by_age_and_year <- p_minL_nbc - p_minL_obs_cc
+#
+#c(colSums(pregs_averted_by_age_and_year[1:2,]),
+#  colSums(pregs_averted_by_age_and_year[3:4,]),
+#  pregs_averted_by_age_and_year[5:6,])
+#
+#pregs_averted_by_age_and_year_binned4 <- rbind(
+#    colSums(pregs_averted_by_age_and_year[1:4,]),
+#    pregs_averted_by_age_and_year[5:6,])
+#
 #### 6 ages version
-matplot(t(p_minL_nbc - p_minL_obs_cc), type='b', pch=1:6, xaxt='n',
-        main = 'No. of pregnancies averted by changes in contraception usage',
-        xlab='Age', ylab='Number of pregnancies averted')
-abline(h=0, col='darkgray')
-axis(1, 1:10, 2008:2017)
-legend(1, 38000, c('13-yo','14-yo',
-                   '15-yo','16-yo',
-                   '17-yo','18-yo'),
-       cex=0.87, text.col=1:6,
-       col=1:6, lty=1, pch=1:6, ncol=2)
-
+#matplot(t(p_minL_nbc - p_minL_obs_cc), type='b', pch=1:6, xaxt='n',
+#        main = 'No. of pregnancies averted by changes in contraception usage',
+#        xlab='Age', ylab='Number of pregnancies averted')
+#abline(h=0, col='darkgray')
+#axis(1, 1:10, 2008:2017)
+#legend(1, 38000, c('13-yo','14-yo',
+#                   '15-yo','16-yo',
+#                   '17-yo','18-yo'),
+#       cex=0.87, text.col=1:6,
+#       col=1:6, lty=1, pch=1:6, ncol=2)
+#
 #### 4 ages version
-matplot(t(pregs_averted_by_age_and_year_binned2), type='b', pch=1:4, xaxt='n',
-        main = 'No. of pregnancies averted by changes in contraception usage',
-        xlab='Age', ylab='Number of pregnancies averted')
-abline(h=0, col='darkgray')
-axis(1, 1:10, 2008:2017)
-legend(1, 38000, c('13-14-yo','15-16-yo',
-                   '17-yo','18-yo'),
-       cex=0.87, text.col=1:4,
-       col=1:4, lty=1, pch=1:4, ncol=2)
+#matplot(t(pregs_averted_by_age_and_year_binned4), type='b', pch=1:4, xaxt='n',
+#        main = 'No. of pregnancies averted by changes in contraception usage',
+#        xlab='Age', ylab='Number of pregnancies averted')
+#abline(h=0, col='darkgray')
+#axis(1, 1:10, 2008:2017)
+#legend(1, 38000, c('13-14-yo','15-16-yo',
+#                   '17-yo','18-yo'),
+#       cex=0.87, text.col=1:4,
+#       col=1:4, lty=1, pch=1:4, ncol=2)
 
 ####################################################################################
 #### Costs by year and cause, total costs by cause
@@ -320,36 +350,6 @@ rowSums(costs_averted_by_year_and_cause)
 
 
 
-####################################################################################
-#### function: wtavg_bctype
-
-wtavg_bctype <- function(obj, method, dim) {
-  apply((obj[[method]]*meanpop_13to18_f*pred_eversex_f_dyn), dim, sum) /
-    apply((meanpop_13to18_f*pred_eversex_f_dyn), dim, sum)
-}
-
-####################################################################################
-#### bctypes predicted by regression
-
-bctypes<- names(pred_bctype_minLARC_dyn)
-bctypes_mean_minLARC <- 
-  sapply(1:6, function(x) wtavg_bctype(pred_bctype_minLARC_dyn, bctypes[x],3))
-
-matplot(bctypes_mean_minLARC, type='b', xlab="year", xaxt="n",
-        ylab = "Prop. using method", main = "Minimum LARC use scenario",
-        ylim=c(0,0.8), pch=c('a', 'b', 'd', 'f', 'g', 'k'))
-
-legend(1.5, 0.8, c(
-  'a = no method', 'b = condoms', 'd = pills', 
-  'f = LARC', 'g = other hormonal', 'k = other (incl. withdrawal)'),
-  cex=0.7, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
-
-axis(1, 1:11, 2007:2017)
-abline(h=0, col="lightgray", lty=3)
-
-#bctype_in <- names(pred_bctype_minLARC_dyn)
-#bctypes_mean_in <- 
-#  sapply(1:11, function(x) wtavg_bctype(bctypes_in, bctypes[x],3))
 
 
 ###############################################################################3
@@ -361,497 +361,45 @@ abline(h=0, col="lightgray", lty=3)
 
 
 
+# Weighted abg of preg prob
+
+totpop_age <- colSums(meanpop_13to18_f)[,1]
+sum(prob_detpreg_maxLARC[2:6] * totpop_age[2:6]) / sum(totpop_age[2:6])
+
+
+
+####################################################################################
+####################################################################################
+## Original QC and debugging
+####################################################################################
+####################################################################################
+#### function: wtavg_bctype
+
+#wtavg_bctype <- function(obj, method, dim) {
+#  apply((obj[[method]]*meanpop_13to18_f*pred_eversex_f_dyn), dim, sum) /
+#    apply((meanpop_13to18_f*pred_eversex_f_dyn), dim, sum)
+#}
+
+####################################################################################
+#### bctypes predicted by regression
+
+#bctypes<- names(pred_bctype_minLARC_dyn)
+#bctypes_mean_minLARC <- 
+#  sapply(1:6, function(x) wtavg_bctype(pred_bctype_minLARC_dyn, bctypes[x],3))
+#
+#matplot(bctypes_mean_minLARC, type='b', xlab="year", xaxt="n",
+#        ylab = "Prop. using method", main = "Minimum LARC use scenario",
+#        ylim=c(0,0.8), pch=c('a', 'b', 'd', 'f', 'g', 'k'))
+#
+#legend(1.5, 0.8, c(
+#  'a = no method', 'b = condoms', 'd = pills', 
+#  'f = LARC', 'g = other hormonal', 'k = other (incl. withdrawal)'),
+#  cex=0.7, text.col=1:6, col=1:6, lty= 1:5, ncol=2)
+#
+#axis(1, 1:11, 2007:2017)
+#abline(h=0, col="lightgray", lty=3)
+#
+##bctype_in <- names(pred_bctype_minLARC_dyn)
+#bctypes_mean_in <- 
+#  sapply(1:11, function(x) wtavg_bctype(bctypes_in, bctypes[x],3))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
-if(F) {
-
-#### Table 1: regression coefficients
-
-round(summary(eversex_f_reg)$coef[,c(1,2,4)],3)
-round(summary(condom_f_reg)$coef[,c(1,2,4)],3)
-round(summary(mnppy_f_reg)$coef[,c(1,2,4)],3)
-
-#################################################################################
-#### Figure 1: predicted values for eversex
-surveyyears <- seq(2007, 2017, by=2)
-
-bmp("../output/predicted.bmp", width=920, height=700)
-
-layout(matrix(c(1,1,1,2,3,4), 2, 3, byrow = TRUE))
-
-par(mar=c(0, 0, 0, 0))
-plot(0:1, 0:1, xaxt = 'n', yaxt = 'n', bty = 'n', 
-     pch = '', ylab = '', xlab = '')
-legend(x=0.18, y=0.15, 
-   legend=c('Age 13 reported', 'Age 14 reported', 'Age 15 reported',
-            'Age 16 reported', 'Age 17 reported', 'Age 18 reported',
-            'Age 13 predicted', 'Age 14 predicted', 'Age 15 predicted',
-            'Age 16 predicted', 'Age 17 predicted', 'Age 18 predicted'),
-   lty=rep(1:2,each=6), col=rep(rainbow(6),2), ncol=4, cex=1.5)
-
-par(mar=c(5.1, 5.1, 2.1, 2.1))
-matplot(surveyyears, t(prop_eversex_f[1,,]), pch=16, ylim=c(0,1), 
-        xaxp=c(2007, 2017, 5), type='b', lty=1, col=rainbow(6),
-        xlab= "Survey year", 
-        ylab="Prop. reporting previous sexual intercourse",
-        main = "Black females", cex.axis=1.75, cex.lab = 1.75, cex.main=1.75)
-matplot(surveyyears, t(pred_eversex_f_dyn[1,,c(1,3,5,7,9,11)]), 
-        pch=16, type='b', add=T, lty=2, col=rainbow(6))
-
-par(mar=c(5.1, 1.5, 2.1, 2.1))
-matplot(surveyyears, t(prop_eversex_f[2,,]), pch=16, ylim=c(0,1), 
-        xaxp=c(2007, 2017, 5), type='b', lty=1, col=rainbow(6),
-        xlab= "Survey year", 
-        ylab="",
-        main = "Hispanic females", cex.axis=1.75, cex.lab=1.75, cex.main=1.75)
-matplot(surveyyears, t(pred_eversex_f_dyn[2,,c(1,3,5,7,9,11)]), 
-          pch=16, type='b', add=T, lty=2, col=rainbow(6))
-  
-matplot(surveyyears, t(prop_eversex_f[3,,]), pch=16, ylim=c(0,1), 
-        xaxp=c(2007, 2017, 5), type='b', lty=1, col=rainbow(6),
-        xlab= "Survey year", 
-        ylab="",
-        main = "White females", cex.axis=1.75, cex.lab=1.75, cex.main=1.75)
-matplot(surveyyears, t(pred_eversex_f_dyn[3,,c(1,3,5,7,9,11)]), 
-        pch=16, type='b', add=T, lty=2, col=rainbow(6))
-
-dev.off()
-
-
-#################################################################################
-### Short names for ease
-
-fns_ct <- a10_ct_nbc$n_inc_insch_f  # Female no behavior change, school
-fcs_ct <- a10_ct_obs$n_inc_insch_f    # etc.
-fnt_ct <- a10_ct_nbc$n_inc_total_f
-fct_ct <- a10_ct_obs$n_inc_total_f
-
-fns_gc <- a10_gc_nbc$n_inc_insch_f  # Female no behavior change, school
-fcs_gc <- a10_gc_obs$n_inc_insch_f    # etc.
-fnt_gc <- a10_gc_nbc$n_inc_total_f
-fct_gc <- a10_gc_obs$n_inc_total_f
-
-plotyears <- 2008:2017
-
-#################################################################################
-## Helper functions
-
-asum <- function(x, y) apply(x, y, sum)
-sum_nbc_f_ct <- function(x, dim) asum(a10_ct_nbc_100[[x]]$n_inc_insch_f[,,3:12], dim)
-sum_nbc_m_ct <- function(x, dim) asum(a10_ct_nbc_100[[x]]$n_inc_insch_m[,,3:12], dim)
-sum_obs_f_ct <- function(x, dim) asum(a10_ct_obs_100[[x]]$n_inc_insch_f[,,3:12], dim)
-sum_obs_m_ct <- function(x, dim) asum(a10_ct_obs_100[[x]]$n_inc_insch_m[,,3:12], dim)
-sum_nbc_f_gc <- function(x, dim) asum(a10_gc_nbc_100[[x]]$n_inc_insch_f[,,3:12], dim)
-sum_nbc_m_gc <- function(x, dim) asum(a10_gc_nbc_100[[x]]$n_inc_insch_m[,,3:12], dim)
-sum_obs_f_gc <- function(x, dim) asum(a10_gc_obs_100[[x]]$n_inc_insch_f[,,3:12], dim)
-sum_obs_m_gc <- function(x, dim) asum(a10_gc_obs_100[[x]]$n_inc_insch_m[,,3:12], dim)
-
-#array(sapply(1:100, function(x) sum_nbc_f(x,c(1,3))), c(3,10,100))
-errbar <- function(x, up, low, ...) arrows(x, low, x, up, 
-                                      length=0.00, angle=90, code=3, ...)
-
-
-
-##############################################################
-## Text: Total NIAs with CIs
-
-# Have to do colSums because helper fxn can't sum across all dimesions at once
-temp_nbc_ct <- colSums(sapply(1:100, function(x) sum_nbc_f_ct(x,1) + sum_nbc_m_ct(x,1))) 
-temp_obs_ct <- colSums(sapply(1:100, function(x) sum_obs_f_ct(x,1) + sum_obs_m_ct(x,1))) 
-nia_ct_tot_pt <- sum(fns_ct[,,3:12]) - sum(fcs_ct[,,3:12]) + 
-                 sum(mns_ct[,,3:12]) - sum(mcs_ct[,,3:12])
-nia_ct_tot_lb <- quantile(temp_nbc_ct - temp_obs_ct, 0.025)
-nia_ct_tot_ub <- quantile(temp_nbc_ct - temp_obs_ct, 0.975)
-round(c(nia_ct_tot_pt, nia_ct_tot_lb, nia_ct_tot_ub),1)
-
-temp_nbc_gc <- colSums(sapply(1:100, function(x) sum_nbc_f_gc(x,1) + sum_nbc_m_gc(x,1))) 
-temp_obs_gc <- colSums(sapply(1:100, function(x) sum_obs_f_gc(x,1) + sum_obs_m_gc(x,1))) 
-nia_gc_tot_pt <- sum(fns_gc[,,3:12]) - sum(fcs_gc[,,3:12]) + 
-  sum(mns_gc[,,3:12]) - sum(mcs_gc[,,3:12])
-nia_gc_tot_lb <- quantile(temp_nbc_gc - temp_obs_gc, 0.025)
-nia_gc_tot_ub <- quantile(temp_nbc_gc - temp_obs_gc, 0.975)
-round(c(nia_gc_tot_pt, nia_gc_tot_lb, nia_gc_tot_ub),1)
-
-
-##############################################################
-## Text: Total PIAs with CIs
-
-temp_nbc_ct <- colSums(sapply(1:100, function(x) sum_nbc_f_ct(x,1) + sum_nbc_m_ct(x,1))) 
-temp_obs_ct <- colSums(sapply(1:100, function(x) sum_obs_f_ct(x,1) + sum_obs_m_ct(x,1))) 
-pia_ct_tot_pt <- (sum(fns_ct[,,3:12]) - sum(fcs_ct[,,3:12]) + 
-                    sum(mns_ct[,,3:12]) - sum(mcs_ct[,,3:12])) / 
-  (sum(fns_ct[,,3:12]) + sum(mns_ct[,,3:12]))
-pia_ct_tot_lb <- quantile((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 0.025)
-pia_ct_tot_ub <- quantile((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 0.975)
-round(100*c(pia_ct_tot_pt, pia_ct_tot_lb, pia_ct_tot_ub),1)
-
-temp_nbc_gc <- colSums(sapply(1:100, function(x) sum_nbc_f_gc(x,1) + sum_nbc_m_gc(x,1))) 
-temp_obs_gc <- colSums(sapply(1:100, function(x) sum_obs_f_gc(x,1) + sum_obs_m_gc(x,1))) 
-pia_gc_tot_pt <- (sum(fns_gc[,,3:12]) - sum(fcs_gc[,,3:12]) + 
-                    sum(mns_gc[,,3:12]) - sum(mcs_gc[,,3:12])) / 
-  (sum(fns_gc[,,3:12]) + sum(mns_gc[,,3:12]))
-pia_gc_tot_lb <- quantile((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 0.025)
-pia_gc_tot_ub <- quantile((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 0.975)
-round(100*c(pia_gc_tot_pt, pia_gc_tot_lb, pia_gc_tot_ub),1)
-
-
-##############################################################
-## Table 2 and Table S5: Total NIAs by year and sex
-
-temp_nbc_ct <- sapply(1:100, function(x) sum_nbc_f_ct(x,3)) 
-temp_obs_ct <- sapply(1:100, function(x) sum_obs_f_ct(x,3)) 
-nia_ct_f_year_pt <- (asum(fns_ct[,,3:12],3) - asum(fcs_ct[,,3:12],3))
-nia_ct_f_year_lb <- apply((temp_nbc_ct-temp_obs_ct), 1, quantile, c(0.025))
-nia_ct_f_year_ub <- apply((temp_nbc_ct-temp_obs_ct), 1, quantile, c(0.975))
-table2a <- round(cbind(nia_ct_f_year_pt, nia_ct_f_year_lb, nia_ct_f_year_ub),1)
-table2a
-
-temp_nbc_ct <- sapply(1:100, function(x) sum_nbc_m_ct(x,3)) 
-temp_obs_ct <- sapply(1:100, function(x) sum_obs_m_ct(x,3)) 
-nia_ct_m_year_pt <- (asum(mns_ct[,,3:12],3) - asum(mcs_ct[,,3:12],3))
-nia_ct_m_year_lb <- apply((temp_nbc_ct-temp_obs_ct), 1, quantile, c(0.025))
-nia_ct_m_year_ub <- apply((temp_nbc_ct-temp_obs_ct), 1, quantile, c(0.975))
-table2b <- round(cbind(nia_ct_m_year_pt, nia_ct_m_year_lb, nia_ct_m_year_ub),1)
-table2b
-
-temp_nbc_gc <- sapply(1:100, function(x) sum_nbc_f_gc(x,3)) 
-temp_obs_gc <- sapply(1:100, function(x) sum_obs_f_gc(x,3)) 
-nia_gc_f_year_pt <- (asum(fns_gc[,,3:12],3) - asum(fcs_gc[,,3:12],3))
-nia_gc_f_year_lb <- apply((temp_nbc_gc-temp_obs_gc), 1, quantile, c(0.025))
-nia_gc_f_year_ub <- apply((temp_nbc_gc-temp_obs_gc), 1, quantile, c(0.975))
-table2c <- round(cbind(nia_gc_f_year_pt, nia_gc_f_year_lb, nia_gc_f_year_ub),1)
-table2c
-
-temp_nbc_gc <- sapply(1:100, function(x) sum_nbc_m_gc(x,3)) 
-temp_obs_gc <- sapply(1:100, function(x) sum_obs_m_gc(x,3)) 
-nia_gc_m_year_pt <- (asum(mns_gc[,,3:12],3) - asum(mcs_gc[,,3:12],3))
-nia_gc_m_year_lb <- apply((temp_nbc_gc-temp_obs_gc), 1, quantile, c(0.025))
-nia_gc_m_year_ub <- apply((temp_nbc_gc-temp_obs_gc), 1, quantile, c(0.975))
-table2d <- round(cbind(nia_gc_m_year_pt, nia_gc_m_year_lb, nia_gc_m_year_ub),1)
-table2d
-
-(annual_savings_ct_f <- table2a * costs$CT_F)
-(annual_savings_ct_m <- table2b * costs$CT_M)
-(annual_savings_gc_f <- table2c * costs$GC_F)
-(annual_savings_gc_m <- table2d * costs$GC_M)
-colSums(annual_savings_ct_f) # Double check Excel (rounding error OK)
-colSums(annual_savings_ct_m) # Double check Excel (rounding error OK)
-colSums(annual_savings_gc_f) # Double check Excel (rounding error OK)
-colSums(annual_savings_gc_m) # Double check Excel (rounding error OK)
-
-
-
-#########################################
-## Figure 2: race-specific year-specific NIAs and PIAs      
-
-temp_nbc_ct <- array(sapply(1:100, function(x) 
-  apply(a10_ct_nbc_100[[x]]$n_inc_insch_f[,,3:12], c(1,3), sum) + 
-  apply(a10_ct_nbc_100[[x]]$n_inc_insch_m[,,3:12], c(1,3), sum)), 
-  dim=c(3,10,100))
-
-temp_obs_ct <- array(sapply(1:100, function(x) 
-  apply(a10_ct_obs_100[[x]]$n_inc_insch_f[,,3:12], c(1,3), sum) + 
-  apply(a10_ct_obs_100[[x]]$n_inc_insch_m[,,3:12], c(1,3), sum)), 
-  dim=c(3,10,100))
-
-temp_nbc_gc <- array(sapply(1:100, function(x) 
-  apply(a10_gc_nbc_100[[x]]$n_inc_insch_f[,,3:12], c(1,3), sum) + 
-  apply(a10_gc_nbc_100[[x]]$n_inc_insch_m[,,3:12], c(1,3), sum)), 
-  dim=c(3,10,100))
-
-temp_obs_gc <- array(sapply(1:100, function(x) 
-  apply(a10_gc_obs_100[[x]]$n_inc_insch_f[,,3:12], c(1,3), sum) + 
-  apply(a10_gc_obs_100[[x]]$n_inc_insch_m[,,3:12], c(1,3), sum)), 
-  dim=c(3,10,100))
-
-nia_ct_raceyr_pt <- 
-  (asum(fns_ct[,,3:12], c(1,3)) - asum(fcs_ct[,,3:12], c(1,3)) +
-     asum(mns_ct[,,3:12], c(1,3)) - asum(mcs_ct[,,3:12], c(1,3)))
-pia_ct_raceyr_pt <- nia_ct_raceyr_pt/
-  (asum(fns_ct[,,3:12], c(1,3)) + asum(mns_ct[,,3:12], c(1,3)))
-
-nia_gc_raceyr_pt <- 
-  (asum(fns_gc[,,3:12], c(1,3)) - asum(fcs_gc[,,3:12], c(1,3)) +
-     asum(mns_gc[,,3:12], c(1,3)) - asum(mcs_gc[,,3:12], c(1,3)))
-pia_gc_raceyr_pt <- nia_gc_raceyr_pt/
-  (asum(fns_gc[,,3:12], c(1,3)) + asum(mns_gc[,,3:12], c(1,3)))
-
-nia_ct_raceyr_ub <- apply((temp_nbc_ct-temp_obs_ct), 
-                          1:2, quantile, c(0.975))
-nia_ct_raceyr_lb <- apply((temp_nbc_ct-temp_obs_ct), 
-                          1:2, quantile, c(0.025))
-nia_gc_raceyr_ub <- apply((temp_nbc_gc-temp_obs_gc), 
-                          1:2, quantile, c(0.975))
-nia_gc_raceyr_lb <- apply((temp_nbc_gc-temp_obs_gc), 
-                          1:2, quantile, c(0.025))
-pia_ct_raceyr_ub <- apply((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 
-                          1:2, quantile, c(0.975))
-pia_ct_raceyr_lb <- apply((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 
-                          1:2, quantile, c(0.025))
-pia_gc_raceyr_ub <- apply((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 
-                          1:2, quantile, c(0.975))
-pia_gc_raceyr_lb <- apply((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 
-                          1:2, quantile, c(0.025))
-
-bmp("../output/a10_race.bmp", width=800, height=800)
-plotoffset = 0.07
-par(mfrow=c(2,1))
-plot(plotyears-plotoffset*3, nia_ct_raceyr_pt[1,], pch=16, col='red',
-     xlim=c(min(plotyears)-0.5, max(plotyears)+0.5), ylim=c(0,3e5), 
-     xaxp=c(min(plotyears),max(plotyears),length(plotyears)-1),
-     yaxt = 'n',
-     xlab="Year", ylab="NIA (mean and CI)",
-     main="NIA by race/ethnicity and year"
-)
-axis(2, at = seq(0,3e5,5e4), las=1,
-     labels=c('0k', '50k', '100k', '150k', '200k', '250k', '300k'))
-errbar(plotyears-plotoffset*3, nia_ct_raceyr_ub[1,], nia_ct_raceyr_lb[1,], col='red')
-points(plotyears-plotoffset*2, nia_ct_raceyr_pt[2,], pch=16, col='blue')
-errbar(plotyears-plotoffset*2, nia_ct_raceyr_ub[2,], nia_ct_raceyr_lb[2,], col='blue')
-points(plotyears-plotoffset*1, nia_ct_raceyr_pt[3,], pch=16, col='green')
-errbar(plotyears-plotoffset*1, nia_ct_raceyr_ub[3,], nia_ct_raceyr_lb[3,], col='green')
-points(plotyears+plotoffset*1, nia_gc_raceyr_pt[1,], pch=4, col='red')
-errbar(plotyears+plotoffset*1, nia_gc_raceyr_ub[1,], nia_gc_raceyr_lb[1,], col='red')
-points(plotyears+plotoffset*2, nia_gc_raceyr_pt[2,], pch=4, col='blue')
-errbar(plotyears+plotoffset*2, nia_gc_raceyr_ub[2,], nia_gc_raceyr_lb[2,], col='blue')
-points(plotyears+plotoffset*3, nia_gc_raceyr_pt[3,], pch=4, col='green')
-errbar(plotyears+plotoffset*3, nia_gc_raceyr_ub[3,], nia_gc_raceyr_lb[3,], col='green')
-legend(2008, 3e5, 
-       legend=c('Black, chlamydia', 'Hispanic, chlamydia', 'White, chlamdyia',
-                'Black, gonorrhea', 'Hispanic, gonorrhea', 'White, gonorrhea'),
-       pch = rep(c(16,4), each=3),
-       col = rep(c('red', 'blue', 'green'),2),
-       ncol=2)
-
-plot(plotyears-plotoffset*3, pia_ct_raceyr_pt[1,], pch=16, col='red',
-     xlim=c(min(plotyears)-0.5, max(plotyears)+0.5), ylim=c(0,0.8), 
-     xaxp=c(min(plotyears),max(plotyears),length(plotyears)-1),
-     xlab="Year", ylab="PIA (mean and CI)",
-     main="PIA by race/ethnicity and year"
-)
-errbar(plotyears-plotoffset*3, pia_ct_raceyr_ub[1,], pia_ct_raceyr_lb[1,], col='red')
-points(plotyears-plotoffset*2, pia_ct_raceyr_pt[2,], pch=16, col='blue')
-errbar(plotyears-plotoffset*2, pia_ct_raceyr_ub[2,], pia_ct_raceyr_lb[2,], col='blue')
-points(plotyears-plotoffset*1, pia_ct_raceyr_pt[3,], pch=16, col='green')
-errbar(plotyears-plotoffset*1, pia_ct_raceyr_ub[3,], pia_ct_raceyr_lb[3,], col='green')
-points(plotyears+plotoffset*1, pia_gc_raceyr_pt[1,], pch=4, col='red')
-errbar(plotyears+plotoffset*1, pia_gc_raceyr_ub[1,], pia_gc_raceyr_lb[1,], col='red')
-points(plotyears+plotoffset*2, pia_gc_raceyr_pt[2,], pch=4, col='blue')
-errbar(plotyears+plotoffset*2, pia_gc_raceyr_ub[2,], pia_gc_raceyr_lb[2,], col='blue')
-points(plotyears+plotoffset*3, pia_gc_raceyr_pt[3,], pch=4, col='green')
-errbar(plotyears+plotoffset*3, pia_gc_raceyr_ub[3,], pia_gc_raceyr_lb[3,], col='green')
-legend(2008, 0.8, 
-       legend=c('Black, chlamydia', 'Hispanic, chlamydia', 'White, chlamdyia',
-                         'Black, gonorrhea', 'Hispanic, gonorrhea', 'White, gonorrhea'),
-       pch = rep(c(16,4), each=3),
-       col = rep(c('red', 'blue', 'green'),2),
-       ncol=2)
-dev.off()
-
-#########################################
-# Text: numbers summarizing Figure 2
-
-rowSums(nia_ct_raceyr_pt)
-prop.table(rowSums(nia_ct_raceyr_pt))
-rowSums(nia_gc_raceyr_pt)
-prop.table(rowSums(nia_gc_raceyr_pt))
-rowSums(nia_ct_raceyr_pt + nia_gc_raceyr_pt)
-prop.table(rowSums(nia_ct_raceyr_pt + nia_gc_raceyr_pt))
-
-### For PAA
-nia_ct_race_pt <- 
-  rowSums((asum(fns_ct[,,3:12], c(1,3)) - asum(fcs_ct[,,3:12], c(1,3)) +
-             asum(mns_ct[,,3:12], c(1,3)) - asum(mcs_ct[,,3:12], c(1,3))))
-
-### For PAA
-nia_gc_race_pt <- 
-  rowSums((asum(fns_gc[,,3:12], c(1,3)) - asum(fcs_gc[,,3:12], c(1,3)) +
-             asum(mns_gc[,,3:12], c(1,3)) - asum(mcs_gc[,,3:12], c(1,3))))
-
-pia_ct_race_pt <- 
-  rowSums((asum(fns_ct[,,3:12], c(1,3)) - asum(fcs_ct[,,3:12], c(1,3)) +
-     asum(mns_ct[,,3:12], c(1,3)) - asum(mcs_ct[,,3:12], c(1,3)))) / 
-  rowSums((asum(fns_ct[,,3:12], c(1,3)) + asum(mns_ct[,,3:12], c(1,3))))
-
-pia_gc_race_pt <- 
-  rowSums((asum(fns_gc[,,3:12], c(1,3)) - asum(fcs_gc[,,3:12], c(1,3)) +
-             asum(mns_gc[,,3:12], c(1,3)) - asum(mcs_gc[,,3:12], c(1,3)))) / 
-  rowSums((asum(fns_gc[,,3:12], c(1,3)) + asum(mns_gc[,,3:12], c(1,3))))
-
-pia_gcct_race_pt <- 
-  (rowSums((asum(fns_ct[,,3:12], c(1,3)) - asum(fcs_ct[,,3:12], c(1,3)) +
-             asum(mns_ct[,,3:12], c(1,3)) - asum(mcs_ct[,,3:12], c(1,3)))) +
-  rowSums((asum(fns_gc[,,3:12], c(1,3)) - asum(fcs_gc[,,3:12], c(1,3)) +
-             asum(mns_gc[,,3:12], c(1,3)) - asum(mcs_gc[,,3:12], c(1,3)))) ) /
-    
-  (rowSums((asum(fns_ct[,,3:12], c(1,3)) + asum(mns_ct[,,3:12], c(1,3)))) +
-  rowSums((asum(fns_gc[,,3:12], c(1,3)) + asum(mns_gc[,,3:12], c(1,3)))) )
-
-
-
-#########################################
-## Figure 3: age-specific NIAs and PIAs      
-
-temp_nbc_ct <- array(sapply(1:100, function(x) 
-  apply(a10_ct_nbc_100[[x]]$n_inc_insch_f[,,3:12], c(2), sum) + 
-    apply(a10_ct_nbc_100[[x]]$n_inc_insch_m[,,3:12], c(2), sum)), 
-  dim=c(6,1,100))
-
-temp_obs_ct <- array(sapply(1:100, function(x) 
-  apply(a10_ct_obs_100[[x]]$n_inc_insch_f[,,3:12], c(2), sum) + 
-    apply(a10_ct_obs_100[[x]]$n_inc_insch_m[,,3:12], c(2), sum)), 
-  dim=c(6,1,100))
-
-temp_nbc_gc <- array(sapply(1:100, function(x) 
-  apply(a10_gc_nbc_100[[x]]$n_inc_insch_f[,,3:12], c(2), sum) + 
-    apply(a10_gc_nbc_100[[x]]$n_inc_insch_m[,,3:12], c(2), sum)), 
-  dim=c(6,1,100))
-
-temp_obs_gc <- array(sapply(1:100, function(x) 
-  apply(a10_gc_obs_100[[x]]$n_inc_insch_f[,,3:12], c(2), sum) + 
-    apply(a10_gc_obs_100[[x]]$n_inc_insch_m[,,3:12], c(2), sum)), 
-  dim=c(6,1,100))
-
-nia_ct_age_pt <- 
-  (asum(fns_ct[,,3:12], c(2)) - asum(fcs_ct[,,3:12], c(2)) +
-     asum(mns_ct[,,3:12], c(2)) - asum(mcs_ct[,,3:12], c(2)))
-pia_ct_age_pt <- nia_ct_age_pt/
-  (asum(fns_ct[,,3:12], c(2)) + asum(mns_ct[,,3:12], c(2)))
-
-nia_gc_age_pt <- 
-  (asum(fns_gc[,,3:12], c(2)) - asum(fcs_gc[,,3:12], c(2)) +
-     asum(mns_gc[,,3:12], c(2)) - asum(mcs_gc[,,3:12], c(2)))
-pia_gc_age_pt <- nia_gc_age_pt/
-  (asum(fns_gc[,,3:12], c(2)) + asum(mns_gc[,,3:12], c(2)))
-
-nia_ct_age_ub <- apply((temp_nbc_ct-temp_obs_ct), 
-                          1:2, quantile, c(0.975))
-nia_ct_age_lb <- apply((temp_nbc_ct-temp_obs_ct), 
-                          1:2, quantile, c(0.025))
-nia_gc_age_ub <- apply((temp_nbc_gc-temp_obs_gc), 
-                          1:2, quantile, c(0.975))
-nia_gc_age_lb <- apply((temp_nbc_gc-temp_obs_gc), 
-                          1:2, quantile, c(0.025))
-pia_ct_age_ub <- apply((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 
-                          1:2, quantile, c(0.975))
-pia_ct_age_lb <- apply((temp_nbc_ct-temp_obs_ct)/temp_nbc_ct, 
-                          1:2, quantile, c(0.025))
-pia_gc_age_ub <- apply((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 
-                          1:2, quantile, c(0.975))
-pia_gc_age_lb <- apply((temp_nbc_gc-temp_obs_gc)/temp_nbc_gc, 
-                          1:2, quantile, c(0.025))
-
-bmp("../output/a10_age.bmp", width=500, height=800)
-plotoffset = 0.07
-par(mfrow=c(2,1))
-plot((13:18)-plotoffset, nia_ct_age_pt, pch=16, col='red',
-     ylim=c(0,8e5), 
-     yaxt = 'n',
-     xlab="Age", ylab="NIA (mean and CI)",
-     main="NIA by age"
-)
-axis(2, at = seq(0,8e5,1e5), las=1,
-     labels=c('0k', '100k', '200k', '300k', '400k', '500k', '600k', '700k', '800k'))
-errbar((13:18)-plotoffset, nia_ct_age_ub, nia_ct_age_lb, col='red')
-points((13:18)+plotoffset, nia_gc_age_pt, pch=4, col='blue')
-errbar((13:18)+plotoffset, nia_gc_age_ub, nia_gc_age_lb, col='blue')
-
-legend(13, 8e5, 
-       legend=c('Chlamydia', 'Gonorrhea'),
-       pch = c(16,4),
-       col = c('red', 'blue')
-)
-
-plot((13:18)-plotoffset, pia_ct_age_pt, pch=16, col='red',
-     ylim=c(0, 0.5),
-     xlab="Age", ylab="PIA (mean and CI)",
-     main="PIA by age"
-)
-errbar((13:18)-plotoffset, pia_ct_age_ub, pia_ct_age_lb, col='red')
-points((13:18)+plotoffset, pia_gc_age_pt, pch=4, col='blue')
-errbar((13:18)+plotoffset, pia_gc_age_ub, pia_gc_age_lb, col='blue')
-
-legend(17, 0.5, 
-       legend=c('Chlamydia', 'Gonorrhea'),
-       pch = c(16,4),
-       col = c('red', 'blue')
-)
-
-dev.off()
-
-
-
-#########################################
-# Text: numbers summarizing Figure 3
-
-nia_ct_age_pt
-prop.table(nia_ct_age_pt)
-nia_gc_age_pt
-prop.table(nia_gc_age_pt)
-nia_ct_age_pt + nia_gc_age_pt
-prop.table(nia_ct_age_pt + nia_gc_age_pt)
-
-pia_ct_age_pt <- 
-  (asum(fns_ct[,,3:12], c(2)) - asum(fcs_ct[,,3:12], c(2)) +
-             asum(mns_ct[,,3:12], c(2)) - asum(mcs_ct[,,3:12], c(2))) / 
-  (asum(fns_ct[,,3:12], c(2)) + asum(mns_ct[,,3:12], c(2)))
-
-pia_gc_age_pt <- 
-  (asum(fns_gc[,,3:12], c(2)) - asum(fcs_gc[,,3:12], c(2)) +
-             asum(mns_gc[,,3:12], c(2)) - asum(mcs_gc[,,3:12], c(2))) / 
-  (asum(fns_gc[,,3:12], c(2)) + asum(mns_gc[,,3:12], c(2)))
-
-pia_gcct_age_pt <- 
-  ((asum(fns_ct[,,3:12], c(2)) - asum(fcs_ct[,,3:12], c(2)) +
-              asum(mns_ct[,,3:12], c(2)) - asum(mcs_ct[,,3:12], c(2))) +
-     (asum(fns_gc[,,3:12], c(2)) - asum(fcs_gc[,,3:12], c(2)) +
-                asum(mns_gc[,,3:12], c(2)) - asum(mcs_gc[,,3:12], c(2))) ) /
-  
-  ((asum(fns_ct[,,3:12], c(2)) + asum(mns_ct[,,3:12], c(2))) +
-     (asum(fns_gc[,,3:12], c(2)) + asum(mns_gc[,,3:12], c(2))) )
-
-
-pia_ct_age_pt
-pia_gc_age_pt
-pia_gcct_age_pt
-
-}
