@@ -1,9 +1,9 @@
 #########################################################################
 ### Call main function
 
-a10_obs_cc_onlyLARC_minL_from_cdm <- a10_preg(n_f = n_f, 
+a10_obs_cc_onlyLARC_minL_from_wdl <- a10_preg(n_f = n_f, 
                                       prop_eversex_f = pred_eversex_f,
-                                      bc_use = pred_bctype_onlyLARC_minL_from_cdm,
+                                      bc_use = pred_bctype_onlyLARC_minL_from_wdl,
                                       mean_new_part_f = pred_mnppy_f,
                                       coital_acts_pp_f = capp_f,
                                       preg_init_f = preg_init_f,             
@@ -12,9 +12,9 @@ a10_obs_cc_onlyLARC_minL_from_cdm <- a10_preg(n_f = n_f,
                                       failure_rate = failure_rate
 )
 
-a10_obs_cc_onlyLARC_maxL_from_cdm <- a10_preg(n_f = n_f, 
+a10_obs_cc_onlyLARC_maxL_from_wdl <- a10_preg(n_f = n_f, 
                                       prop_eversex_f = pred_eversex_f,
-                                      bc_use = pred_bctype_onlyLARC_maxL_from_cdm,
+                                      bc_use = pred_bctype_onlyLARC_maxL_from_wdl,
                                       mean_new_part_f = pred_mnppy_f,
                                       coital_acts_pp_f = capp_f,
                                       preg_init_f = preg_init_f,             
