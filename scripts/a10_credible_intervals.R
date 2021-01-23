@@ -9,7 +9,10 @@ save.image(file="../output/a10_preg_all_before_boot.rda")
 
 nreps <- 100
 bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, nreps))
-#resample <- vector("list", length(years))
+eversex_boot <- array(dim=c(neths, nages, nyears, nreps))
+#aafs_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
+#lnp_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
+
 
 for (i in 1:length(years)) {
   filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
@@ -37,6 +40,18 @@ for (i in 1:length(years)) {
     temp$pregprev2 <- recode(temp$pregprev2,
                              '1'='no method', '2'='pills', '3'='other hormonal',
                              '4'='condoms', '5'='LARC', '6'='withdrawal/other')}
+
+  filename <- paste(datapath, "/data_ind_", years[i], ".csv", sep="")  # These data came limited to females
+  temp2 <- read.csv(filename)
+  temp2 <- rename(temp2, "weight"="Analysis.weight", "age"="Current.age", "race"="X4.level.race.variable",
+                          "eversex"="Ever.had.sexual.intercourse", "age1stsex"="At.at.first.sex", "nlifepart"="Lifetime.number.of.sexual.partners")
+  temp2 <- filter(temp2, age %in% 13:18)
+  temp2 <- filter(temp2, !is.na(age))
+  temp2 <- filter(temp2, age!=".")
+  temp2 <- filter(temp2, race!=".")
+  temp2 <- filter(temp2, race!="Other")
+  temp2$race <- recode(temp2$race, 'White'='white', 'Black'='black', 'Hispanic'='hispanic')
+  
   
   n <- nrow(temp)
   for (s in 1:nreps) {
