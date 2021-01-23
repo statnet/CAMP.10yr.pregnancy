@@ -355,11 +355,12 @@ points(ages, num_pregs_averted_by_age_and_cause_maxL[2,], type='b', col='red')
 points(ages, num_pregs_averted_by_age_and_cause_maxL[3,], type='b', col='blue')
 errbar(ages, navert_maxL_obs_cc_boot_age_lb, navert_maxL_obs_cc_boot_age_ub, col='blue')
 
-legend(14, 2.5e5, c('from delay in age at first sex',
-                       'from changes in annual partner numbers after first sex',
+legend(14, 2.5e5, c('from delay in age at first SI',
+                       'from changes in annual partner numbers after first SI',
                        'from changes in contraception methods'),
-        cex=0.9, text.col=c('red','darkgreen', 'blue'),
-        fill = c('red','darkgreen', 'blue'))
+        cex=0.9, text.col=c('black','red', 'blue'),
+        fill = c('black','red', 'blue'),
+        border = c('black','red', 'blue'))
 abline(h=0, lty=2)
 dev.off()
 
