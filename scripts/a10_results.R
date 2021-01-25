@@ -462,27 +462,27 @@ model_pregs <- colSums(round(apply(
   # Same as p_maxL_obs but with 2007 included
 
 btp_ratio_flat <- rep(nvss_births[1]/model_pregs[1], 11)
-btp_ratio_marketscan <- c(0.63, 0.62, 0.61, 0.60, 0.59, 
-                          0.58, 0.57, 0.55, 0.56, 0.53)
+#btp_ratio_marketscan <- c(0.63, 0.62, 0.61, 0.60, 0.59, 
+#                          0.58, 0.57, 0.55, 0.56, 0.53)
+btp_ratio_guttmacher <- c(0.59, 0.59, 0.59, 0.59, 0.59, 
+                          0.60, 0.61, 0.61, 0.61, 0.61, 0.61)
 
 model_births_btp_flat <- model_pregs * btp_ratio_flat
-model_births_btp_dyn  <- model_pregs[1:10] * btp_ratio_marketscan *
-                            (btp_ratio_flat[1]/btp_ratio_marketscan[1])
+model_births_btp_dyn  <- model_pregs * btp_ratio_guttmacher *
+                            (btp_ratio_flat[1]/btp_ratio_guttmacher[1])
 
 
 tiff("../output/Fig5.tif", height = 5*1200, 5*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
-plot(2007:2017, model_births_btp_flat, ylim=c(0,3e5), type='b', 
+plot(2007:2017, nvss_births, ylim=c(0,3e5), type='b', 
      xlab="Year", ylab = "Births", xaxt='n')
 abline(h=model_births_btp_flat[1], lty=2, col='grey80')
 axis(1, 2007:2017, 2007:2017)
-points(2007:2017, nvss_births, type='b', col = 'red')
-points(2007:2016, model_births_btp_dyn, type='b', col = 'blue')
+points(2007:2017, model_births_btp_dyn, type='b', col = 'red')
 legend(2007, 5e4, c('Reported births (NVSS)',
-                   'Predicted births (constant birth-to-preg. ratio)',
-                   'Predicted births (birth-to-preg. ratio from MarketScan)'),
-        cex=0.9, text.col=c('black','red', 'blue'),
-        col=c('black','red', 'blue'), pch = 1, ncol=1)
+                   'Predicted births'),
+        cex=0.9, text.col=c('black','red'),
+        col=c('black','red'), pch = 1, ncol=1)
 
 dev.off()
 
