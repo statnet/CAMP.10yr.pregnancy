@@ -76,8 +76,10 @@ saveRDS(a10_obs_mnppy_maxLARC, file='../output/a10_obs_mnppy_maxLARC.rda')
 source("a10_obs_contraception_change_onlyLARC_from_wdl.R")    # Observed behavior change
 source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    # Observed behavior change
 
-saveRDS(a10_obs_cc_onlyLARC_from_wdl, file='../output/a10_obs_cc_onlyLARC_from_wd.rda')
-saveRDS(a10_obs_cc_onlyLARC_from_cdm, file='../output/a10_obs_cc_onlyLARC_from_cdm.rda')
+saveRDS(a10_obs_cc_onlyLARC_maxL_from_wdl, file='../output/a10_obs_cc_onlyLARC_maxL_from_wdl.rda')
+saveRDS(a10_obs_cc_onlyLARC_minL_from_wdl, file='../output/a10_obs_cc_onlyLARC_minL_from_wdl.rda')
+saveRDS(a10_obs_cc_onlyLARC_maxL_from_cdm, file='../output/a10_obs_cc_onlyLARC_maxL_from_cdm.rda')
+saveRDS(a10_obs_cc_onlyLARC_minL_from_cdm, file='../output/a10_obs_cc_onlyLARC_minL_from_cdm.rda')
 
 ########################################################################
 source("a10_credible_intervals.R")           # Observed behavior change
