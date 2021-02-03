@@ -3,7 +3,7 @@
 #### Results for paper
 ####################################################################################
 
-nreps <- 100
+nreps <- 10
 
 ####################################################################################
 # Costs saved in 2017 dollars by year
@@ -14,8 +14,8 @@ costs <- c(20308, 21057, 20090, 19325, 19160, 21247, 19670, 19255, 19080, 19013)
 ###############################################################################
 # Weighted avg of preg prob
 
-totpop_age <- colSums(meanpop_13to18_f)[,1]
-sum(prob_detpreg_maxLARC[2:6] * totpop_age[2:6]) / sum(totpop_age[2:6])
+#totpop_age <- colSums(meanpop_13to18_f)[,1]
+#sum(prob_detpreg_maxLARC[2:6] * totpop_age[2:6]) / sum(totpop_age[2:6])
 
 ####################################################################################
 # Load main results
@@ -33,6 +33,11 @@ a10_obs_cc_maxLARC <- readRDS("../output/a10_obs_cc_maxLARC.rda")
 a10_obs_sex_maxLARC <- readRDS("../output/a10_obs_sex_maxLARC.rda")
 a10_obs_debut_maxLARC <- readRDS("../output/a10_obs_debut_maxLARC.rda")
 a10_obs_mnppy_maxLARC <- readRDS("../output/a10_obs_mnppy_maxLARC.rda")
+
+a10_obs_cc_onlyLARC_minL_from_wdl <- readRDS("../output/a10_obs_cc_onlyLARC_minL_from_wdl.rda")
+a10_obs_cc_onlyLARC_minL_from_cdm <- readRDS("../output/a10_obs_cc_onlyLARC_minL_from_cdm.rda")
+a10_obs_cc_onlyLARC_maxL_from_wdl <- readRDS("../output/a10_obs_cc_onlyLARC_maxL_from_wdl.rda")
+a10_obs_cc_onlyLARC_maxL_from_cdm <- readRDS("../output/a10_obs_cc_onlyLARC_maxL_from_cdm.rda")
 
 ####################################################################################
 # Load and compile bootstrap results
@@ -230,6 +235,26 @@ costs_averted_by_year_maxL <- colSums(costs_averted_by_year_and_cause_maxL)
 (costs_averted_by_cause_maxL <- rowSums(costs_averted_by_year_and_cause_maxL))
 (costs_averted__maxL <- sum(costs_averted_by_year_and_cause_maxL))
 
+# costs by age and cause - alas, code before now didn't leave room for this to be done with maximal efficiency
+
+costs_averted_by_age_and_cause_minL <- rbind(
+  colSums(costs*t((p_minL_nbc - p_minL_obs_debut))),
+  colSums(costs*t((p_minL_nbc - p_minL_obs_mnppy))),
+  colSums(costs*t((p_minL_nbc - p_minL_obs_cc)))
+)
+costs_averted_by_age_and_cause_minL <- rbind(colSums(costs_averted_by_age_and_cause_minL),
+                                             costs_averted_by_age_and_cause_minL)
+
+costs_averted_by_age_and_cause_maxL <- rbind(
+  colSums(costs*t((p_maxL_nbc - p_maxL_obs_debut))),
+  colSums(costs*t((p_maxL_nbc - p_maxL_obs_mnppy))),
+  colSums(costs*t((p_maxL_nbc - p_maxL_obs_cc)))
+)
+costs_averted_by_age_and_cause_maxL <- rbind(colSums(costs_averted_by_age_and_cause_maxL),
+                                              costs_averted_by_age_and_cause_maxL)
+
+
+
 ####################################################################################
 ### Fig 2: plot partition of proportion averted, minLARC and maxLARC
 
@@ -393,8 +418,8 @@ p_onlyL_maxL_cdm <- p_onlyL_maxL_cdm[-1,]
 
 num_pregs_averted_by_age_onlyL_minL_wdl <- rowSums(p_minL_nbc) - rowSums(p_onlyL_minL_wdl)
 num_pregs_averted_by_age_onlyL_minL_cdm <- rowSums(p_minL_nbc) - rowSums(p_onlyL_minL_cdm)
-num_pregs_averted_by_age_onlyL_maxL_wdl <- rowSums(p_minL_nbc) - rowSums(p_onlyL_maxL_wdl)
-num_pregs_averted_by_age_onlyL_maxL_cdm <- rowSums(p_minL_nbc) - rowSums(p_onlyL_maxL_cdm)
+num_pregs_averted_by_age_onlyL_maxL_wdl <- rowSums(p_maxL_nbc) - rowSums(p_onlyL_maxL_wdl)
+num_pregs_averted_by_age_onlyL_maxL_cdm <- rowSums(p_maxL_nbc) - rowSums(p_onlyL_maxL_cdm)
 
 num_pregs_averted_by_year_onlyL_minL_wdl <- colSums(p_minL_nbc) - colSums(p_onlyL_minL_wdl)
 num_pregs_averted_by_year_onlyL_minL_cdm <- colSums(p_minL_nbc) - colSums(p_onlyL_minL_cdm)
@@ -411,6 +436,12 @@ num_pregs_averted_onlyL_minL_cdm / num_pregs_averted_minL
 num_pregs_averted_onlyL_maxL_wdl / num_pregs_averted_maxL
 num_pregs_averted_onlyL_maxL_cdm / num_pregs_averted_maxL
 
+colSums(costs*t(p_minL_nbc - p_onlyL_minL_wdl))
+colSums(costs*t(p_minL_nbc - p_onlyL_minL_cdm))
+colSums(costs*t(p_maxL_nbc - p_onlyL_maxL_wdl))
+colSums(costs*t(p_maxL_nbc - p_onlyL_maxL_cdm))
+
+
 
 tiff("../output/Fig4.tif", height = 5*1200, 10*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
@@ -418,8 +449,7 @@ tiff("../output/Fig4.tif", height = 5*1200, 10*1200,
 par(mfrow=c(1,2))
 plot(num_pregs_averted_by_year_onlyL_minL_wdl, 
      type='b', ylim=c(0,8e4), xaxt = 'n', lty=1, xlab = "Year", lwd=1.5, 
-     ylab = "Num. pregnancies averted",
-     main = "Est. num. pregnancies averted by LARC by year")
+     ylab = "Num. pregnancies averted")
 axis(1, at = 1:10, labels=2008:2017)
 points(1:6, num_pregs_averted_by_year_onlyL_maxL_wdl[1:6], type='b', col='red', lty=1, lwd=1.5)
 points(6:10, num_pregs_averted_by_year_onlyL_maxL_wdl[6:10], type='b', col='red', lty=2, lwd=1.5)
@@ -433,11 +463,11 @@ legend(1,8e4, c('min-LARC (no LARC use before 2012), LARC use replaces withdrawa
                 'max-LARC (no LARC use before 2008), LARC use replaces condoms'),
       col=c('black','red','blue','brown'), lty=1
        )
+mtext('A)', side=3, line=1.0, at=-0.2, cex=1.5)
 
 plot(num_pregs_averted_by_age_onlyL_minL_wdl, 
      type='b', ylim=c(0,8e4), xaxt = 'n', xlab = "Age", lwd=1.5, 
-     ylab = "Num. pregnancies averted",
-     main = "Est. num. pregnancies averted by LARC by age")
+     ylab = "Num. pregnancies averted")
 axis(1, at = 1:5, labels=14:18)
 points(num_pregs_averted_by_age_onlyL_maxL_wdl, type='b', col='red', lwd=1.5)
 points(num_pregs_averted_by_age_onlyL_minL_cdm, type='b', col='blue', lwd=1.5)
@@ -448,9 +478,9 @@ legend(1,8e4, c('min-LARC (no LARC use before 2012), LARC use replaces withdrawa
                 'max-LARC (no LARC use before 2008), LARC use replaces condoms'),
        col=c('black','red','blue','brown'), lty=1
 )
+mtext('B)', side=3, line=1.0, at=0.45, cex=1.5)
 
 dev.off()
-
 
 ## Comparison to actual births
 
@@ -462,16 +492,12 @@ model_pregs <- colSums(round(apply(
   # Same as p_maxL_obs but with 2007 included
 
 btp_ratio_flat <- rep(nvss_births[1]/model_pregs[1], 11)
-btp_ratio_marketscan <- c(0.63, 0.62, 0.61, 0.60, 0.59, 
-                          0.58, 0.57, 0.55, 0.56, 0.53)
-btp_ratio_guttmacher <- c(0.59, 0.59, 0.59, 0.59, 0.59, 
-                          0.60, 0.61, 0.61, 0.61, 0.61)
+btp_ratio_gutt <- c(0.59, 0.59, 0.59, 0.59, 0.59, 
+                          0.60, 0.61, 0.61, 0.61, 0.61, 0.61)
 
 model_births_btp_flat <- model_pregs * btp_ratio_flat
-model_births_btp_gutt  <- model_pregs[1:10] * btp_ratio_guttmacher *
-                            (btp_ratio_flat[1]/btp_ratio_guttmacher[1])
-model_births_btp_ms  <- model_pregs[1:10] * btp_ratio_marketscan *
-                          (btp_ratio_flat[1]/btp_ratio_marketscan[1])
+model_births_btp_gutt  <- model_pregs * btp_ratio_gutt *
+                            (btp_ratio_flat[1]/btp_ratio_gutt[1])
 
 
 tiff("../output/Fig5.tif", height = 5*1200, 5*1200,
@@ -480,13 +506,15 @@ plot(2007:2017, nvss_births, ylim=c(0,3e5), type='b',
      xlab="Year", ylab = "Births", xaxt='n')
 abline(h=model_births_btp_flat[1], lty=2, col='grey80')
 axis(1, 2007:2017, 2007:2017)
-points(2007:2016, model_births_btp_gutt, type='b', col = 'red')
-points(2007:2016, model_births_btp_ms, type='b', col = 'blue')
+points(2007:2017, model_births_btp_gutt, type='b', col = 'red')
 legend(2007, 5e4, c('Reported births (NVSS)',
-                   'Predicted births (Guttmacher birth/preg ratios)',
-                   'Predicted births (MarketScan birth/preg ratios)'),
-        cex=0.9, text.col=c('black','red','blue'),
-        col=c('black','red','blue'), pch = 1, ncol=1)
+                   'Predicted births'),
+        cex=0.9, text.col=c('black','red'),
+        col=c('black','red'), pch = 1, ncol=1)
 
 dev.off()
 
+1-nvss_births[11]/nvss_births[1]
+1-model_births_btp_gutt[11]/model_births_btp_gutt[1]
+
+save.image("a10_preg_full_run.rda")
