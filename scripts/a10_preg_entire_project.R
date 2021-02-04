@@ -26,7 +26,7 @@ source("a10_process_inputs_bctypes.R")          # Process inputs (i.e. conduct r
 source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
 source("a10_impute_even_years.R")               # Impute even years
 source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
-source("a10_make_onlyLARC_scenarios.R")           # These differ from other types of scenarios and need to be made after previous two steps]
+source("a10_make_onlyLARC_scenarios.R")         # These differ from other types of scenarios and need to be made after previous two steps]
 
 saveRDS(bctype_in_wts, file="../output/a10_bctype_in_wts.rda")
 
@@ -81,11 +81,13 @@ saveRDS(a10_obs_cc_onlyLARC_minL_from_wdl, file='../output/a10_obs_cc_onlyLARC_m
 saveRDS(a10_obs_cc_onlyLARC_maxL_from_cdm, file='../output/a10_obs_cc_onlyLARC_maxL_from_cdm.rda')
 saveRDS(a10_obs_cc_onlyLARC_minL_from_cdm, file='../output/a10_obs_cc_onlyLARC_minL_from_cdm.rda')
 
+
+########################################################################
+### # Scenario X: Additional coital freq decline within partnerships
+source("a10_coital_decline.R")
+
 ########################################################################
 source("a10_credible_intervals.R")           # Observed behavior change
-
-
-
 
 ########################################################
 ## Generate results for paper 
