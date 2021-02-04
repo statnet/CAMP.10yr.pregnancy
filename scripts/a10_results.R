@@ -442,7 +442,6 @@ colSums(costs*t(p_maxL_nbc - p_onlyL_maxL_wdl))
 colSums(costs*t(p_maxL_nbc - p_onlyL_maxL_cdm))
 
 
-
 tiff("../output/Fig4.tif", height = 5*1200, 10*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 
@@ -499,6 +498,21 @@ model_births_btp_flat <- model_pregs * btp_ratio_flat
 model_births_btp_gutt  <- model_pregs * btp_ratio_gutt *
                             (btp_ratio_flat[1]/btp_ratio_gutt[1])
 
+model_pregs_coital_decline <- colSums(round(apply(
+  a10_coital_decline$n_preg_total_f, 2:3, sum)[,2:12],0)) 
+model_births_btp_coit  <- model_pregs_coital_decline * btp_ratio_gutt *
+  (btp_ratio_flat[1]/btp_ratio_gutt[1])
+
+num_avert_nvss <- nvss_births[1] - nvss_births
+num_avert_obs_behav <- nvss_births[1] - model_births_btp_gutt
+num_avert_obs_coital <- nvss_births[1] - model_births_btp_coit
+
+sum(num_avert_nvss) /  
+sum(num_avert_obs_behav)
+sum(num_avert_obs_coital)
+
+
+
 
 tiff("../output/Fig5.tif", height = 5*1200, 5*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
@@ -507,10 +521,13 @@ plot(2007:2017, nvss_births, ylim=c(0,3e5), type='b',
 abline(h=model_births_btp_flat[1], lty=2, col='grey80')
 axis(1, 2007:2017, 2007:2017)
 points(2007:2017, model_births_btp_gutt, type='b', col = 'red')
-legend(2007, 5e4, c('Reported births (NVSS)',
-                   'Predicted births'),
-        cex=0.9, text.col=c('black','red'),
-        col=c('black','red'), pch = 1, ncol=1)
+points(2007:2017, model_births_btp_coit, type='b', col = 'blue')
+
+  legend(2007, 5e4, c('Reported births (NVSS)',
+                   'Predicted births (YRBS behavioral data)',
+                   'Predicted births (with additional gradual decline in coital acts per partner)'),
+        cex=0.9, text.col=c('black','red', 'blue'),
+        col=c('black','red', 'blue'), pch = 1, ncol=1)
 
 dev.off()
 
