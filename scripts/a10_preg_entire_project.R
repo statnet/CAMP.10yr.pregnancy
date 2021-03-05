@@ -2,8 +2,8 @@
 ########################################################################
 ## Code for manuscript "XXXXX"
 
-#setwd("C:/git/CAMP_10yr_pregnancy/scripts/")  # Change depending on machine
-setwd("H:/_goodreau/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
+setwd("C:/git/CAMP_10yr_pregnancy/scripts/")  # Change depending on machine
+#setwd("H:/_goodreau/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
 
 #install.packages("EasyABC")
 library(EasyABC)
@@ -21,6 +21,7 @@ set.seed(1)
 
 source("a10_preg_backcalc_logistic.R")
 source("a10_import.R")                          # Get all inputs
+source("a10_process_inputs_popsizes.R")         # Process inputs (i.e. conduct regressions, etc.)
 source("a10_process_inputs_all_but_bctypes.R")  # Process inputs (i.e. conduct regressions, etc.)
 source("a10_process_inputs_bctypes.R")          # Process inputs (i.e. conduct regressions, etc.)
 source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types

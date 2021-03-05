@@ -20,3 +20,21 @@ for(bctype in 1:6) {
   }
 }
 dev.off()
+
+
+
+aaa <- (eversex_f/wts_f)[,,1]
+bbb <- apply(eversex_boot_yes[,,1,] / (eversex_boot_yes[,,1,] + eversex_boot_no[,,1,]),
+      1:2, mean)
+#ccc <- eversex_boot_yes[,,1,1] / (eversex_boot_yes[,,1,1] + eversex_boot_no[,,1,1])
+
+matplot(t(bbb/aaa), type='b')
+#matplot(t(ccc/aaa), type='b')
+
+sum((temp2 %>% filter(race=='white', age==14))$weight)
+wts_f[3,2,1]
+
+
+temp2 %>% filter(race=="hispanic" & age==13)
+
+

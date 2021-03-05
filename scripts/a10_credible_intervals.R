@@ -1,4 +1,4 @@
-
+  
 ##########################################################
 ### Determining credible intervals for pregnancy model
 
@@ -7,11 +7,12 @@ save.image(file="../output/a10_preg_all_before_boot.rda")
 
 ### Bootstrapping
 
-nreps <- 100
+nreps <- 3
 bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, nreps))
-eversex_boot <- array(dim=c(neths, nages, nyears, nreps))
-#aafs_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
-#lnp_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
+eversex_boot_yes <- array(dim=c(neths, nages, nyears, nreps))
+eversex_boot_no <- array(dim=c(neths, nages, nyears, nreps))
+AgeByDebutAge_lp_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
+AgeByDebutAge_num_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
 
 
 for (i in 1:length(years)) {
@@ -51,7 +52,7 @@ for (i in 1:length(years)) {
   temp2 <- filter(temp2, race!=".")
   temp2 <- filter(temp2, race!="Other")
   temp2$race <- recode(temp2$race, 'White'='white', 'Black'='black', 'Hispanic'='hispanic')
-  
+  temp2$age1stsex <- recode(temp2$age1stsex, '11'='12')
   
   n <- nrow(temp)
   for (s in 1:nreps) {
@@ -66,6 +67,27 @@ for (i in 1:length(years)) {
     }
   cat(s, ' ', sep='')
   }
+  
+  n <- nrow(temp2)
+  for (s in 1:nreps) {
+    indices <- sample(1:n, n, prob=temp2$weight, replace=TRUE)
+    resample <- temp2[indices,]
+    for (j in 1:neths) {
+      for (k in 1:nages) {
+          eversex_boot_yes[j,k,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], eversex=="Yes"))
+          eversex_boot_no[j,k,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], !eversex=="Yes"))  #Consistency with previous methods
+          for (z in 1:7) {
+            AgeByDebutAge_num_boot[j,k,z,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+12))
+            if (AgeByDebutAge_num_boot[j,k,z,i,s]>0) {
+              AgeByDebutAge_lp_boot[j,k,z,i,s] <- suppressWarnings(
+                mean(as.numeric((resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+12))$nlifepart))
+              )
+            }
+          }
+      }
+    }
+    cat(s, ' ', sep='')
+  }
 }
 
 #### Run the model on each bootstrapped version
@@ -77,9 +99,16 @@ pred_bctype_minLARC_dyn_boot <- list()  # Temp
 for (bootrep in 1:nreps) {
   bctype_in_wts <- bctype_in_wts_boot[,,,,bootrep]
   bctype_in_prob <- bctype_in_prob_boot[,,,,bootrep]
+  AgeByDebutAge_num_f <- AgeByDebutAge_num_boot[,,,,bootrep]
+  AgeByDebutAge_lp_f <- AgeByDebutAge_lp_boot[,,,,bootrep]
+  eversex_f <- eversex_boot_yes[,,,bootrep]
+
+  source("a10_process_inputs_popsizes.R")  # Process inputs (i.e. conduct regressions, etc.)
   
-  pred_eversex_f <- pred_eversex_f_dyn
-  pred_mnppy_f <- pred_mnppy_f_dyn
+  wts_f <- eversex_boot_yes[,,,bootrep] + eversex_boot_no[,,,bootrep]
+  wts_m <- wts_f
+
+  source("a10_process_inputs_all_but_bctypes.R")  # Process inputs (i.e. conduct regressions, etc.)
   source("a10_process_inputs_bctypes.R")          # Process inputs (i.e. conduct regressions, etc.)
   source("a10_reassign_bctypes.R")                # Move bc methods from input types to standardized types
   source("a10_impute_even_years.R")               # Impute even years
