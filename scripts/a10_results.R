@@ -3,7 +3,7 @@
 #### Results for paper
 ####################################################################################
 
-nreps <- 10
+nreps <- 100
 
 ####################################################################################
 # Costs saved in 2017 dollars by year
@@ -282,18 +282,70 @@ errbar <- function(x, up, low, ...) arrows(x, low, x, up, length=0.00, angle=90,
 #pavert_maxL_obs_cc_boot_ub <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.75)
 #pavert_maxL_obs_cc_boot_lb <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.25)
 
-num_pregs_averted_by_year_cc_minL_boot <- t(sapply(1:nreps, function(x) 
-  colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_cc_boot[[x]])))
 num_pregs_averted_by_year_all_minL_boot <- t(sapply(1:nreps, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_boot[[x]])))
-num_pregs_averted_by_year_cc_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_cc_minL_boot <- t(sapply(1:nreps, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_cc_boot[[x]])))
+num_pregs_averted_by_year_sex_minL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_sex_boot[[x]])))
+num_pregs_averted_by_year_debut_minL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_debut_boot[[x]])))
+num_pregs_averted_by_year_mnppy_minL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_mnppy_boot[[x]])))
+
 num_pregs_averted_by_year_all_maxL_boot <- t(sapply(1:nreps, function(x) 
-  colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_boot[[x]])))
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_boot[[x]])))
+num_pregs_averted_by_year_cc_maxL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_cc_boot[[x]])))
+num_pregs_averted_by_year_sex_maxL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_sex_boot[[x]])))
+num_pregs_averted_by_year_debut_maxL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_debut_boot[[x]])))
+num_pregs_averted_by_year_mnppy_maxL_boot <- t(sapply(1:nreps, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_mnppy_boot[[x]])))
+
+num_pregs_averted_by_year_all_minL_boot_mean <- colMeans(num_pregs_averted_by_year_all_minL_boot)
+num_pregs_averted_by_year_all_minL_boot_ub <- apply(num_pregs_averted_by_year_all_minL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_all_minL_boot_lb <- apply(num_pregs_averted_by_year_all_minL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_cc_minL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_minL_boot)
+num_pregs_averted_by_year_cc_minL_boot_ub <- apply(num_pregs_averted_by_year_cc_minL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_cc_minL_boot_lb <- apply(num_pregs_averted_by_year_cc_minL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_sex_minL_boot_mean <- colMeans(num_pregs_averted_by_year_sex_minL_boot)
+num_pregs_averted_by_year_sex_minL_boot_ub <- apply(num_pregs_averted_by_year_sex_minL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_sex_minL_boot_lb <- apply(num_pregs_averted_by_year_sex_minL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_debut_minL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_minL_boot)
+num_pregs_averted_by_year_debut_minL_boot_ub <- apply(num_pregs_averted_by_year_debut_minL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_debut_minL_boot_lb <- apply(num_pregs_averted_by_year_debut_minL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_mnppy_minL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_minL_boot)
+num_pregs_averted_by_year_mnppy_minL_boot_ub <- apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_mnppy_minL_boot_lb <- apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_all_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_all_maxL_boot)
+num_pregs_averted_by_year_all_maxL_boot_ub <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_all_maxL_boot_lb <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.25)
 
 num_pregs_averted_by_year_cc_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_maxL_boot)
 num_pregs_averted_by_year_cc_maxL_boot_ub <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.75)
 num_pregs_averted_by_year_cc_maxL_boot_lb <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_sex_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_sex_maxL_boot)
+num_pregs_averted_by_year_sex_maxL_boot_ub <- apply(num_pregs_averted_by_year_sex_maxL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_sex_maxL_boot_lb <- apply(num_pregs_averted_by_year_sex_maxL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_debut_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_maxL_boot)
+num_pregs_averted_by_year_debut_maxL_boot_ub <- apply(num_pregs_averted_by_year_debut_maxL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_debut_maxL_boot_lb <- apply(num_pregs_averted_by_year_debut_maxL_boot, 2, quantile, 0.25)
+
+num_pregs_averted_by_year_mnppy_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_maxL_boot)
+num_pregs_averted_by_year_mnppy_maxL_boot_ub <- apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, quantile, 0.75)
+num_pregs_averted_by_year_mnppy_maxL_boot_lb <- apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, quantile, 0.25)
+
+
+
 
 tiff("../output/Fig2.tif", height = 5*1200, 5*1200,
     units = "px", res = 1200, pointsize = 8,  compression = "lzw")
@@ -319,6 +371,9 @@ points(num_pregs_averted_by_year_and_cause_maxL[2,], col='darkgreen', type='b')
 points(num_pregs_averted_by_year_and_cause_maxL[3,], col='blue', type='b')
 
 errbar(1:10, num_pregs_averted_by_year_cc_maxL_boot_lb, num_pregs_averted_by_year_cc_maxL_boot_ub, col='blue')
+errbar(1:10, num_pregs_averted_by_year_debut_maxL_boot_lb, num_pregs_averted_by_year_debut_maxL_boot_ub, col='red')
+errbar(1:10, num_pregs_averted_by_year_mnppy_maxL_boot_lb, num_pregs_averted_by_year_mnppy_maxL_boot_ub, col='green')
+errbar(1:10, num_pregs_averted_by_year_all_maxL_boot_lb, num_pregs_averted_by_year_all_maxL_boot_ub, col='black')
 axis(1, 1:10, labels=2008:2017)
 
 dev.off()
