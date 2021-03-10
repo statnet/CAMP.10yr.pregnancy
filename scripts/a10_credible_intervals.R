@@ -52,7 +52,6 @@ for (i in 1:length(years)) {
   temp2 <- filter(temp2, race!=".")
   temp2 <- filter(temp2, race!="Other")
   temp2$race <- recode(temp2$race, 'White'='white', 'Black'='black', 'Hispanic'='hispanic')
-  temp2$age1stsex <- recode(temp2$age1stsex, '11'='12')
   
   n <- nrow(temp)
   for (s in 1:nreps) {
@@ -76,13 +75,13 @@ for (i in 1:length(years)) {
       for (k in 1:nages) {
           eversex_boot_yes[j,k,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], eversex=="Yes"))
           eversex_boot_no[j,k,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], !eversex=="Yes"))  #Consistency with previous methods
-          for (z in 1:7) {
-            AgeByDebutAge_num_boot[j,k,z,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+12))
+          for (z in 1:(k+1)) {
+            AgeByDebutAge_num_boot[j,k,z,i,s] <- nrow(resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+10))
             if (AgeByDebutAge_num_boot[j,k,z,i,s]>0) {
               AgeByDebutAge_lp_boot[j,k,z,i,s] <- suppressWarnings(
-                mean(as.numeric((resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+12))$nlifepart))
+                mean(as.numeric((resample %>% filter(race==eths_lc[j], age==ages[k], age1stsex==z+10))$nlifepart))
               )
-            }
+            } else {AgeByDebutAge_lp_boot[j,k,z,i,s] <- 0}
           }
       }
     }
