@@ -7,7 +7,7 @@ save.image(file="../output/a10_preg_all_before_boot.rda")
 
 ### Bootstrapping
 
-nreps <- 3
+nreps <- 100
 bctype_in_wts_boot <- array(dim=c(neths, nages, nyears, nbctypes_in, nreps))
 eversex_boot_yes <- array(dim=c(neths, nages, nyears, nreps))
 eversex_boot_no <- array(dim=c(neths, nages, nyears, nreps))
