@@ -3,7 +3,7 @@
 #### Results for paper
 ####################################################################################
 
-nreps <- 100
+nreps <- 16
 
 ####################################################################################
 # Costs saved in 2017 dollars by year
@@ -328,6 +328,9 @@ num_pregs_averted_by_year_all_maxL_boot_mean <- colMeans(num_pregs_averted_by_ye
 num_pregs_averted_by_year_all_maxL_boot_ub <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.75)
 num_pregs_averted_by_year_all_maxL_boot_lb <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.25)
 
+num_pregs_averted_by_year_all_maxL_boot_ub <- colSums(num_pregs_averted_by_year_and_cause_maxL) + apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/nreps^0.5
+num_pregs_averted_by_year_all_maxL_boot_lb <- colSums(num_pregs_averted_by_year_and_cause_maxL) - apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/nreps^0.5
+
 num_pregs_averted_by_year_cc_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_maxL_boot)
 num_pregs_averted_by_year_cc_maxL_boot_ub <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.75)
 num_pregs_averted_by_year_cc_maxL_boot_lb <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.25)
@@ -371,9 +374,9 @@ points(num_pregs_averted_by_year_and_cause_maxL[2,], col='darkgreen', type='b')
 points(num_pregs_averted_by_year_and_cause_maxL[3,], col='blue', type='b')
 
 errbar(1:10, num_pregs_averted_by_year_cc_maxL_boot_lb, num_pregs_averted_by_year_cc_maxL_boot_ub, col='blue')
-errbar(1:10, num_pregs_averted_by_year_debut_maxL_boot_lb, num_pregs_averted_by_year_debut_maxL_boot_ub, col='red')
-errbar(1:10, num_pregs_averted_by_year_mnppy_maxL_boot_lb, num_pregs_averted_by_year_mnppy_maxL_boot_ub, col='green')
-errbar(1:10, num_pregs_averted_by_year_all_maxL_boot_lb, num_pregs_averted_by_year_all_maxL_boot_ub, col='black')
+errbar((1:10)+0.1, num_pregs_averted_by_year_debut_maxL_boot_lb, num_pregs_averted_by_year_debut_maxL_boot_ub, col='red')
+errbar((1:10)+0.2, num_pregs_averted_by_year_mnppy_maxL_boot_lb, num_pregs_averted_by_year_mnppy_maxL_boot_ub, col='darkgreen')
+errbar((1:10)+0.1, num_pregs_averted_by_year_all_maxL_boot_lb, num_pregs_averted_by_year_all_maxL_boot_ub, col='black')
 axis(1, 1:10, labels=2008:2017)
 
 dev.off()
