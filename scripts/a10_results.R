@@ -359,9 +359,9 @@ plot(num_pregs_averted_by_year_maxL, ylab="Num. pregs averted",
 abline(h=0)
 axis(1, 1:10, 2008:2017)
 legend(1.5, 2e5, c('total',
-                   'from delay in age at first sexual intercourse (SI)',
-                   'from changes in partner acquistion rates after first SI',
-                   'from changes in contraception methods used'
+                   'attributable to delay in age at first sexual intercourse (SI)',
+                   'attributable to changes in partner acquistion rates after first SI',
+                   'attributable to changes in contraception methods used'
 ),
   cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
   col=c('black','red','darkgreen', 'blue'), pch = 1, ncol=1)
@@ -438,9 +438,11 @@ points(ages, num_pregs_averted_by_age_and_cause_maxL[2,], type='b', col='red')
 points(ages, num_pregs_averted_by_age_and_cause_maxL[3,], type='b', col='blue')
 errbar(ages, navert_maxL_obs_cc_boot_age_lb, navert_maxL_obs_cc_boot_age_ub, col='blue')
 
-legend(14, 2.5e5, c('from delay in age at first SI',
-                       'from changes in annual partner numbers after first SI',
-                       'from changes in contraception methods'),
+legend(14, 2.5e5, c(
+                      'attributable to delay in age at first sexual intercourse (SI)',
+                      'attributable to changes in partner acquistion rates after first SI',
+                      'attributable to changes in contraception methods used'
+                    ),
         cex=0.9, text.col=c('black','red', 'blue'),
         fill = c('black','red', 'blue'),
         border = c('black','red', 'blue'))
