@@ -3,7 +3,7 @@
 #### Results for paper
 ####################################################################################
 
-nreps <- 16
+nreps <- 100
 
 ####################################################################################
 # Costs saved in 2017 dollars by year
@@ -48,7 +48,10 @@ a10_nbc_minLARC_boot <- a10_obs_minLARC_boot <- a10_obs_cc_minLARC_boot <-
   a10_obs_sex_maxLARC_boot <- a10_obs_debut_maxLARC_boot <- a10_obs_mnppy_maxLARC_boot <- 
   list()
 
-for ( bootrep in 1:nreps) {
+nonconverged <- c(17, 23, 27, 44, 50, 52, 75)   # place holder
+converged <- (1:nreps)[-nonconverged]
+
+for (bootrep in converged) {
   repnum <- paste(ifelse(bootrep<10, "0", ""), bootrep, sep="")
   a10_nbc_minLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_nbc_minLARC_boot",repnum,".rda",sep=""))
   a10_obs_minLARC_boot[[bootrep]] <-       readRDS(paste("../output/a10_obs_minLARC_boot",repnum,".rda",sep=""))
@@ -90,7 +93,7 @@ p_minL_nbc_boot <- p_minL_obs_boot <- p_minL_obs_cc_boot <-
   p_maxL_obs_sex_boot <- p_maxL_obs_debut_boot <- p_maxL_obs_mnppy_boot <- 
   list()
 
-for (bootnum in 1:nreps) {
+for (bootnum in converged) {
   p_minL_nbc_boot[[bootnum]] <- round(apply(a10_nbc_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
   p_minL_obs_boot[[bootnum]] <- round(apply(a10_obs_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
   p_minL_obs_cc_boot[[bootnum]] <- round(apply(a10_obs_cc_minLARC_boot[[bootnum]]$n_preg_total_f, 2:3, sum)[,3:12],0)
@@ -161,7 +164,7 @@ p_maxL_obs_sex   <- p_maxL_obs_sex[-1,]
 p_maxL_obs_debut <- p_maxL_obs_debut[-1,]
 p_maxL_obs_mnppy <- p_maxL_obs_mnppy[-1,]
 
-for (bootnum in 1:nreps) {
+for (bootnum in converged) {
   p_minL_nbc_boot[[bootnum]]       <- p_minL_nbc_boot[[bootnum]][-1,]
   p_minL_obs_boot[[bootnum]]       <- p_minL_obs_boot[[bootnum]][-1,]
   p_minL_obs_cc_boot[[bootnum]]    <- p_minL_obs_cc_boot[[bootnum]][-1,]   
@@ -188,6 +191,7 @@ num_pregs_averted_by_year_and_cause_minL <- rbind(colSums(p_minL_nbc - p_minL_ob
 num_pregs_averted_by_year_minL <- colSums(num_pregs_averted_by_year_and_cause_minL)
 num_pregs_averted_by_cause_minL <- rowSums(num_pregs_averted_by_year_and_cause_minL)
 num_pregs_averted_minL <- sum(num_pregs_averted_by_year_minL)
+
 prop_pregs_averted_by_year_and_cause_minL <- num_pregs_averted_by_year_and_cause_minL / colSums(p_minL_nbc)
 prop_pregs_averted_by_year_minL <- num_pregs_averted_by_year_minL / colSums(p_minL_nbc)
 prop_pregs_averted_by_cause_minL <- num_pregs_averted_by_cause_minL / sum(p_minL_nbc)
@@ -199,6 +203,7 @@ num_pregs_averted_by_year_and_cause_maxL <- rbind(colSums(p_maxL_nbc - p_maxL_ob
 num_pregs_averted_by_year_maxL <- colSums(num_pregs_averted_by_year_and_cause_maxL)
 num_pregs_averted_by_cause_maxL <- rowSums(num_pregs_averted_by_year_and_cause_maxL)
 num_pregs_averted_maxL <- sum(num_pregs_averted_by_year_maxL)
+
 prop_pregs_averted_by_year_and_cause_maxL <- num_pregs_averted_by_year_and_cause_maxL / colSums(p_maxL_nbc)
 prop_pregs_averted_by_year_maxL <- num_pregs_averted_by_year_maxL / colSums(p_maxL_nbc)
 prop_pregs_averted_by_cause_maxL <- num_pregs_averted_by_cause_maxL / sum(p_maxL_nbc)
@@ -254,129 +259,93 @@ costs_averted_by_age_and_cause_maxL <- rbind(colSums(costs_averted_by_age_and_ca
                                               costs_averted_by_age_and_cause_maxL)
 
 
-
 ####################################################################################
 ### Fig 2: plot partition of proportion averted, minLARC and maxLARC
 
-#pavert_minL_obs <- 1 - colSums(p_minL_obs)/colSums(p_minL_nbc)
-#pavert_minL_obs_debut <- 1 - colSums(p_minL_obs_debut)/colSums(p_minL_nbc)
-#pavert_minL_obs_mnppy <- 1 - colSums(p_minL_obs_mnppy)/colSums(p_minL_nbc)
-#pavert_minL_obs_cc <- 1 - colSums(p_minL_obs_cc)/colSums(p_minL_nbc)
-#pavert_maxL_obs <- 1 - colSums(p_maxL_obs)/colSums(p_maxL_nbc)
-#pavert_maxL_obs_debut <- 1 - colSums(p_maxL_obs_debut)/colSums(p_maxL_nbc)
-#pavert_maxL_obs_mnppy <- 1 - colSums(p_maxL_obs_mnppy)/colSums(p_maxL_nbc)
-#pavert_maxL_obs_cc <- 1 - colSums(p_maxL_obs_cc)/colSums(p_maxL_nbc)
-
 errbar <- function(x, up, low, ...) arrows(x, low, x, up, length=0.00, angle=90, code=3, ...)
 
-#pavert_minL_obs_cc_boot <- t(sapply(1:nreps, function(x) 
-#  1 - colSums(p_minL_obs_cc_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
-#pavert_minL_obs_boot <- t(sapply(1:nreps, function(x) 
-#  1 - colSums(p_minL_obs_boot[[x]])/colSums(p_minL_nbc_boot[[x]])))
-#pavert_maxL_obs_cc_boot <- t(sapply(1:nreps, function(x) 
-#  1 - colSums(p_maxL_obs_cc_boot[[x]])/colSums(p_maxL_nbc_boot[[x]])))
-#pavert_maxL_obs_boot <- t(sapply(1:nreps, function(x) 
-#  1 - colSums(p_maxL_obs_boot[[x]])/colSums(p_maxL_nbc_boot[[x]])))
-
-#pavert_maxL_obs_cc_boot_mean <- colMeans(pavert_maxL_obs_cc_boot)
-#pavert_maxL_obs_cc_boot_ub <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.75)
-#pavert_maxL_obs_cc_boot_lb <- apply(pavert_maxL_obs_cc_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_all_minL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_all_minL_boot <- t(sapply(converged, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_boot[[x]])))
-num_pregs_averted_by_year_cc_minL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_cc_minL_boot <- t(sapply(converged, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_cc_boot[[x]])))
-num_pregs_averted_by_year_sex_minL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_sex_minL_boot <- t(sapply(converged, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_sex_boot[[x]])))
-num_pregs_averted_by_year_debut_minL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_debut_minL_boot <- t(sapply(converged, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_debut_boot[[x]])))
-num_pregs_averted_by_year_mnppy_minL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_mnppy_minL_boot <- t(sapply(converged, function(x) 
   colSums(p_minL_nbc_boot[[x]]) - colSums(p_minL_obs_mnppy_boot[[x]])))
 
-num_pregs_averted_by_year_all_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_all_minL_boot_mean <- colMeans(num_pregs_averted_by_year_all_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_all_minL_boot_ub <- colSums(num_pregs_averted_by_year_and_cause_minL) + apply(num_pregs_averted_by_year_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_all_minL_boot_lb <- colSums(num_pregs_averted_by_year_and_cause_minL) - apply(num_pregs_averted_by_year_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_year_debut_minL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_debut_minL_boot_ub <- num_pregs_averted_by_year_and_cause_minL[1,] + apply(num_pregs_averted_by_year_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+num_pregs_averted_by_year_debut_minL_boot_lb <- num_pregs_averted_by_year_and_cause_minL[1,] - apply(num_pregs_averted_by_year_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+
+num_pregs_averted_by_year_mnppy_minL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_mnppy_minL_boot_ub <- num_pregs_averted_by_year_and_cause_minL[2,] + apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_mnppy_minL_boot_lb <- num_pregs_averted_by_year_and_cause_minL[2,] - apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_year_cc_minL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_cc_minL_boot_ub <- num_pregs_averted_by_year_and_cause_minL[3,] + apply(num_pregs_averted_by_year_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_cc_minL_boot_lb <- num_pregs_averted_by_year_and_cause_minL[3,] - apply(num_pregs_averted_by_year_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_year_all_maxL_boot <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_boot[[x]])))
-num_pregs_averted_by_year_cc_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_cc_maxL_boot <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_cc_boot[[x]])))
-num_pregs_averted_by_year_sex_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_sex_maxL_boot <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_sex_boot[[x]])))
-num_pregs_averted_by_year_debut_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_debut_maxL_boot <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_debut_boot[[x]])))
-num_pregs_averted_by_year_mnppy_maxL_boot <- t(sapply(1:nreps, function(x) 
+num_pregs_averted_by_year_mnppy_maxL_boot <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_mnppy_boot[[x]])))
 
-num_pregs_averted_by_year_all_minL_boot_mean <- colMeans(num_pregs_averted_by_year_all_minL_boot)
-num_pregs_averted_by_year_all_minL_boot_ub <- apply(num_pregs_averted_by_year_all_minL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_all_minL_boot_lb <- apply(num_pregs_averted_by_year_all_minL_boot, 2, quantile, 0.25)
+num_pregs_averted_by_year_all_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_all_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_all_maxL_boot_ub <- colSums(num_pregs_averted_by_year_and_cause_maxL) + apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_all_maxL_boot_lb <- colSums(num_pregs_averted_by_year_and_cause_maxL) - apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
 
-num_pregs_averted_by_year_cc_minL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_minL_boot)
-num_pregs_averted_by_year_cc_minL_boot_ub <- apply(num_pregs_averted_by_year_cc_minL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_cc_minL_boot_lb <- apply(num_pregs_averted_by_year_cc_minL_boot, 2, quantile, 0.25)
+num_pregs_averted_by_year_debut_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_debut_maxL_boot_ub <- num_pregs_averted_by_year_and_cause_maxL[1,] + apply(num_pregs_averted_by_year_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
+num_pregs_averted_by_year_debut_maxL_boot_lb <- num_pregs_averted_by_year_and_cause_maxL[1,] - apply(num_pregs_averted_by_year_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
 
-num_pregs_averted_by_year_sex_minL_boot_mean <- colMeans(num_pregs_averted_by_year_sex_minL_boot)
-num_pregs_averted_by_year_sex_minL_boot_ub <- apply(num_pregs_averted_by_year_sex_minL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_sex_minL_boot_lb <- apply(num_pregs_averted_by_year_sex_minL_boot, 2, quantile, 0.25)
+num_pregs_averted_by_year_mnppy_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_mnppy_maxL_boot_ub <- num_pregs_averted_by_year_and_cause_maxL[2,] + apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_mnppy_maxL_boot_lb <- num_pregs_averted_by_year_and_cause_maxL[2,] - apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
 
-num_pregs_averted_by_year_debut_minL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_minL_boot)
-num_pregs_averted_by_year_debut_minL_boot_ub <- apply(num_pregs_averted_by_year_debut_minL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_debut_minL_boot_lb <- apply(num_pregs_averted_by_year_debut_minL_boot, 2, quantile, 0.25)
+num_pregs_averted_by_year_cc_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_year_cc_maxL_boot_ub <- num_pregs_averted_by_year_and_cause_maxL[3,] + apply(num_pregs_averted_by_year_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_year_cc_maxL_boot_lb <- num_pregs_averted_by_year_and_cause_maxL[3,] - apply(num_pregs_averted_by_year_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
 
-num_pregs_averted_by_year_mnppy_minL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_minL_boot)
-num_pregs_averted_by_year_mnppy_minL_boot_ub <- apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_mnppy_minL_boot_lb <- apply(num_pregs_averted_by_year_mnppy_minL_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_all_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_all_maxL_boot)
-num_pregs_averted_by_year_all_maxL_boot_ub <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_all_maxL_boot_lb <- apply(num_pregs_averted_by_year_all_maxL_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_all_maxL_boot_ub <- colSums(num_pregs_averted_by_year_and_cause_maxL) + apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/nreps^0.5
-num_pregs_averted_by_year_all_maxL_boot_lb <- colSums(num_pregs_averted_by_year_and_cause_maxL) - apply(num_pregs_averted_by_year_all_maxL_boot, 2, sd)*1.96/nreps^0.5
-
-num_pregs_averted_by_year_cc_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_cc_maxL_boot)
-num_pregs_averted_by_year_cc_maxL_boot_ub <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_cc_maxL_boot_lb <- apply(num_pregs_averted_by_year_cc_maxL_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_sex_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_sex_maxL_boot)
-num_pregs_averted_by_year_sex_maxL_boot_ub <- apply(num_pregs_averted_by_year_sex_maxL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_sex_maxL_boot_lb <- apply(num_pregs_averted_by_year_sex_maxL_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_debut_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_debut_maxL_boot)
-num_pregs_averted_by_year_debut_maxL_boot_ub <- apply(num_pregs_averted_by_year_debut_maxL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_debut_maxL_boot_lb <- apply(num_pregs_averted_by_year_debut_maxL_boot, 2, quantile, 0.25)
-
-num_pregs_averted_by_year_mnppy_maxL_boot_mean <- colMeans(num_pregs_averted_by_year_mnppy_maxL_boot)
-num_pregs_averted_by_year_mnppy_maxL_boot_ub <- apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, quantile, 0.75)
-num_pregs_averted_by_year_mnppy_maxL_boot_lb <- apply(num_pregs_averted_by_year_mnppy_maxL_boot, 2, quantile, 0.25)
-
-
-
-
+offset <- 0.02
 tiff("../output/Fig2.tif", height = 5*1200, 5*1200,
     units = "px", res = 1200, pointsize = 8,  compression = "lzw")
-plot(num_pregs_averted_by_year_maxL, ylab="Num. pregs averted",
-     ylim=c(-1e5,2e5), xaxt="n", xlab='year', type='b')
+plot((1:10)-offset, num_pregs_averted_by_year_maxL, ylab="Num. pregs averted",
+     ylim=c(-1e5,2e5), xaxt="n", xlab='year', type='b', pch=20, cex=0.75)
 #plot(pavert_maxL_obs, ylab="prop. pregs averted",
 #     ylim=c(-0.05,0.3), xaxt="n", xlab='year', type='b')
 abline(h=0)
 axis(1, 1:10, 2008:2017)
 legend(1.5, 2e5, c('total',
                    'attributable to delay in age at first sexual intercourse (SI)',
-                   'attributable to changes in partner acquistion rates after first SI',
+                   'attributable to changes in annual partner numbers',
                    'attributable to changes in contraception methods used'
 ),
   cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
-  col=c('black','red','darkgreen', 'blue'), pch = 1, ncol=1)
+  col=c('black','red','darkgreen', 'blue'), pch = 20, ncol=1)
 
 #points(pavert_maxL_obs_debut, col='red', type='b')
 #points(pavert_maxL_obs_mnppy, col='darkgreen', type='b')
 #points(pavert_maxL_obs_cc, col='blue', type='b')
-points(num_pregs_averted_by_year_and_cause_maxL[1,], col='red', type='b')
-points(num_pregs_averted_by_year_and_cause_maxL[2,], col='darkgreen', type='b')
-points(num_pregs_averted_by_year_and_cause_maxL[3,], col='blue', type='b')
+points((1:10)+offset, num_pregs_averted_by_year_and_cause_maxL[1,], col='red', type='b', pch=20, cex=0.75)
+points((1:10)-offset, num_pregs_averted_by_year_and_cause_maxL[2,], col='darkgreen', type='b', pch=20, cex=0.75)
+points((1:10)+offset, num_pregs_averted_by_year_and_cause_maxL[3,], col='blue', type='b', pch=20, cex=0.75)
 
-errbar(1:10, num_pregs_averted_by_year_cc_maxL_boot_lb, num_pregs_averted_by_year_cc_maxL_boot_ub, col='blue')
-errbar((1:10)+0.1, num_pregs_averted_by_year_debut_maxL_boot_lb, num_pregs_averted_by_year_debut_maxL_boot_ub, col='red')
-errbar((1:10)+0.2, num_pregs_averted_by_year_mnppy_maxL_boot_lb, num_pregs_averted_by_year_mnppy_maxL_boot_ub, col='darkgreen')
-errbar((1:10)+0.1, num_pregs_averted_by_year_all_maxL_boot_lb, num_pregs_averted_by_year_all_maxL_boot_ub, col='black')
+errbar((1:10)-offset, num_pregs_averted_by_year_all_maxL_boot_lb, num_pregs_averted_by_year_all_maxL_boot_ub, col='black')
+errbar((1:10)+offset, num_pregs_averted_by_year_debut_maxL_boot_lb, num_pregs_averted_by_year_debut_maxL_boot_ub, col='red')
+errbar((1:10)-offset, num_pregs_averted_by_year_mnppy_maxL_boot_lb, num_pregs_averted_by_year_mnppy_maxL_boot_ub, col='darkgreen')
+errbar((1:10)+offset, num_pregs_averted_by_year_cc_maxL_boot_lb, num_pregs_averted_by_year_cc_maxL_boot_ub, col='blue')
 axis(1, 1:10, labels=2008:2017)
 
 dev.off()
@@ -399,26 +368,46 @@ num_pregs_averted_by_age_and_cause_maxL[3,5]  # 18-yo contraception
 num_pregs_averted_by_age_and_cause_maxL[3,5] / sum(p_maxL_nbc)
 num_pregs_averted_by_age_and_cause_maxL[3,5] / sum(num_pregs_averted_by_age_and_cause_maxL)
 
-navert_maxL_obs_cc_boot_year <- t(sapply(1:nreps, function(x) 
-  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_cc_boot[[x]])))
-
-navert_maxL_obs_boot_year <- t(sapply(1:nreps, function(x) 
+navert_maxL_obs_boot_year <- t(sapply(converged, function(x) 
   colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_boot[[x]])))
 
-navert_maxL_obs_cc_boot_age <- t(sapply(1:nreps, function(x) 
-  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_cc_boot[[x]])))
+navert_maxL_obs_debut_boot_year <- t(sapply(converged, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_debut_boot[[x]])))
 
-navert_maxL_obs_boot_age <- t(sapply(1:nreps, function(x) 
+navert_maxL_obs_mnppy_boot_year <- t(sapply(converged, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_mnppy_boot[[x]])))
+
+navert_maxL_obs_cc_boot_year <- t(sapply(converged, function(x) 
+  colSums(p_maxL_nbc_boot[[x]]) - colSums(p_maxL_obs_cc_boot[[x]])))
+
+navert_maxL_obs_boot_age <- t(sapply(converged, function(x) 
   rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_boot[[x]])))
 
-navert_maxL_obs_cc_boot_year_mean <- colMeans(navert_maxL_obs_cc_boot_year)
-navert_maxL_obs_cc_boot_year_ub <- apply(navert_maxL_obs_cc_boot_year, 2, quantile, 0.75)
-navert_maxL_obs_cc_boot_year_lb <- apply(navert_maxL_obs_cc_boot_year, 2, quantile, 0.25)
+navert_maxL_obs_debut_boot_age <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_debut_boot[[x]])))
 
-navert_maxL_obs_cc_boot_age_mean <- colMeans(navert_maxL_obs_cc_boot_age)
-navert_maxL_obs_cc_boot_age_ub <- apply(navert_maxL_obs_cc_boot_age, 2, quantile, 0.75)
-navert_maxL_obs_cc_boot_age_lb <- apply(navert_maxL_obs_cc_boot_age, 2, quantile, 0.25)
+navert_maxL_obs_mnppy_boot_age <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_mnppy_boot[[x]])))
 
+navert_maxL_obs_cc_boot_age <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_cc_boot[[x]])))
+
+navert_maxL_obs_debut_boot_age_ub <- num_pregs_averted_by_age_and_cause_maxL[1,] + 
+            apply(navert_maxL_obs_debut_boot_age, 2, sd)*1.96/length(converged)^0.25
+navert_maxL_obs_debut_boot_age_lb <- num_pregs_averted_by_age_and_cause_maxL[1,] - 
+            apply(navert_maxL_obs_debut_boot_age, 2, sd)*1.96/length(converged)^0.25
+
+navert_maxL_obs_mnppy_boot_age_ub <- num_pregs_averted_by_age_and_cause_maxL[2,] + 
+            apply(navert_maxL_obs_mnppy_boot_age, 2, sd)*1.96/length(converged)^0.5
+navert_maxL_obs_mnppy_boot_age_lb <- num_pregs_averted_by_age_and_cause_maxL[2,] - 
+            apply(navert_maxL_obs_mnppy_boot_age, 2, sd)*1.96/length(converged)^0.5
+
+navert_maxL_obs_cc_boot_age_ub <- num_pregs_averted_by_age_and_cause_maxL[3,] + 
+            apply(navert_maxL_obs_cc_boot_age, 2, sd)*1.96/length(converged)^0.5
+navert_maxL_obs_cc_boot_age_lb <- num_pregs_averted_by_age_and_cause_maxL[3,] - 
+            apply(navert_maxL_obs_cc_boot_age, 2, sd)*1.96/length(converged)^0.5
+
+offset <- 0.02
 tiff("../output/Fig3.tif", height = 5*1200, 5*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 
@@ -429,25 +418,232 @@ tiff("../output/Fig3.tif", height = 5*1200, 5*1200,
 #        ylim=c(-4e4,20e4))
 
 ages <- 14:18
-plot(ages, num_pregs_averted_by_age_and_cause_maxL[1,],
+plot(ages-offset, num_pregs_averted_by_age_and_cause_maxL[1,],
               xlab='age', ylab='No. of pregnancies averted',
               #main='No. of pregnancies averted by cause and by age, summed across years',
-              ylim=c(-8e4,25e4), type='b')
+              ylim=c(-8e4,25e4), type='b', pch=20, cex=0.75, col='red')
 
-points(ages, num_pregs_averted_by_age_and_cause_maxL[2,], type='b', col='red')
-points(ages, num_pregs_averted_by_age_and_cause_maxL[3,], type='b', col='blue')
-errbar(ages, navert_maxL_obs_cc_boot_age_lb, navert_maxL_obs_cc_boot_age_ub, col='blue')
+points(ages-offset, num_pregs_averted_by_age_and_cause_maxL[2,], type='b', col='darkgreen', pch=20, cex=0.75)
+points(ages+offset, num_pregs_averted_by_age_and_cause_maxL[3,], type='b', col='blue', pch=20, cex=0.75)
+errbar(ages-offset, navert_maxL_obs_debut_boot_age_lb, navert_maxL_obs_debut_boot_age_ub, col='red')
+errbar(ages-offset, navert_maxL_obs_mnppy_boot_age_lb, navert_maxL_obs_mnppy_boot_age_ub, col='darkgreen')
+errbar(ages+offset, navert_maxL_obs_cc_boot_age_lb, navert_maxL_obs_cc_boot_age_ub, col='blue')
 
-legend(14, 2.5e5, c(
-                      'attributable to delay in age at first sexual intercourse (SI)',
-                      'attributable to changes in partner acquistion rates after first SI',
-                      'attributable to changes in contraception methods used'
-                    ),
-        cex=0.9, text.col=c('black','red', 'blue'),
-        fill = c('black','red', 'blue'),
-        border = c('black','red', 'blue'))
+legend(14, 2.5e5, c('attributable to delay in age at first sexual intercourse',
+                    'attributable to changes in annual partner numbers',
+                    'attributable to changes in contraception methods'),
+        cex=0.9, text.col=c('red','darkgreen', 'blue'),
+        fill = c('red','darkgreen', 'blue'),
+        border = c('red','darkgreen', 'blue'))
 abline(h=0, lty=2)
 dev.off()
+
+###############################################################################
+# Numbers for boot CIs 
+
+# By year and cause
+
+round(cbind(num_pregs_averted_by_year_all_maxL_boot_lb,
+            colSums(num_pregs_averted_by_year_and_cause_maxL),
+            num_pregs_averted_by_year_all_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_debut_maxL_boot_lb,
+            num_pregs_averted_by_year_and_cause_maxL[1,],
+            num_pregs_averted_by_year_debut_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_mnppy_maxL_boot_lb,
+            num_pregs_averted_by_year_and_cause_maxL[2,],
+            num_pregs_averted_by_year_mnppy_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_cc_maxL_boot_lb,
+            num_pregs_averted_by_year_and_cause_maxL[3,],
+            num_pregs_averted_by_year_cc_maxL_boot_ub),0)
+
+round(cbind(num_pregs_averted_by_year_all_minL_boot_lb,
+            colSums(num_pregs_averted_by_year_and_cause_minL),
+            num_pregs_averted_by_year_all_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_debut_minL_boot_lb,
+            num_pregs_averted_by_year_and_cause_minL[1,],
+            num_pregs_averted_by_year_debut_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_mnppy_minL_boot_lb,
+            num_pregs_averted_by_year_and_cause_minL[2,],
+            num_pregs_averted_by_year_mnppy_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_year_cc_minL_boot_lb,
+            num_pregs_averted_by_year_and_cause_minL[3,],
+            num_pregs_averted_by_year_cc_minL_boot_ub),0)
+
+
+# By age and cause
+
+num_pregs_averted_by_age_all_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_minL_nbc_boot[[x]]) - rowSums(p_minL_obs_boot[[x]])))
+num_pregs_averted_by_age_cc_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_minL_nbc_boot[[x]]) - rowSums(p_minL_obs_cc_boot[[x]])))
+num_pregs_averted_by_age_sex_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_minL_nbc_boot[[x]]) - rowSums(p_minL_obs_sex_boot[[x]])))
+num_pregs_averted_by_age_debut_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_minL_nbc_boot[[x]]) - rowSums(p_minL_obs_debut_boot[[x]])))
+num_pregs_averted_by_age_mnppy_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_minL_nbc_boot[[x]]) - rowSums(p_minL_obs_mnppy_boot[[x]])))
+
+num_pregs_averted_by_age_all_minL_boot_mean <- colMeans(num_pregs_averted_by_age_all_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_all_minL_boot_ub <- colSums(num_pregs_averted_by_age_and_cause_minL) + apply(num_pregs_averted_by_age_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_all_minL_boot_lb <- colSums(num_pregs_averted_by_age_and_cause_minL) - apply(num_pregs_averted_by_age_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_age_debut_minL_boot_mean <- colMeans(num_pregs_averted_by_age_debut_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_debut_minL_boot_ub <- num_pregs_averted_by_age_and_cause_minL[1,] + apply(num_pregs_averted_by_age_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+num_pregs_averted_by_age_debut_minL_boot_lb <- num_pregs_averted_by_age_and_cause_minL[1,] - apply(num_pregs_averted_by_age_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+
+num_pregs_averted_by_age_mnppy_minL_boot_mean <- colMeans(num_pregs_averted_by_age_mnppy_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_mnppy_minL_boot_ub <- num_pregs_averted_by_age_and_cause_minL[2,] + apply(num_pregs_averted_by_age_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_mnppy_minL_boot_lb <- num_pregs_averted_by_age_and_cause_minL[2,] - apply(num_pregs_averted_by_age_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_age_cc_minL_boot_mean <- colMeans(num_pregs_averted_by_age_cc_minL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_cc_minL_boot_ub <- num_pregs_averted_by_age_and_cause_minL[3,] + apply(num_pregs_averted_by_age_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_cc_minL_boot_lb <- num_pregs_averted_by_age_and_cause_minL[3,] - apply(num_pregs_averted_by_age_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_age_all_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_boot[[x]])))
+num_pregs_averted_by_age_cc_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_cc_boot[[x]])))
+num_pregs_averted_by_age_sex_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_sex_boot[[x]])))
+num_pregs_averted_by_age_debut_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_debut_boot[[x]])))
+num_pregs_averted_by_age_mnppy_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(p_maxL_nbc_boot[[x]]) - rowSums(p_maxL_obs_mnppy_boot[[x]])))
+
+num_pregs_averted_by_age_all_maxL_boot_mean <- colMeans(num_pregs_averted_by_age_all_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_all_maxL_boot_ub <- colSums(num_pregs_averted_by_age_and_cause_maxL) + apply(num_pregs_averted_by_age_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_all_maxL_boot_lb <- colSums(num_pregs_averted_by_age_and_cause_maxL) - apply(num_pregs_averted_by_age_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_age_debut_maxL_boot_mean <- colMeans(num_pregs_averted_by_age_debut_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_debut_maxL_boot_ub <- num_pregs_averted_by_age_and_cause_maxL[1,] + apply(num_pregs_averted_by_age_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
+num_pregs_averted_by_age_debut_maxL_boot_lb <- num_pregs_averted_by_age_and_cause_maxL[1,] - apply(num_pregs_averted_by_age_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
+
+num_pregs_averted_by_age_mnppy_maxL_boot_mean <- colMeans(num_pregs_averted_by_age_mnppy_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_mnppy_maxL_boot_ub <- num_pregs_averted_by_age_and_cause_maxL[2,] + apply(num_pregs_averted_by_age_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_mnppy_maxL_boot_lb <- num_pregs_averted_by_age_and_cause_maxL[2,] - apply(num_pregs_averted_by_age_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+num_pregs_averted_by_age_cc_maxL_boot_mean <- colMeans(num_pregs_averted_by_age_cc_maxL_boot, na.rm=TRUE)
+num_pregs_averted_by_age_cc_maxL_boot_ub <- num_pregs_averted_by_age_and_cause_maxL[3,] + apply(num_pregs_averted_by_age_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+num_pregs_averted_by_age_cc_maxL_boot_lb <- num_pregs_averted_by_age_and_cause_maxL[3,] - apply(num_pregs_averted_by_age_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+round(cbind(num_pregs_averted_by_age_all_maxL_boot_lb,
+            colSums(num_pregs_averted_by_age_and_cause_maxL),
+            num_pregs_averted_by_age_all_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_debut_maxL_boot_lb,
+            num_pregs_averted_by_age_and_cause_maxL[1,],
+            num_pregs_averted_by_age_debut_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_mnppy_maxL_boot_lb,
+            num_pregs_averted_by_age_and_cause_maxL[2,],
+            num_pregs_averted_by_age_mnppy_maxL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_cc_maxL_boot_lb,
+            num_pregs_averted_by_age_and_cause_maxL[3,],
+            num_pregs_averted_by_age_cc_maxL_boot_ub),0)
+
+round(cbind(num_pregs_averted_by_age_all_minL_boot_lb,
+            colSums(num_pregs_averted_by_age_and_cause_minL),
+            num_pregs_averted_by_age_all_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_debut_minL_boot_lb,
+            num_pregs_averted_by_age_and_cause_minL[1,],
+            num_pregs_averted_by_age_debut_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_mnppy_minL_boot_lb,
+            num_pregs_averted_by_age_and_cause_minL[2,],
+            num_pregs_averted_by_age_mnppy_minL_boot_ub),0)
+round(cbind(num_pregs_averted_by_age_cc_minL_boot_lb,
+            num_pregs_averted_by_age_and_cause_minL[3,],
+            num_pregs_averted_by_age_cc_minL_boot_ub),0)
+
+# age costs
+
+costs_averted_by_age_all_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_minL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_minL_obs_boot[[x]])))))
+
+costs_averted_by_age_cc_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_minL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_minL_obs_cc_boot[[x]])))))
+
+costs_averted_by_age_sex_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_minL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_minL_obs_sex_boot[[x]])))))
+
+costs_averted_by_age_debut_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_minL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_minL_obs_debut_boot[[x]])))))
+
+costs_averted_by_age_mnppy_minL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_minL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_minL_obs_mnppy_boot[[x]])))))
+
+costs_averted_by_age_all_minL_boot_mean <- colMeans(costs_averted_by_age_all_minL_boot, na.rm=TRUE)
+costs_averted_by_age_all_minL_boot_ub <- costs_averted_by_age_and_cause_minL[1,] + apply(costs_averted_by_age_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_all_minL_boot_lb <- costs_averted_by_age_and_cause_minL[1,] - apply(costs_averted_by_age_all_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+costs_averted_by_age_debut_minL_boot_mean <- colMeans(costs_averted_by_age_debut_minL_boot, na.rm=TRUE)
+costs_averted_by_age_debut_minL_boot_ub <- costs_averted_by_age_and_cause_minL[2,] + apply(costs_averted_by_age_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+costs_averted_by_age_debut_minL_boot_lb <- costs_averted_by_age_and_cause_minL[2,] - apply(costs_averted_by_age_debut_minL_boot, 2, sd)*1.96/length(converged)^0.25
+
+costs_averted_by_age_mnppy_minL_boot_mean <- colMeans(costs_averted_by_age_mnppy_minL_boot, na.rm=TRUE)
+costs_averted_by_age_mnppy_minL_boot_ub <- costs_averted_by_age_and_cause_minL[3,] + apply(costs_averted_by_age_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_mnppy_minL_boot_lb <- costs_averted_by_age_and_cause_minL[3,] - apply(costs_averted_by_age_mnppy_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+costs_averted_by_age_cc_minL_boot_mean <- colMeans(costs_averted_by_age_cc_minL_boot, na.rm=TRUE)
+costs_averted_by_age_cc_minL_boot_ub <- costs_averted_by_age_and_cause_minL[4,] + apply(costs_averted_by_age_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_cc_minL_boot_lb <- costs_averted_by_age_and_cause_minL[4,] - apply(costs_averted_by_age_cc_minL_boot, 2, sd)*1.96/length(converged)^0.5
+
+
+costs_averted_by_age_all_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_maxL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_maxL_obs_boot[[x]])))))
+
+costs_averted_by_age_cc_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_maxL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_maxL_obs_cc_boot[[x]])))))
+
+costs_averted_by_age_sex_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_maxL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_maxL_obs_sex_boot[[x]])))))
+
+costs_averted_by_age_debut_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_maxL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_maxL_obs_debut_boot[[x]])))))
+
+costs_averted_by_age_mnppy_maxL_boot <- t(sapply(converged, function(x) 
+  rowSums(t(costs*t(p_maxL_nbc_boot[[x]]))) - rowSums(t(costs*t(p_maxL_obs_mnppy_boot[[x]])))))
+
+costs_averted_by_age_all_maxL_boot_mean <- colMeans(costs_averted_by_age_all_maxL_boot, na.rm=TRUE)
+costs_averted_by_age_all_maxL_boot_ub <- costs_averted_by_age_and_cause_maxL[1,] + apply(costs_averted_by_age_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_all_maxL_boot_lb <- costs_averted_by_age_and_cause_maxL[1,] - apply(costs_averted_by_age_all_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+costs_averted_by_age_debut_maxL_boot_mean <- colMeans(costs_averted_by_age_debut_maxL_boot, na.rm=TRUE)
+costs_averted_by_age_debut_maxL_boot_ub <- costs_averted_by_age_and_cause_maxL[2,] + apply(costs_averted_by_age_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
+costs_averted_by_age_debut_maxL_boot_lb <- costs_averted_by_age_and_cause_maxL[2,] - apply(costs_averted_by_age_debut_maxL_boot, 2, sd)*1.96/length(converged)^0.25
+
+costs_averted_by_age_mnppy_maxL_boot_mean <- colMeans(costs_averted_by_age_mnppy_maxL_boot, na.rm=TRUE)
+costs_averted_by_age_mnppy_maxL_boot_ub <- costs_averted_by_age_and_cause_maxL[3,] + apply(costs_averted_by_age_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_mnppy_maxL_boot_lb <- costs_averted_by_age_and_cause_maxL[3,] - apply(costs_averted_by_age_mnppy_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+costs_averted_by_age_cc_maxL_boot_mean <- colMeans(costs_averted_by_age_cc_maxL_boot, na.rm=TRUE)
+costs_averted_by_age_cc_maxL_boot_ub <- costs_averted_by_age_and_cause_maxL[4,] + apply(costs_averted_by_age_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+costs_averted_by_age_cc_maxL_boot_lb <- costs_averted_by_age_and_cause_maxL[4,] - apply(costs_averted_by_age_cc_maxL_boot, 2, sd)*1.96/length(converged)^0.5
+
+round(cbind(costs_averted_by_age_all_maxL_boot_lb,
+            costs_averted_by_age_and_cause_maxL[1,],
+            costs_averted_by_age_all_maxL_boot_ub),0)
+round(cbind(costs_averted_by_age_debut_maxL_boot_lb,
+            costs_averted_by_age_and_cause_maxL[2,],
+            costs_averted_by_age_debut_maxL_boot_ub),0)
+round(cbind(costs_averted_by_age_mnppy_maxL_boot_lb,
+            costs_averted_by_age_and_cause_maxL[3,],
+            costs_averted_by_age_mnppy_maxL_boot_ub),0)
+round(cbind(costs_averted_by_age_cc_maxL_boot_lb,
+            costs_averted_by_age_and_cause_maxL[4,],
+            costs_averted_by_age_cc_maxL_boot_ub),0)
+
+round(cbind(costs_averted_by_age_all_minL_boot_lb,
+            costs_averted_by_age_and_cause_minL[1,],
+            costs_averted_by_age_all_minL_boot_ub),0)
+round(cbind(costs_averted_by_age_debut_minL_boot_lb,
+            costs_averted_by_age_and_cause_minL[2,],
+            costs_averted_by_age_debut_minL_boot_ub),0)
+round(cbind(costs_averted_by_age_mnppy_minL_boot_lb,
+            costs_averted_by_age_and_cause_minL[3,],
+            costs_averted_by_age_mnppy_minL_boot_ub),0)
+round(cbind(costs_averted_by_age_cc_minL_boot_lb,
+            costs_averted_by_age_and_cause_minL[4,],
+            costs_averted_by_age_cc_minL_boot_ub),0)
+
+
 
 ###############################################################################
 # Isolating LARC, minLARC
