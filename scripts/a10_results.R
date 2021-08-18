@@ -791,3 +791,8 @@ dev.off()
 1-model_births_btp_gutt[11]/model_births_btp_gutt[1]
 
 save.image("a10_preg_full_run.rda")
+
+
+# Figure for paper
+(sum(model_births_btp_coit) - sum(nvss_births)) / sum(nvss_births)
+
