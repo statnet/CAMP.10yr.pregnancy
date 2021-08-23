@@ -781,7 +781,7 @@ points(2007:2017, model_births_btp_coit, type='b', col = 'blue')
 
   legend(2007, 5e4, c('Reported births (NVSS)',
                    'Predicted births (YRBS behavioral data)',
-                   'Predicted births (with additional gradual decline in coital acts per partner)'),
+                   'Predicted births (with additional 50% decline per decade in sexual acts per partner)'),
         cex=0.9, text.col=c('black','red', 'blue'),
         col=c('black','red', 'blue'), pch = 1, ncol=1)
 
