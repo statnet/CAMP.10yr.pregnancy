@@ -16,6 +16,7 @@ AgeByDebutAge_num_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
 
 
 for (i in 1:length(years)) {
+  cat('Starting year ', years[i], '\n', sep='')
   filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
   temp <- read.csv(filename)
 
@@ -54,6 +55,7 @@ for (i in 1:length(years)) {
   temp2$race <- recode(temp2$race, 'White'='white', 'Black'='black', 'Hispanic'='hispanic')
   
   n <- nrow(temp)
+  cat('Bootstrapping bctypes: ')
   for (s in 1:nreps) {
     indices <- sample(1:n, n, prob=temp$weight, replace=TRUE)
     resample <- temp[indices,]
@@ -68,6 +70,7 @@ for (i in 1:length(years)) {
   }
   
   n <- nrow(temp2)
+  cat('\nBootstrapping eversex: ')
   for (s in 1:nreps) {
     indices <- sample(1:n, n, prob=temp2$weight, replace=TRUE)
     resample <- temp2[indices,]
@@ -87,6 +90,7 @@ for (i in 1:length(years)) {
     }
     cat(s, ' ', sep='')
   }
+  cat('\n')
 }
 
 #### Run the model on each bootstrapped version
