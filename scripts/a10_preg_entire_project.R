@@ -73,7 +73,29 @@ saveRDS(a10_obs_debut_maxLARC, file='../output/a10_obs_debut_maxLARC.rda')
 saveRDS(a10_obs_mnppy_maxLARC, file='../output/a10_obs_mnppy_maxLARC.rda')
 
 ########################################################################
-### # Scenario 3: Only LARC changes
+### # Scenario 3: Linear increases in LARC use prior to 2013 (medLARC)
+
+source("a10_ABC_medLARC.R")
+source("a10_calibration_medLARC.R")                  # calib pt 1
+source("a10_no_behav_change_medLARC.R")              # No behavior change
+source("a10_obs_behav_change_medLARC.R")             # Observed behavior change
+source("a10_obs_contraception_change_medLARC.R")     # Observed contraception change only
+source("a10_obs_sexual_activity_change_medLARC.R")   # Observed debut / partner numbers only
+source("a10_obs_debut_change_medLARC.R")             # Observed debut only
+source("a10_obs_mnppy_change_medLARC.R")             # Observed partner numbers only
+
+saveRDS(a10_calib_medLARC, file = "../output/a10_calib_medLARC.rda")
+saveRDS(prob_detpreg_medLARC, file="../output/prob_detpreg_medLARC.rda")
+saveRDS(a10_nbc_medLARC, file='../output/a10_nbc_medLARC.rda')
+saveRDS(a10_obs_medLARC, file='../output/a10_obs_medLARC.rda')
+saveRDS(a10_obs_cc_medLARC, file='../output/a10_obs_cc_medLARC.rda')
+saveRDS(a10_obs_sex_medLARC, file='../output/a10_obs_sex_medLARC.rda')
+saveRDS(a10_obs_debut_medLARC, file='../output/a10_obs_debut_medLARC.rda')
+saveRDS(a10_obs_mnppy_medLARC, file='../output/a10_obs_mnppy_medLARC.rda')
+
+
+########################################################################
+### # Scenario 4: Only LARC changes
 source("a10_obs_contraception_change_onlyLARC_from_wdl.R")    # Observed behavior change
 source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    # Observed behavior change
 

@@ -16,8 +16,11 @@ for (year in c(2,4,6,8,10)) {
                                               pred_bctype_minLARC[[method]][,,year+1]) /
                                               2
     pred_bctype_maxLARC[[method]][,,year] <- (pred_bctype_maxLARC[[method]][,,year-1] + 
-                                                pred_bctype_maxLARC[[method]][,,year+1]) /
-      2
+                                              pred_bctype_maxLARC[[method]][,,year+1]) /
+                                              2
+    pred_bctype_medLARC[[method]][,,year] <- (pred_bctype_medLARC[[method]][,,year-1] + 
+                                              pred_bctype_medLARC[[method]][,,year+1]) /
+                                              2
   }
 }
 
