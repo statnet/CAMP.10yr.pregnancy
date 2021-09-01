@@ -109,6 +109,43 @@ temp <- pred_bctype_maxLARC[[1]] + pred_bctype_maxLARC[[2]] + pred_bctype_maxLAR
 temp <- round(temp,5)  
 sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
 
+###### medium LARC ###
+
+pred_bctype_medLARC <- pred_bctype
+
+pred_bctype_medLARC$LARC[,,1] <- 0
+pred_bctype_medLARC$LARC[,,3] <- pred_bctype_medLARC$LARC[,,7]
+pred_bctype_medLARC$LARC[,,5] <- pred_bctype_medLARC$LARC[,,7]
+
+for (year in c(1)) {
+  pred_bctype_medLARC$other_hormonal[,,year] <- 
+    pred_bctype$other_hormonal[,,year] + pred_bctype_in$other79[,,year]
+}
+
+for (year in c(3)) {
+  pred_bctype_medLARC$other_hormonal[,,year] <- 
+    pred_bctype$other_hormonal[,,year] + pred_bctype_in$other79[,,year] - pred_bctype_medLARC$LARC[,,year]
+}
+
+for (year in c(5)) {
+  pred_bctype_medLARC$other_hormonal[,,year] <- 
+    pred_bctype_in$other_hormonal_LARC[,,year] - pred_bctype_medLARC$LARC[,,year]
+}
+
+# if any other hormonals go below zero, reduce LARC down so that other hormonals = 0
+for (year in c(1,3,5)) {
+  whichneg <- pred_bctype_medLARC$other_hormonal[,,year] < 0
+  pred_bctype_medLARC$LARC[,,year][whichneg] <- 
+    pred_bctype_medLARC$LARC[,,year][whichneg] + pred_bctype_medLARC$other_hormonal[,,year][whichneg]
+  pred_bctype_medLARC$other_hormonal[,,year][whichneg] <- 0
+}
+
+# Check to see it's all 1s
+temp <- pred_bctype_medLARC[[1]] + pred_bctype_medLARC[[2]] + pred_bctype_medLARC[[3]] + 
+  pred_bctype_medLARC[[4]] + pred_bctype_medLARC[[5]] + pred_bctype_medLARC[[6]]
+temp <- round(temp,5)  
+sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
+
 #######################################################################
 ### NOTES
 
