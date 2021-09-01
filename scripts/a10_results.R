@@ -796,3 +796,12 @@ save.image("a10_preg_full_run.rda")
 # Figure for paper
 (sum(model_births_btp_coit) - sum(nvss_births)) / sum(nvss_births)
 
+# Percent explained
+
+obs_decline_births <- nvss_births[1] - nvss_births
+mod_decline_births <- nvss_births[1] - model_births_btp_gutt
+
+mod_decline_births / obs_decline_births
+sum(mod_decline_births) / sum(obs_decline_births)
+
+
