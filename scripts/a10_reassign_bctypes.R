@@ -114,8 +114,9 @@ sum(temp[,,c(1,3,5,7,9,11)]!=1)  # should equal 0
 pred_bctype_medLARC <- pred_bctype
 
 pred_bctype_medLARC$LARC[,,1] <- 0
-pred_bctype_medLARC$LARC[,,3] <- pred_bctype_medLARC$LARC[,,7]
-pred_bctype_medLARC$LARC[,,5] <- pred_bctype_medLARC$LARC[,,7]
+pred_bctype_medLARC$LARC[,,3] <- pred_bctype_medLARC$LARC[,,7]/3
+pred_bctype_medLARC$LARC[,,5] <- pred_bctype_medLARC$LARC[,,7]*2/3
+
 
 for (year in c(1)) {
   pred_bctype_medLARC$other_hormonal[,,year] <- 
