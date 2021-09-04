@@ -14,7 +14,6 @@ eversex_boot_no <- array(dim=c(neths, nages, nyears, nreps))
 AgeByDebutAge_lp_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
 AgeByDebutAge_num_boot <- array(dim=c(neths, nages, 7, nyears, nreps))
 
-
 for (i in 1:length(years)) {
   cat('Starting year ', years[i], '\n', sep='')
   filename <- paste(datapath, "/bctypes_ind_", years[i], ".csv", sep="")
@@ -97,7 +96,7 @@ for (i in 1:length(years)) {
 
 bctype_in_prob_boot <- sweep(bctype_in_wts_boot, c(1:3,5), apply(bctype_in_wts_boot, c(1:3,5), sum), "/")
 
-pred_bctype_minLARC_dyn_boot <- list()  # Temp
+# pred_bctype_minLARC_dyn_boot <- list() # Was here for debugging
 
 for (bootrep in 1:nreps) {
   bctype_in_wts <- bctype_in_wts_boot[,,,,bootrep]
@@ -117,7 +116,7 @@ for (bootrep in 1:nreps) {
   source("a10_impute_even_years.R")               # Impute even years
   source("a10_make_behav_inputs_all_2007.R")      # override 2009-2017 numbers with 2007 for both calibration and no-behavior-change models
   
-  pred_bctype_minLARC_dyn_boot[[bootrep]] <- pred_bctype_minLARC_dyn  # TEMP
+  # pred_bctype_minLARC_dyn_boot[[bootrep]] <- pred_bctype_minLARC_dyn  (Was here for debugging)
   
   repnum <- paste(ifelse(bootrep<10, "0", ""), bootrep, sep="")
 
@@ -165,4 +164,30 @@ for (bootrep in 1:nreps) {
   filename <- paste("../output/a10_preg_boot", ifelse(i<10, "0", ""), bootrep, ".rda", sep="")
   save.image(file=filename)
   cat("Finished bootstrap ", bootrep, ".\n", sep="")
+
+  ########################################################################
+  ### # Scenario 3: Medium LARC use (linear increase) (medLARC)
+  
+  #source("a10_ABC_medLARC.R")
+  source("a10_calibration_medLARC.R")                  # calib pt 1
+  source("a10_no_behav_change_medLARC.R")              # No behavior change
+  source("a10_obs_behav_change_medLARC.R")             # Observed behavior change
+  source("a10_obs_contraception_change_medLARC.R")     # Observed contraception change only
+  source("a10_obs_sexual_activity_change_medLARC.R")   # Observed debut / partner numbers only
+  source("a10_obs_debut_change_medLARC.R")             # Observed debut only
+  source("a10_obs_mnppy_change_medLARC.R")             # Observed partner numbers only
+  
+  saveRDS(a10_calib_medLARC,     file=paste("../output/a10_calib_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(prob_detpreg_medLARC,  file=paste("../output/prob_detpreg_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_nbc_medLARC,       file=paste("../output/a10_nbc_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_obs_medLARC,       file=paste("../output/a10_obs_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_obs_cc_medLARC,    file=paste("../output/a10_obs_cc_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_obs_sex_medLARC,   file=paste("../output/a10_obs_sex_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_obs_debut_medLARC, file=paste("../output/a10_obs_debut_medLARC_boot",repnum,".rda",sep=""))
+  saveRDS(a10_obs_mnppy_medLARC, file=paste("../output/a10_obs_mnppy_medLARC_boot",repnum,".rda",sep=""))
+  
+  filename <- paste("../output/a10_preg_boot", ifelse(i<10, "0", ""), bootrep, ".rda", sep="")
+  save.image(file=filename)
+  cat("Finished bootstrap ", bootrep, ".\n", sep="")
+
 }
