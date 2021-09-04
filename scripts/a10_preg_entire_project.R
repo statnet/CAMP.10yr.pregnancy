@@ -93,17 +93,26 @@ saveRDS(a10_obs_sex_medLARC, file='../output/a10_obs_sex_medLARC.rda')
 saveRDS(a10_obs_debut_medLARC, file='../output/a10_obs_debut_medLARC.rda')
 saveRDS(a10_obs_mnppy_medLARC, file='../output/a10_obs_mnppy_medLARC.rda')
 
-
 ########################################################################
 ### # Scenario 4: Only LARC changes
-source("a10_obs_contraception_change_onlyLARC_from_wdl.R")    # Observed behavior change
-source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    # Observed behavior change
 
+source("a10_obs_contraception_change_onlyLARC_from_all.R")
+source("a10_obs_contraception_change_onlyLARC_from_wdl.R")    
+source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    
+source("a10_obs_contraception_change_onlyLARC_from_pil.R")
+
+saveRDS(a10_obs_cc_onlyLARC_maxL_from_all, file='../output/a10_obs_cc_onlyLARC_maxL_from_all.rda')
+saveRDS(a10_obs_cc_onlyLARC_minL_from_all, file='../output/a10_obs_cc_onlyLARC_minL_from_all.rda')
+saveRDS(a10_obs_cc_onlyLARC_medL_from_all, file='../output/a10_obs_cc_onlyLARC_medL_from_all.rda')
 saveRDS(a10_obs_cc_onlyLARC_maxL_from_wdl, file='../output/a10_obs_cc_onlyLARC_maxL_from_wdl.rda')
 saveRDS(a10_obs_cc_onlyLARC_minL_from_wdl, file='../output/a10_obs_cc_onlyLARC_minL_from_wdl.rda')
+saveRDS(a10_obs_cc_onlyLARC_medL_from_wdl, file='../output/a10_obs_cc_onlyLARC_medL_from_wdl.rda')
 saveRDS(a10_obs_cc_onlyLARC_maxL_from_cdm, file='../output/a10_obs_cc_onlyLARC_maxL_from_cdm.rda')
 saveRDS(a10_obs_cc_onlyLARC_minL_from_cdm, file='../output/a10_obs_cc_onlyLARC_minL_from_cdm.rda')
-
+saveRDS(a10_obs_cc_onlyLARC_medL_from_cdm, file='../output/a10_obs_cc_onlyLARC_medL_from_cdm.rda')
+saveRDS(a10_obs_cc_onlyLARC_maxL_from_pil, file='../output/a10_obs_cc_onlyLARC_maxL_from_pil.rda')
+saveRDS(a10_obs_cc_onlyLARC_minL_from_pil, file='../output/a10_obs_cc_onlyLARC_minL_from_pil.rda')
+saveRDS(a10_obs_cc_onlyLARC_medL_from_pil, file='../output/a10_obs_cc_onlyLARC_medL_from_pil.rda')
 
 ########################################################################
 ### # Scenario X: Additional coital freq decline within partnerships
