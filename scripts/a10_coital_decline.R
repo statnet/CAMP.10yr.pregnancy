@@ -16,3 +16,5 @@ a10_coital_decline <- a10_preg(n_f = n_f,
                             meanpop_tot_f = meanpop_13to18_f,
                             failure_rate = failure_rate
 )
+
+saveRDS(a10_coital_decline, "../output/a10_coutal_decline.rda")
