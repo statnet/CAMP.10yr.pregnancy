@@ -41,7 +41,7 @@ wts_f <- wts_f %>% replace_na(0)
 wts_m <- wts_m %>% replace_na(0)
 
 #### Read in the eversex numbers
-# NB:the name of the sex column is different hear than for wts
+# NB:the name of the sex column is different here than for wts
 
 eversex_f <- array(dim=c(neths, nages, nyears))
 
