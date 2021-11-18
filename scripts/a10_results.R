@@ -166,9 +166,11 @@ tiff("../output/Fig1.tif", height = 5*1200, width = 5*1200,
 
 neworder <- c(1,2,4,5,3,8,7,6,9,10,11)
   
-matplot(bctype_in_yearprob[,neworder], type='b', xaxt="n" , ylab= "Prop. reporting method",
+matplot(bctype_in_yearprob[,neworder], type='b', xaxt="n" , 
+        ylab= "Prop. reporting method",
         #main = "Method of birth control reported by females, YRBS", 
-        ylim=c(0,0.8), pch=letters[1:length(bctypes_in)])
+        ylim=c(0,0.8), pch=letters[1:length(bctypes_in)],
+        col='black')
 axis(1, 1:6, seq(2007, 2017, 2))
 legend(c(1,6), c(0.8,0.6), c( 'a = no method', 
                     'b = condoms', 
@@ -183,7 +185,8 @@ legend(c(1,6), c(0.8,0.6), c( 'a = no method',
                     'k = withdrawal or other',
                     '          (2013-7 options)'
                   ),
-  cex=0.9, text.col=c(1:6,1:5,5), col=c(1:6,1:5,"white"), 
+  #cex=0.9, text.col=c(1:6,1:5,5), col=c(1:6,1:5,"white"),
+  cex=0.9, text.col='black', col=c(rep('black', 11),"white"), 
   lty= 1:5, ncol=2)
 abline(h=0, col="lightgray", lty=3)
 dev.off()
@@ -427,7 +430,7 @@ offset <- 0.02
 tiff("../output/Fig2.tif", height = 5*1200, 5*1200,
     units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 plot((1:10)-offset, num_pregs_averted_by_year_medL, ylab="Num. pregs averted",
-     ylim=c(-1e5,2e5), xaxt="n", xlab='year', type='b', pch=20, cex=0.75)
+     ylim=c(-1e5,2e5), xaxt="n", xlab='year', type='b', pch=15, cex=0.75)
 #plot(pavert_medL_obs, ylab="prop. pregs averted",
 #     ylim=c(-0.05,0.3), xaxt="n", xlab='year', type='b')
 abline(h=0)
@@ -437,20 +440,22 @@ legend(1.5, 2e5, c('total',
                    'attributable to changes in annual partner numbers',
                    'attributable to changes in contraception methods used'
 ),
-  cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
-  col=c('black','red','darkgreen', 'blue'), pch = 20, ncol=1)
+#  cex=0.9, text.col=c('black','red','darkgreen', 'blue'),
+#  col=c('black','red','darkgreen', 'blue'), pch = 20, ncol=1)
+  cex=0.9, text.col='black',
+  col='black', pch = c(15, 1, 4, 20), ncol=1)
 
 #points(pavert_medL_obs_debut, col='red', type='b')
 #points(pavert_medL_obs_mnppy, col='darkgreen', type='b')
 #points(pavert_medL_obs_cc, col='blue', type='b')
-points((1:10)+offset, num_pregs_averted_by_year_and_cause_medL[1,], col='red', type='b', pch=20, cex=0.75)
-points((1:10)-offset, num_pregs_averted_by_year_and_cause_medL[2,], col='darkgreen', type='b', pch=20, cex=0.75)
-points((1:10)+offset, num_pregs_averted_by_year_and_cause_medL[3,], col='blue', type='b', pch=20, cex=0.75)
+points((1:10)+offset, num_pregs_averted_by_year_and_cause_medL[1,], col='black', type='b', pch=1, cex=0.75)
+points((1:10)-offset, num_pregs_averted_by_year_and_cause_medL[2,], col='black', type='b', pch=4, cex=0.75)
+points((1:10)+offset, num_pregs_averted_by_year_and_cause_medL[3,], col='black', type='b', pch=20, cex=0.75)
 
 errbar((1:10)-offset, num_pregs_averted_by_year_all_medL_boot_lb, num_pregs_averted_by_year_all_medL_boot_ub, col='black')
-errbar((1:10)+offset, num_pregs_averted_by_year_debut_medL_boot_lb, num_pregs_averted_by_year_debut_medL_boot_ub, col='red')
-errbar((1:10)-offset, num_pregs_averted_by_year_mnppy_medL_boot_lb, num_pregs_averted_by_year_mnppy_medL_boot_ub, col='darkgreen')
-errbar((1:10)+offset, num_pregs_averted_by_year_cc_medL_boot_lb, num_pregs_averted_by_year_cc_medL_boot_ub, col='blue')
+errbar((1:10)+offset, num_pregs_averted_by_year_debut_medL_boot_lb, num_pregs_averted_by_year_debut_medL_boot_ub, col='black')
+errbar((1:10)-offset, num_pregs_averted_by_year_mnppy_medL_boot_lb, num_pregs_averted_by_year_mnppy_medL_boot_ub, col='black')
+errbar((1:10)+offset, num_pregs_averted_by_year_cc_medL_boot_lb, num_pregs_averted_by_year_cc_medL_boot_ub, col='black')
 axis(1, 1:10, labels=2008:2017)
 
 dev.off()
@@ -572,20 +577,21 @@ ages <- 14:18
 plot(ages-offset, num_pregs_averted_by_age_and_cause_medL[1,],
               xlab='age', ylab='No. of pregnancies averted',
               #main='No. of pregnancies averted by cause and by age, summed across years',
-              ylim=c(-8e4,25e4), type='b', pch=20, cex=0.75, col='red')
+              ylim=c(-8e4,25e4), type='b', pch=1, cex=0.75, col='black')
 
-points(ages-offset, num_pregs_averted_by_age_and_cause_medL[2,], type='b', col='darkgreen', pch=20, cex=0.75)
-points(ages+offset, num_pregs_averted_by_age_and_cause_medL[3,], type='b', col='blue', pch=20, cex=0.75)
-errbar(ages-offset, navert_medL_obs_debut_boot_age_lb, navert_medL_obs_debut_boot_age_ub, col='red')
-errbar(ages-offset, navert_medL_obs_mnppy_boot_age_lb, navert_medL_obs_mnppy_boot_age_ub, col='darkgreen')
-errbar(ages+offset, navert_medL_obs_cc_boot_age_lb, navert_medL_obs_cc_boot_age_ub, col='blue')
+points(ages-offset, num_pregs_averted_by_age_and_cause_medL[2,], type='b', col='black', pch=4, cex=0.75)
+points(ages+offset, num_pregs_averted_by_age_and_cause_medL[3,], type='b', col='black', pch=20, cex=0.75)
+errbar(ages-offset, navert_medL_obs_debut_boot_age_lb, navert_medL_obs_debut_boot_age_ub, col='black')
+errbar(ages-offset, navert_medL_obs_mnppy_boot_age_lb, navert_medL_obs_mnppy_boot_age_ub, col='black')
+errbar(ages+offset, navert_medL_obs_cc_boot_age_lb, navert_medL_obs_cc_boot_age_ub, col='black')
 
 legend(14, 2.5e5, c('attributable to delay in age at first sexual intercourse',
                     'attributable to changes in annual partner numbers',
                     'attributable to changes in contraception methods'),
-        cex=0.9, text.col=c('red','darkgreen', 'blue'),
-        fill = c('red','darkgreen', 'blue'),
-        border = c('red','darkgreen', 'blue'))
+        pch=c(1,4,20), cex=0.9) 
+        #text.col=c('red','darkgreen', 'blue'),
+        #fill = c('red','darkgreen', 'blue'),
+        #border = c('red','darkgreen', 'blue'))
 abline(h=0, lty=2)
 dev.off()
 
@@ -1161,29 +1167,25 @@ sum(num_avert_obs_behav)
 sum(num_avert_obs_coital)
 
 
-
-
 tiff("../output/Fig5.tif", height = 5*1200, 5*1200,
      units = "px", res = 1200, pointsize = 8,  compression = "lzw")
 plot(2007:2017, nvss_births, ylim=c(0,3e5), type='b', 
-     xlab="Year", ylab = "Births", xaxt='n')
+     xlab="Year", ylab = "Births", xaxt='n', pch=15)
 abline(h=model_births_btp_flat[1], lty=2, col='grey80')
 axis(1, 2007:2017, 2007:2017)
-points(2007:2017, model_births_btp_gutt, type='b', col = 'red')
-points(2007:2017, model_births_btp_coit, type='b', col = 'blue')
+points(2007:2017, model_births_btp_gutt, type='b', col = 'black', pch=4)
+points(2007:2017, model_births_btp_coit, type='b', col = 'black', pch=1)
 
 legend(2007, 5e4, c('Reported births (NVSS)',
                    'Predicted births (YRBS behavioral data)',
                    'Predicted births (with additional 50% decline per decade in sexual acts per partner)'),
-        cex=0.9, text.col=c('black','red', 'blue'),
-        col=c('black','red', 'blue'), pch = 1, ncol=1)
+        cex=0.9, text.col='black',
+        col='black', pch = c(15,4,1), ncol=1)
 
 dev.off()
 
 1-nvss_births[11]/nvss_births[1]
 1-model_births_btp_gutt[11]/model_births_btp_gutt[1]
-
-save.image("a10_preg_full_run.rda")
 
 # Figure for paper
 (sum(model_births_btp_coit) - sum(nvss_births)) / sum(nvss_births)
@@ -1195,5 +1197,8 @@ mod_decline_births <- nvss_births[1] - model_births_btp_gutt
 
 mod_decline_births / obs_decline_births
 sum(mod_decline_births) / sum(obs_decline_births)
+
+save.image("a10_preg_full_run.rda")
+save.image()
 
 
