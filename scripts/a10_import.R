@@ -3,7 +3,7 @@
 #setwd("C:/git/CAMP_10yr_pregnancy/scripts")
 
 datapath <- "../dat"
-#file_classes <- c("propsexrace.txt", "eversex.txt", "condom.txt", 
+#file_classes <- c("propsexrace.txt", "eversex.txt", "condom.txt",
 #                  "matrix1.txt", "matrix2.txt")
 
 years <- seq(2007, 2017, by=2)
@@ -12,7 +12,7 @@ eths <- c("Black", "Hispanic", "White")
 eths_all <- c("Black", "Hispanic", "White", "Other")  # For popsizes, to remove Others from census estimates
 eths_lc <- c("black", "hispanic", "white")
 
-bctypes_in <- c("no method", "condoms", "withdrawal", "pills", "injection", "LARC", 
+bctypes_in <- c("no method", "condoms", "withdrawal", "pills", "injection", "LARC",
              "other hormonal", "other hormonal+LARC", "other79", "other1", "withdrawal/other")
 
 nages <- length(ages)
@@ -37,8 +37,8 @@ for (i in 1:length(years)) {
     }
 }
 
-wts_f <- wts_f %>% replace_na(0)
-wts_m <- wts_m %>% replace_na(0)
+wts_f[is.na(wts_f)] <- 0
+wts_m[is.na(wts_m)] <- 0
 
 #### Read in the eversex numbers
 # NB:the name of the sex column is different here than for wts
@@ -66,7 +66,7 @@ eversex_f <- eversex_f %>% replace_na(0)
 ## And the types keep changing across years
 
 ## OLD***********************************
-## There are a total of nine different possible responses with different associated 
+## There are a total of nine different possible responses with different associated
 ##    efficacies present in at least 1 year:
 ##       1 * no method:     2007, 2009, 2011, 2013, 2015, 2017
 ##       2 * condoms:       2007, 2009, 2011, 2013, 2015, 2017
@@ -123,18 +123,18 @@ for (i in 1:length(years)) {
                                   ))==0) {  ## Cases where row is missing altogether
              bctype_in_wts[j,k,i,m] <- 0
           } else {
-            if(sum(temp %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]) %>% dplyr::select(WgtFreq))==0) {  
+            if(sum(temp %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]) %>% dplyr::select(WgtFreq))==0) {
                       ## Cases where freq is 0 (either in the original data, or as a replacement for NA as done above)
               bctype_in_wts[j,k,i,m] <- 0
             } else {
               bctype_in_wts[j,k,i,m] <- unlist(temp %>% filter(sex=="female", race==eths_lc[j], age==ages[k], pregprev2==bctypes_in[m]) %>% dplyr::select(WgtFreq))
-            }}  
+            }}
       }
     }
   }
 }
 
-# Make sum to 1 across bctypes within each ethn/age/year 
+# Make sum to 1 across bctypes within each ethn/age/year
 bctype_in_prob <- sweep(bctype_in_wts, 1:3, apply(bctype_in_wts, 1:3, sum), "/")
 
 #####
@@ -148,11 +148,11 @@ for (i in 1:length(years)) {
   filename <- paste(datapath, "/matrix1_", years[i], ".txt", sep="")
   temp <- read.csv(filename)
   for (j in 1:neths) {
-    AgeByDebutAge_num_f[j,,,i] <- unname(as.matrix(temp %>% 
-                        filter(sex_active=="Female", race==eths[j]) %>% 
+    AgeByDebutAge_num_f[j,,,i] <- unname(as.matrix(temp %>%
+                        filter(sex_active=="Female", race==eths[j]) %>%
                         dplyr::select(starts_with("age1")), nages))
-    #AgeByDebutAge_num_m[j,,,i] <- unname(as.matrix(temp %>% 
-    #                    filter(sex_active=="Male", race==eths[j]) %>% 
+    #AgeByDebutAge_num_m[j,,,i] <- unname(as.matrix(temp %>%
+    #                    filter(sex_active=="Male", race==eths[j]) %>%
     #                    dplyr::select(starts_with("age1")), nages))
   }
 }
@@ -165,11 +165,11 @@ for (i in 1:length(years)) {
   filename <- paste(datapath, "/matrix2_", years[i], ".txt", sep="")
   temp <- read.csv(filename)
   for (j in 1:neths) {
-    AgeByDebutAge_lp_f[j,,,i] <- unname(as.matrix(temp %>% 
-                                 filter(sex_active=="Female", race==eths[j]) %>% 
+    AgeByDebutAge_lp_f[j,,,i] <- unname(as.matrix(temp %>%
+                                 filter(sex_active=="Female", race==eths[j]) %>%
                                  dplyr::select(starts_with("mean1")), nages))
-    #AgeByDebutAge_lp_m[j,,,i] <- unname(as.matrix(temp %>% 
-    #                             filter(sex_active=="Male", race==eths[j]) %>% 
+    #AgeByDebutAge_lp_m[j,,,i] <- unname(as.matrix(temp %>%
+    #                             filter(sex_active=="Male", race==eths[j]) %>%
     #                             dplyr::select(starts_with("mean1")), nages))
   }
 }
