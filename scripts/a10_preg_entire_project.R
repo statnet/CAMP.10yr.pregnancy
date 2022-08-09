@@ -1,11 +1,22 @@
 
 ########################################################################
-## Code for manuscript "XXXXX"
+## Code for manuscript:
+##   Goodreau SM, Pollock ED, Wang LY, Li J, Aslam MV, Katz DA, Hamilton DT,
+##   Rosenberg ES. 2022. Declines in pregnancies among US adolescents from
+##   2007 to 2017: behavioral contributors to the trend, Journal of Pediatric
+##   and Adolescent Gynecology, doi: https://doi.org/10.1016/j.jpag.2022.07.008
 
-setwd("C:/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
-#setwd("H:/_goodreau/git/CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
+setwd("CAMP.10yr.pregnancy/scripts/")  # Change depending on machine
 
+## Install any needed packages
 #install.packages("EasyABC")
+#install.packages("MASS")
+#install.packages("dplyr")
+#install.packages("tidyverse")
+#install.packages("magrittr")
+#install.packages("nnet")
+
+## Load packages
 library(EasyABC)
 library(MASS)
 library(dplyr)
@@ -13,6 +24,7 @@ library(tidyverse)
 library(magrittr)
 library(nnet)
 
+## Prepare environment
 rm(list=ls())
 set.seed(1)
 
@@ -97,8 +109,8 @@ saveRDS(a10_obs_mnppy_medLARC, file='../output/a10_obs_mnppy_medLARC.rda')
 ### # Scenario 4: Only LARC changes
 
 source("a10_obs_contraception_change_onlyLARC_from_all.R")
-source("a10_obs_contraception_change_onlyLARC_from_wdl.R")    
-source("a10_obs_contraception_change_onlyLARC_from_cdm.R")    
+source("a10_obs_contraception_change_onlyLARC_from_wdl.R")
+source("a10_obs_contraception_change_onlyLARC_from_cdm.R")
 source("a10_obs_contraception_change_onlyLARC_from_pil.R")
 
 saveRDS(a10_obs_cc_onlyLARC_maxL_from_all, file='../output/a10_obs_cc_onlyLARC_maxL_from_all.rda')
@@ -122,7 +134,7 @@ source("a10_coital_decline.R")
 source("a10_credible_intervals.R")           # Observed behavior change
 
 ########################################################
-## Generate results for paper 
+## Generate results for paper
 
 #source("a10_results.R")
 
