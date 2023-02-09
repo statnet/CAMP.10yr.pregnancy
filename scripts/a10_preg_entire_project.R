@@ -127,14 +127,14 @@ saveRDS(a10_obs_cc_onlyLARC_minL_from_pil, file='../output/a10_obs_cc_onlyLARC_m
 saveRDS(a10_obs_cc_onlyLARC_medL_from_pil, file='../output/a10_obs_cc_onlyLARC_medL_from_pil.rda')
 
 ########################################################################
-### # Scenario X: Additional coital freq decline within partnerships
+### # Scenario 5: Additional coital freq decline within partnerships
 source("a10_coital_decline.R")
 
 ########################################################################
-source("a10_credible_intervals.R")           # Observed behavior change
+### Create credible intervals
+source("a10_credible_intervals.R")
 
 ########################################################
 ## Generate results for paper
-
-#source("a10_results.R")
+source("a10_results.R")
 
